@@ -1,0 +1,461 @@
+Require Import HoTT.
+Require Export HoTT.
+
+(*
+Colimits as higher inductive type
+*)
+Module Export Colims.
+
+Private Inductive colim
+  (F : nat -> Type0)
+  (f : forall (n : nat), F n -> F(S n)) : Type0 :=
+| inc : forall (n : nat), F n -> colim F f.
+
+Axiom com : 
+  forall 
+    (F : nat -> Type0) 
+    (f : forall (n : nat), F n -> F(S n))
+    (n : nat) 
+    (x : F n), inc F f n x = inc F f (S n) (f n x).
+
+Fixpoint colim_rec
+  (P : Type)
+  (F : nat -> Type0)
+  (f : forall (n : nat), F n -> F(S n))
+  (Pi : forall (n : nat), F n -> P)
+  (Pc : forall (n : nat) (x : F n), Pi n x = Pi (S n) (f n x))
+  (x : colim F f)
+  {struct x}
+  : P
+  := 
+    (match x return _ -> P with
+      | inc n x => fun _ => Pi n x
+    end) Pc.
+
+Axiom colim_rec_beta_com : forall
+  (P : Type)
+  (F : nat -> Type0)
+  (f : forall (n : nat), F n -> F(S n))
+  (Pi : forall (n : nat), F n -> P)
+  (Pc : forall (n : nat) (x : F n), Pi n x = Pi (S n) (f n x))
+  (n : nat)
+  (x : F n)
+  , ap (colim_rec P F f Pi Pc) (com F f n x) = Pc n x.
+
+Fixpoint colim_ind
+  (F : nat -> Type0)
+  (f : forall (n : nat), F n -> F(S n))
+  (P : colim F f -> Type)
+  (Pi : forall (n : nat), forall (x : F n), P (inc F f n x))
+  (Pc : forall (n : nat) (x : F n), (com F f n x) # Pi n x = Pi (S n) (f n x))
+  (x : colim F f)
+  {struct x}
+  : P x
+  := 
+    (match x return _ -> P x with
+      | inc n x => fun _ => Pi n x
+    end) Pc.
+
+Axiom colim_ind_beta_com : forall
+  (F : nat -> Type0)
+  (f : forall (n : nat), F n -> F(S n))
+  (P : colim F f -> Type)
+  (Pi : forall (n : nat), forall (x : F n), P (inc F f n x))
+  (Pc : forall (n : nat) (x : F n), (com F f n x) # Pi n x = Pi (S n) (f n x))
+  (n : nat)
+  (x : F n)
+  , apD (colim_ind F f P Pi Pc) (com F f n x) = Pc n x.
+End Colims.
+
+
+
+(*
+Skiplemma:
+  We can skip the 0th object of the colimit, and still obtain an isomorphic colimit.
+*)
+
+(*Section skipLemma.
+
+Lemma toSkip : forall (F : nat -> Type0) (f : forall (n : nat), F n -> F (S n)),
+  colim F f -> colim (fun (n : nat) => F(S n)) (fun (n : nat) => f(S n)).
+Proof.
+intros F f.
+refine (colim_rec _ _ _ _ _).
+ Unshelve.
+ Focus 2.
+ intros n x.
+ apply (inc (fun n0 : nat => F n0.+1) (fun n0 : nat => f n0.+1) n (f n x)).
+
+ intros.
+ compute.
+ apply com.
+Defined.
+
+Lemma fromSkip : forall (F : nat -> Type0) (f : forall (n : nat), F n -> F (S n)),
+  colim (fun (n : nat) => F(S n)) (fun (n : nat) => f(S n)) -> colim F f.
+Proof.
+intros F f.
+refine (colim_rec _ _ _ _ _).
+ Unshelve.
+ Focus 2.
+ intros n x.
+ apply (inc F f (S n) x).
+
+ intros.
+ compute.
+ apply com.
+Defined.
+
+Lemma fromSkipIso : forall (F : nat -> Type0) (f : forall (n : nat), F n -> F (S n)) (x : colim F f),
+  fromSkip F f (toSkip F f x) = x.
+Proof.
+intros F f.
+refine (colim_ind _ _ _ _ _).
+ Unshelve.
+ Focus 2.
+ intros.
+ compute.
+ symmetry.
+ apply com.
+
+ intros.
+ rewrite @HoTT.Types.Paths.transport_paths_FlFr.
+ rewrite ap_idmap.
+ rewrite ap_compose.
+ rewrite colim_rec_beta_com.
+ rewrite colim_rec_beta_com.
+ rewrite concat_pp_p.
+ rewrite concat_Vp.
+ apply concat_p1.
+Qed.
+
+Lemma toSkipIso : forall (F : nat -> Type0) (f : forall (n : nat), F n -> F (S n)) 
+  (x : colim (fun (n : nat) => F(S n)) (fun (n : nat) => f(S n))),
+  toSkip F f (fromSkip F f x) = x.
+Proof.
+intros F f.
+refine (colim_ind _ _ _ _ _).
+ Unshelve.
+ Focus 2.
+ intros.
+ compute.
+ apply (com (fun n0 : nat => F n0.+1) (fun n0 : nat => f n0.+1) n x)^.
+
+ intros.
+ rewrite @HoTT.Types.Paths.transport_paths_FlFr.
+ rewrite ap_idmap.
+ rewrite ap_compose.
+ rewrite colim_rec_beta_com.
+ rewrite colim_rec_beta_com.
+ rewrite concat_pp_p.
+ rewrite concat_Vp.
+ apply concat_p1.
+Qed.
+
+End skipLemma.*)
+
+Section ColimConst.
+
+Lemma CC_A : forall (A : Type0),
+  colim (fun (_ : nat) => A) (fun (_ : nat) => idmap) -> A.
+Proof.
+intro A.
+refine (colim_rec _ _ _ _ _).
+ Unshelve.
+ Focus 2.
+ intro n.
+ apply idmap.
+
+ intros.
+ reflexivity.
+
+Defined.
+
+Lemma A_CC : forall (A : Type0),
+  A -> colim (fun (_ : nat) => A) (fun (_ : nat) => idmap).
+Proof.
+intros.
+apply (inc (fun _ : nat => A) (fun n : nat => idmap) 1).
+apply H.
+Defined.
+
+Lemma iso_CC_A : forall (A : Type0) (x : A),
+  CC_A A (A_CC A x) = x.
+Proof.
+intros.
+reflexivity.
+Qed.
+
+Lemma iso_A_CC : forall (A : Type0) (x : colim (fun (_ : nat) => A) (fun (_ : nat) => idmap)),
+  x = A_CC A (CC_A A x).
+Proof.
+intro A.
+refine (colim_ind _ _ _ _ _).
+ Unshelve.
+ Focus 2.
+ intros.
+ induction n.
+  apply com.
+
+  apply ((com (fun _ : nat => A) (fun _ : nat => idmap) n x)^ @ IHn).
+
+ intros.
+ rewrite @HoTT.Types.Paths.transport_paths_FlFr.
+ rewrite ap_idmap.
+ rewrite ap_compose.
+ rewrite colim_rec_beta_com.
+ rewrite concat_p1.
+ induction n ; cbn.
+ - reflexivity.
+ - rewrite IHn.
+   reflexivity.
+Defined.
+
+End ColimConst.
+
+
+
+Section ColimElems.
+
+Theorem colim_elem :
+  forall  (F : nat -> Type0)
+          (f : forall (n : nat), F n -> F(S n))
+          (x : colim F f),
+    {i : nat & {y : F i & inc F f i y = x}}.
+Proof.
+intros F f.
+refine (colim_ind _ _ _ _ _).
+Unshelve.
+  Focus 2.
+  intros n x.
+  exists n.
+  exists x.
+  reflexivity.
+
+  intros n x.
+  cbn.
+
+
+
+(*
+
+(* Colims commute with sums *)
+Section ColimSum.
+Section ColimProd.
+
+Definition Sum (G1 : Type0 -> Type0) (G2 : Type0 -> Type0) (F : nat -> Type0) : nat -> Type0
+  := fun (n : nat) => sum (G1 (F n)) (G2 (F n)).
+
+Definition SMap 
+  (G1 : Type0 -> Type0)
+  (G2 : Type0 -> Type0)
+  (G1F : forall (A B : Type0), (A -> B) -> G1 A -> G1 B)
+  (G2F : forall (A B : Type0), (A -> B) -> G2 A -> G2 B)
+  (F : nat -> Type0)
+  (f : forall (n : nat), F n -> F (S n))
+  : forall (n : nat), Sum G1 G2 F n -> Sum G1 G2 F (S n).
+Proof.
+compute.
+intros.
+destruct H as [x| y].
+ left.
+ apply (G1F (F n) (F (S n)) (f n) x).
+
+ right.
+ apply (G2F (F n) (F (S n)) (f n) y).
+Defined.
+
+Definition colim_S : 
+  forall  (F : nat -> Type0)
+          (f : forall (n : nat), F n -> F(S n))
+          (G1 G2 : Type0 -> Type0)
+          (G1F : forall (A B : Type0), (A -> B) -> G1 A -> G1 B)
+          (G2F : forall (A B : Type0), (A -> B) -> G2 A -> G2 B),
+  colim (Sum G1 G2 F) (SMap G1 G2 G1F G2F F f)
+  ->
+  sum
+    (colim (fun (n : nat) => G1 (F n)) (fun (n : nat) => G1F (F n) (F (S n)) (f n)))
+    (colim (fun (n : nat) => G2 (F n)) (fun (n : nat) => G2F (F n) (F (S n)) (f n))).
+Proof.
+intros F f G1 G2 G1F G2F.
+refine (colim_rec _ _ _ _ _).
+Unshelve.
+  Focus 2.
+  compute.
+  intros n i.
+  destruct i as [x | y].
+    Focus 1.
+    left.
+    apply (inc (fun n0 : nat => G1 (F n0)) (fun n0 : nat => G1F (F n0) (F n0.+1) (f n0)) n x).
+
+    right.
+    apply (inc (fun n0 : nat => G2 (F n0)) (fun n0 : nat => G2F (F n0) (F n0.+1) (f n0)) n y).
+
+  intros n i.
+  destruct i as [x | y].
+    Focus 1.
+    apply (ap inl (com (fun n0 : nat => G1 (F n0)) (fun n0 : nat => G1F (F n0) (F n0.+1) (f n0)) n x)).
+
+    apply (ap inr (com (fun n0 : nat => G2 (F n0)) (fun n0 : nat => G2F (F n0) (F n0.+1) (f n0)) n y)).
+Defined.
+
+Definition S_colim : 
+  forall  (F : nat -> Type0)
+          (f : forall (n : nat), F n -> F(S n))
+          (G1 G2 : Type0 -> Type0)
+          (G1F : forall (A B : Type0), (A -> B) -> G1 A -> G1 B)
+          (G2F : forall (A B : Type0), (A -> B) -> G2 A -> G2 B),
+  sum
+    (colim (fun (n : nat) => G1 (F n)) (fun (n : nat) => G1F (F n) (F (S n)) (f n)))
+    (colim (fun (n : nat) => G2 (F n)) (fun (n : nat) => G2F (F n) (F (S n)) (f n)))
+  ->
+  colim (Sum G1 G2 F) (SMap G1 G2 G1F G2F F f).
+Proof.
+intros F f G1 G2 G1F G2F i.
+destruct i as [x | y].
+refine (colim_rec _ _ _ _ _ x).
+Unshelve.
+  Focus 3.
+  intros n a.
+  apply (inc (Sum G1 G2 F) (SMap G1 G2 G1F G2F F f) n).
+  left.
+  apply a.
+
+  intros n a.
+  apply (com (Sum G1 G2 F) (SMap G1 G2 G1F G2F F f) n (inl a)).
+
+refine (colim_rec _ _ _ _ _ y).
+Unshelve.
+  Focus 2.
+  intros n b.
+  apply (inc (Sum G1 G2 F) (SMap G1 G2 G1F G2F F f) n).
+  right.
+  apply b.
+
+  cbn.
+  intros n b.
+  apply (com (Sum G1 G2 F) (SMap G1 G2 G1F G2F F f) n (inr b)).
+Defined.
+
+Theorem S_iso_1 :
+  forall  (F : nat -> Type0)
+          (f : forall (n : nat), F n -> F(S n))
+          (G1 G2 : Type0 -> Type0)
+          (G1F : forall (A B : Type0), (A -> B) -> G1 A -> G1 B)
+          (G2F : forall (A B : Type0), (A -> B) -> G2 A -> G2 B)
+          (i : sum
+              (colim (fun (n : nat) => G1 (F n)) (fun (n : nat) => G1F (F n) (F (S n)) (f n)))
+              (colim (fun (n : nat) => G2 (F n)) (fun (n : nat) => G2F (F n) (F (S n)) (f n)))),
+  colim_S F f G1 G2 G1F G2F (S_colim F f G1 G2 G1F G2F i) = i.
+Proof.
+intros F f G1 G2 G1F G2F i.
+destruct i as [x | y].
+Focus 1.
+  refine (colim_ind _ _ _ _ _ x).
+  Unshelve.
+
+  Focus 2.
+    intro z.
+    apply (colim_S F f G1 G2 G1F G2F (S_colim F f G1 G2 G1F G2F (inl z)) = inl z).
+
+  Focus 2.
+    intros n a.
+    reflexivity.
+
+  intros n a.
+  rewrite @HoTT.Types.Paths.transport_paths_FlFr.
+  rewrite concat_p1.
+  rewrite ap_compose.
+  rewrite colim_rec_beta_com.
+  rewrite colim_rec_beta_com.
+  apply concat_Vp.
+
+*)
+
+
+
+(*
+
+(* Colims commute with products *)
+Section ColimProd.
+
+Definition P (G1 : Type0 -> Type0) (G2 : Type0 -> Type0) (F : nat -> Type0) : nat -> Type0
+  := fun (n : nat) => prod (G1 (F n)) (G2 (F n)).
+
+Definition PMap 
+  (G1 : Type0 -> Type0)
+  (G2 : Type0 -> Type0)
+  (G1F : forall (A B : Type0), (A -> B) -> G1 A -> G1 B)
+  (G2F : forall (A B : Type0), (A -> B) -> G2 A -> G2 B)
+  (F : nat -> Type0)
+  (f : forall (n : nat), F n -> F (S n))
+  : forall (n : nat), P G1 G2 F n -> P G1 G2 F (S n).
+Proof.
+intros.
+destruct H.
+split.
+ apply (G1F (F n) (F (S n)) (f n) fst).
+
+ apply (G2F (F n) (F (S n)) (f n) snd).
+Defined.
+
+Definition colim_P : 
+  forall  (F : nat -> Type0)
+          (f : forall (n : nat), F n -> F(S n))
+          (G1 G2 : Type0 -> Type0)
+          (G1F : forall (A B : Type0), (A -> B) -> G1 A -> G1 B)
+          (G2F : forall (A B : Type0), (A -> B) -> G2 A -> G2 B) ,
+  colim (P G1 G2 F) (PMap G1 G2 G1F G2F F f)
+  ->
+  prod
+    (colim (fun (n : nat) => G1 (F n)) (fun (n : nat) => G1F (F n) (F (S n)) (f n)))
+    (colim (fun (n : nat) => G2 (F n)) (fun (n : nat) => G2F (F n) (F (S n)) (f n))).
+Proof.
+intros F f G1 G2 G1F G2F.
+refine (colim_rec _ _ _ _ _).
+ Unshelve.
+ Focus 2.
+ compute.
+ intros.
+ destruct H.
+ split.
+  apply
+   (inc (fun n0 : nat => G1 (F n0))
+      (fun n0 : nat => G1F (F n0) (F n0.+1) (f n0)) n fst).
+
+  apply
+   (inc (fun n0 : nat => G2 (F n0))
+      (fun n0 : nat => G2F (F n0) (F n0.+1) (f n0)) n snd).
+
+ compute.
+ intros.
+ destruct x.
+ apply path_prod.
+  Focus 1.
+  apply com.
+
+  apply com.
+Defined.
+
+Definition P_colim : 
+  forall  (F : nat -> Type0)
+          (f : forall (n : nat), F n -> F(S n))
+          (G1 G2 : Type0 -> Type0)
+          (G1F : forall (A B : Type0), (A -> B) -> G1 A -> G1 B)
+          (G2F : forall (A B : Type0), (A -> B) -> G2 A -> G2 B) ,
+  prod
+    (colim (fun (n : nat) => G1 (F n)) (fun (n : nat) => G1F (F n) (F (S n)) (f n)))
+    (colim (fun (n : nat) => G2 (F n)) (fun (n : nat) => G2F (F n) (F (S n)) (f n)))
+  ->
+  colim (P G1 G2 F) (PMap G1 G2 G1F G2F F f).
+Proof.
+intros F f G1 G2 G1F G2F pair.
+destruct pair.
+refine (colim_rec _ _ _ _ _ fst).
+Unshelve.
+  Focus 2.
+  intros n x.
+  refine (colim_rec _ _ _ _ _ snd).
+  Unshelve.
+    Focus 2.
+*)
