@@ -1,0 +1,50 @@
+This is BibTeX, Version 0.99d (TeX Live 2014)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: Paper.aux
+The style file: plainurl.bst
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=20001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: lipics-v2016-sample-article.bib
+You've used 4 entries,
+            2849 wiz_defined-function locations,
+            650 strings with 5850 characters,
+and the built_in function-call counts, 1849 in all, are:
+= -- 198
+> -- 51
+< -- 1
++ -- 18
+- -- 14
+* -- 104
+:= -- 281
+add.period$ -- 16
+call.type$ -- 4
+change.case$ -- 18
+chr.to.int$ -- 0
+cite$ -- 4
+duplicate$ -- 55
+empty$ -- 177
+format.name$ -- 14
+if$ -- 471
+int.to.chr$ -- 0
+int.to.str$ -- 4
+missing$ -- 5
+newline$ -- 26
+num.names$ -- 8
+pop$ -- 34
+preamble$ -- 1
+purify$ -- 15
+quote$ -- 0
+skip$ -- 131
+stack$ -- 0
+substring$ -- 94
+swap$ -- 18
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 14
+warning$ -- 0
+while$ -- 15
+width$ -- 5
+write$ -- 52
