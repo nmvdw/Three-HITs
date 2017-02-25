@@ -7,44 +7,48 @@ Reallocated global_strs (elt_size=20001) to 20 items from 10.
 Reallocated glb_str_end (elt_size=4) to 20 items from 10.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Database file #1: lipics-v2016-sample-article.bib
-You've used 4 entries,
+Warning--empty journal in basoldhigher
+Warning--empty year in basoldhigher
+Warning--can't use both volume and number fields in sojakova2015higher
+You've used 16 entries,
             2849 wiz_defined-function locations,
-            650 strings with 5850 characters,
-and the built_in function-call counts, 1849 in all, are:
-= -- 198
-> -- 51
-< -- 1
-+ -- 18
-- -- 14
-* -- 104
-:= -- 281
-add.period$ -- 16
-call.type$ -- 4
-change.case$ -- 18
+            708 strings with 7665 characters,
+and the built_in function-call counts, 7047 in all, are:
+= -- 730
+> -- 245
+< -- 8
++ -- 91
+- -- 72
+* -- 344
+:= -- 1024
+add.period$ -- 51
+call.type$ -- 16
+change.case$ -- 82
 chr.to.int$ -- 0
-cite$ -- 4
-duplicate$ -- 55
-empty$ -- 177
-format.name$ -- 14
-if$ -- 471
+cite$ -- 19
+duplicate$ -- 229
+empty$ -- 655
+format.name$ -- 72
+if$ -- 1818
 int.to.chr$ -- 0
-int.to.str$ -- 4
-missing$ -- 5
-newline$ -- 26
-num.names$ -- 8
-pop$ -- 34
+int.to.str$ -- 16
+missing$ -- 18
+newline$ -- 82
+num.names$ -- 32
+pop$ -- 162
 preamble$ -- 1
-purify$ -- 15
+purify$ -- 68
 quote$ -- 0
-skip$ -- 131
+skip$ -- 515
 stack$ -- 0
-substring$ -- 94
-swap$ -- 18
-text.length$ -- 1
+substring$ -- 312
+swap$ -- 65
+text.length$ -- 8
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 14
-warning$ -- 0
-while$ -- 15
-width$ -- 5
-write$ -- 52
+type$ -- 60
+warning$ -- 3
+while$ -- 55
+width$ -- 18
+write$ -- 176
+(There were 3 warnings)

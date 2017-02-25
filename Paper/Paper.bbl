@@ -1,31 +1,92 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
-\bibitem{DBLP:journals/cacm/Dijkstra68a}
-Edsger~W. Dijkstra.
-\newblock Letters to the editor: go to statement considered harmful.
-\newblock {\em Commun. {ACM}}, 11(3):147--148, 1968.
-\newblock \href {http://dx.doi.org/10.1145/362929.362947}
-  {\path{doi:10.1145/362929.362947}}.
+\bibitem{abbott2005containers}
+Michael Abbott, Thorsten Altenkirch, and Neil Ghani.
+\newblock Containers: constructing strictly positive types.
+\newblock {\em Theoretical Computer Science}, 342(1):3--27, 2005.
 
-\bibitem{DBLP:books/mk/GrayR93}
-Jim Gray and Andreas Reuter.
-\newblock {\em Transaction Processing: Concepts and Techniques}.
-\newblock Morgan Kaufmann, 1993.
+\bibitem{adamek1974free}
+Ji{\v{r}}{\'\i} Ad{\'a}mek.
+\newblock Free algebras and automata realizations in the language of
+  categories.
+\newblock {\em Commentationes Mathematicae Universitatis Carolinae},
+  15(4):589--602, 1974.
 
-\bibitem{DBLP:conf/focs/HopcroftPV75}
-{John E.} Hopcroft, {Wolfgang J.} Paul, and {Leslie G.} Valiant.
-\newblock On time versus space and related problems.
-\newblock In {\em 16th Annual Symposium on Foundations of Computer Science,
-  Berkeley, California, USA, October 13-15, 1975}, pages 57--64. {IEEE}
-  Computer Society, 1975.
-\newblock \href {http://dx.doi.org/10.1109/SFCS.1975.23}
-  {\path{doi:10.1109/SFCS.1975.23}}.
+\bibitem{altenkirch2016quotient}
+Thorsten Altenkirch, Paolo Capriotti, Gabe Dijkstra, and Fredrik~Nordvall
+  Forsberg.
+\newblock Quotient inductive-inductive types.
+\newblock {\em arXiv preprint arXiv:1612.02346}, 2016.
 
-\bibitem{DBLP:journals/cacm/Knuth74}
-Donald~E. Knuth.
-\newblock {Computer Programming as an Art}.
-\newblock {\em Commun. {ACM}}, 17(12):667--673, 1974.
-\newblock \href {http://dx.doi.org/10.1145/361604.361612}
-  {\path{doi:10.1145/361604.361612}}.
+\bibitem{awodey2012inductive}
+Steve Awodey, Nicola Gambino, and Kristina Sojakova.
+\newblock Inductive types in homotopy type theory.
+\newblock In {\em Proceedings of the 2012 27th Annual IEEE/ACM Symposium on
+  Logic in Computer Science}, pages 95--104. IEEE Computer Society, 2012.
+
+\bibitem{basoldhigher}
+Henning Basold, Herman Geuvers, and Niels van~der Weide.
+\newblock Higher inductive types in programming.
+
+\bibitem{bauer2016hott}
+Andrej Bauer, Jason Gross, Peter~LeFanu Lumsdaine, Mike Shulman, Matthieu
+  Sozeau, and Bas Spitters.
+\newblock The hott library: A formalization of homotopy type theory in coq.
+\newblock {\em arXiv preprint arXiv:1610.04591}, 2016.
+
+\bibitem{bezem2014model}
+Marc Bezem, Thierry Coquand, and Simon Huber.
+\newblock A model of type theory in cubical sets.
+\newblock In {\em 19th International Conference on Types for Proofs and
+  Programs (TYPES 2013)}, volume~26, pages 107--128, 2014.
+
+\bibitem{cohen2016cubical}
+Cyril Cohen, Thierry Coquand, Simon Huber, and Anders M{\"o}rtberg.
+\newblock Cubical type theory: a constructive interpretation of the univalence
+  axiom.
+\newblock {\em arXiv preprint arXiv:1611.02108}, 2016.
+
+\bibitem{doorn2016constructing}
+Floris~van Doorn.
+\newblock Constructing the propositional truncation using non-recursive hits.
+\newblock In {\em Proceedings of the 5th ACM SIGPLAN Conference on Certified
+  Programs and Proofs}, pages 122--129. ACM, 2016.
+
+\bibitem{dybjer1994inductive}
+Peter Dybjer.
+\newblock Inductive families.
+\newblock {\em Formal aspects of computing}, 6(4):440--465, 1994.
+
+\bibitem{dybjer2003induction}
+Peter Dybjer and Anton Setzer.
+\newblock Induction--recursion and initial algebras.
+\newblock {\em Annals of Pure and Applied Logic}, 124(1-3):1--47, 2003.
+
+\bibitem{kraus2014general}
+Nicolai Kraus.
+\newblock The general universal property of the propositional truncation.
+\newblock {\em arXiv preprint arXiv:1411.2682}, 2014.
+
+\bibitem{kraus2016constructions}
+Nicolai Kraus.
+\newblock Constructions with non-recursive higher inductive types.
+\newblock In {\em Proceedings of the 31st Annual ACM/IEEE Symposium on Logic in
+  Computer Science}, pages 595--604. ACM, 2016.
+
+\bibitem{mac2013categories}
+Saunders Mac~Lane.
+\newblock {\em Categories for the working mathematician}, volume~5.
+\newblock Springer Science \& Business Media, 2013.
+
+\bibitem{sojakova2015higher}
+Kristina Sojakova.
+\newblock Higher inductive types as homotopy-initial algebras.
+\newblock In {\em ACM SIGPLAN Notices}, volume~50, pages 31--42. ACM, 2015.
+
+\bibitem{hottbook}
+The {Univalent Foundations Program}.
+\newblock {\em Homotopy Type Theory: Univalent Foundations of Mathematics}.
+\newblock \url{https://homotopytypetheory.org/book}, Institute for Advanced
+  Study, 2013.
 
 \end{thebibliography}
