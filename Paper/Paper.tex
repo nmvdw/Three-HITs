@@ -12,7 +12,7 @@
 \bibliographystyle{plainurl}% the recommended bibstyle
 
 % Author macros::begin %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{The Three-HIT Theorem\footnote{This work was partially supported by someone.}}
+\title{The Three-HIT Theorem\footnote{This work was partially supported by COST Action CA15123.}}
 \titlerunning{The Three-HIT Theorem} %optional, in case that the title is too long; the running title should fit into the top page column
 
 %% Please provide for each author the \author and \affil macro, even when authors have the same affiliation, i.e. for each author there needs to be the  \author and \affil macros
@@ -24,10 +24,10 @@
   \texttt{nweide@cs.ru.nl}}
 \authorrunning{A. Bauer and N. van der Weide} %mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et. al.'
 
-\Copyright{John Q. Open and Joan R. Access}%mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
+%\Copyright{Andrej Bauer and Niels van der Weide}%mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
 
-\subjclass{Dummy classification -- please refer to \url{http://www.acm.org/about/class/ccs98-html}}% mandatory: Please choose ACM 1998 classifications from http://www.acm.org/about/class/ccs98-html . E.g., cite as "F.1.1 Models of Computation". 
-\keywords{Dummy keyword -- please provide 1--5 keywords}% mandatory: Please provide 1-5 keywords
+\subjclass{F.4.1 Mathematical Logic}% mandatory: Please choose ACM 1998 classifications from http://www.acm.org/about/class/ccs98-html . E.g., cite as "F.1.1 Models of Computation". 
+\keywords{homotopy type theory, higher inductive types, category theory}% mandatory: Please provide 1-5 keywords
 % Author macros::end %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Editor-only macros:: begin (do not touch as author)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -104,49 +104,52 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent convallis orci
  \end{abstract}
 
 \section{Introduction}
-Higher inductive types extend normal inductive types by allowing constructors for equations as well rather than just for the points.
-Numerous examples and definitions of higher inductive types have been given in the literature \cite{altenkirch2016quotient,awodey2012inductive,basoldhigher,sojakova2015higher,hottbook}, but a definition with a good metatheory remains to be given.
-As a step towards that goal, we simplify the definition given in \cite{basoldhigher} bringing it closer to the intuition and the meaning.
+Higher inductive types (HITs) extend normal inductive types by allowing constructors for both points and paths, rather than just for the points.
+While inductive types are freely generated from a signature, a higher inductive type is freely generated from a signature with equations.
+Numerous examples and definitions of such types have been given in the literature \cite{altenkirch2016quotient,awodey2012inductive,basoldhigher,sojakova2015higher,hottbook}, but a definition with a good metatheory remains to be given.
+As a step towards that goal, we simplify the definition given in \cite{basoldhigher} bringing it closer to the intuition and the intended meaning.
 
 Philosophically, one sees an inductive type as a type `which is built step by step'.
 One starts with the nonrecursive constructors, and then at each step new terms are added by applying the recursive constructors to the previously built terms.
-This is explained by a theorem which says that inductive types are initial algebras for a functor \cite{dybjer1994inductive,dybjer2003induction} and how these algebras are obtained \cite{adamek1974free}.
+This is explained by a theorem which says that inductive types are initial algebras for a functor \cite{dybjer1994inductive,dybjer2003induction} and another one about how these algebras are obtained \cite{adamek1974free}.
 For higher inductive types one would expect a similar result which explains philosophically what they are.
 The only difference between higher inductive types and normal inductive types is that during the construction of higher inductive types several identifications are made which are described by the path constructors.
 
 The goal of this paper is to show that the higher inductive types defined in \cite{basoldhigher} can be generated from the interval, homotopy pushouts and colimits, and that formally justifies this intuition on higher inductive types, 
 Also, this generalizes the results in \cite{doorn2016constructing,kraus2014general,kraus2016constructions} where the result is showed for truncations.
-With this result the metatheory of higher inductive types could be simplified significantly, because rather than a general class, one only needs to check for three types.
+With this result the metatheory of higher inductive types could be simplified significantly, because rather than a general class, one only needs to check metatheoretical properties for three types.
 
 In Section \ref{sec:prelims} we shall discuss some of the required notions for this paper.
-More concretely, we recall the definition of a higher inductive, and show the interval, the pushout, and the homotopy colimit.
+More concretely, we recall the syntax of higher inductive types, and as examples we give the interval, the homotopy pushout, and colimit.
 Next we define the approximating sequence of a higher inductive type in Section \ref{sec:approximator}, and in Section \ref{sec:rules} we show that the colimit of this sequence satisfies the rules of the given HIT.
 For this we need some lemmata which are proved in Section \ref{sec:Lemmata}.
 
 \section{Preliminaries}
 \label{sec:prelims}
 Let us briefly recall the scheme of higher inductive types which we shall use \cite{basoldhigher}.
-First of all, we need polynomial functors.
+First of all, we need \emph{polynomial functors}.
 \begin{definition}
 Let $X$ be a variable.
 Then a \emph{polynomial} is given by the following grammar.
 \[
-F, G ::= A : \Type \ | \ X \ | \ F \times G \ | \ F + G
+F, G ::= B : \Type \ | \ X \ | \ F \times G \ | \ F + G
 \]
 \end{definition}
-A possible extension would be to use arbitrary containers as in \cite{abbott2005containers}, but we shall refrain to do so
-When we tried to do the proof with that extension, we needed the axiom of choice which does not hold in general in type theory.
+A possible extension would be to use arbitrary containers as in \cite{abbott2005containers}, but we shall refrain to do so.
+With that extension the given proof requires the axiom of choice which generally does not hold in type theory.
 One can prove that polynomials are functors, and that given a type family $Y : T \rightarrow \Type$ and a polynomial $F$, we get a lift $\bar{F} : F \> T \rightarrow \Type$.
 We will write $F \> f$ to denote the application of a polynomial $F$ to a map $f$.
+Also, given $f : \prod (x : T), Y \> x$, one can define $\bar{F} \> f : \prod (x : H \> T), \bar{H} \> Y \> x$.
+Precise definitions of these are given in \cite{basoldhigher}.
 
 Next we define the notion of a constructor term.
 \begin{definition}
-Given are functions $c_i : H_i \> T \rightarrow T$ for $i = 1, \ldots, k$.
-Then we say $t$ is a \emph{constructor term} over the $c_i$ if we can find polynomials $F$ and $G$ such that $x : F \> T \Vdash t : G \> T$ can be derived using the following rules.
+Given are functions $c : A \> T \rightarrow T$.
+Then we say $t$ is a \emph{constructor term} over $c$ if we can find polynomials $F$ and $G$ such that $x : F \> T \Vdash t : G \> T$ can be derived using the following rules.
 \begin{gather*}
-	\AxiomC{$t : A$}
-	\AxiomC{$T$ does not occur in $A$}
-	\BinaryInfC{$x:F \> T \Vdash t : A$}
+	\AxiomC{$t : B$}
+	\AxiomC{$T$ does not occur in $B$}
+	\BinaryInfC{$x:F \> T \Vdash t : B$}
 	\bottomAlignProof
 	\DisplayProof 
 	 \quad
@@ -155,8 +158,8 @@ Then we say $t$ is a \emph{constructor term} over the $c_i$ if we can find polyn
 	\bottomAlignProof
 	\DisplayProof
 	\quad
-	\AxiomC{$x : F \> T \Vdash r : H_i \> T$}
-	\UnaryInfC{$x : F \> T \Vdash c_i \> r : T$}
+	\AxiomC{$x : F \> T \Vdash r : A \> T$}
+	\UnaryInfC{$x : F \> T \Vdash c \> r : T$}
 	\bottomAlignProof
 	\DisplayProof
 	\\[7pt]
@@ -182,6 +185,7 @@ Then we say $t$ is a \emph{constructor term} over the $c_i$ if we can find polyn
 
 Using constructor terms we give the following scheme of higher inductive types.
 \begin{definition}
+\label{def:hit}
 A \emph{higher inductive type} is defined according to the following scheme
 \lstset{language=Coq}
 \begin{lstlisting}
@@ -194,7 +198,7 @@ where $A$ and each $B_i$ are polynomials, and each $t_i$ and $r_i$ are construct
 
 Before we can give the rules for higher inductive types, we need to define the lift of a constructor term.
 \begin{definition}
-Given is a constructor $c : A \> H \rightarrow H$, a type family $Y : H \rightarrow \Type$, and a term
+Given are a constructor $c : A \> H \rightarrow H$, a type family $Y : H \rightarrow \Type$, and a term
 \[
  \vdash f : \prod (x: A \> H), \bar{A} \> Y \> x \rightarrow  Y(c \> x).
 \]
@@ -213,7 +217,8 @@ by induction in $r$ as follows.
 	\end{align*}
 \end{definition}
 
-The introduction rules for $H$ are
+With all these notions we can give the introduction, elimination and computation rules of higher inductive types.
+The introduction rules for $H$ as given in Definition \ref{def:hit} are
 \[
 c : A \> H \rightarrow H,
 \]
@@ -233,15 +238,16 @@ We also have an elimination rule for which we use the lifting of constructor ter
 Let us abbreviate $H\frec(f, q_1, \ldots, q_n)$ by $H\frec$.
 The type $H$ also has computation rules for each point $t : A \> H$
 \begin{equation*}
-H\frec \> (c_i \> t) \equiv f_i \> t \> (A \> H\frec \> t),
+H\frec \> (c_i \> t) \equiv f_i \> t \> (\bar{A} \> H\frec \> t),
 \end{equation*}
 and for each $a : B_i \> H$
 \begin{equation*}
-\apd \> H\frec \> (p_j \> a) \equiv q_j \> a \> (\bar{B}_i \> H\frec \> a.
+\apd \> H\frec \> (p_j \> a) \equiv q_j \> a \> (\bar{B}_i \> H\frec \> a).
 \end{equation*}
+Note that these equalities are definitional rather than propositional.
 
 Let us finish by defining some examples of higher inductive types which will be used a lot in this paper.
-The first would be the interval
+The first one would be the interval
 \lstset{language=Coq}
 \begin{lstlisting}
 Inductive $I^1$ :=
@@ -273,8 +279,8 @@ Inductive $\hocolim$ $(F : \mathbb{N} \rightarrow \Type)$ $(f : \prod (n : \math
 
 \section{The Approximator}
 \label{sec:approximator}
-Let us assume that we some higher inductive type $H$ is given.
-In order to construct $H$ as a colimit, we first need to give how the approximations in the colimit are given, and for that we define the \emph{approximator}.
+Let us assume that some higher inductive type $H$ is given.
+In order to construct $H$ as a colimit, we first need to give the approximations in the colimit, and for that we define the \emph{approximator}.
 
 Before giving the definition, let us think about how it should be given.
 By Ad\'amek's theorem, every inductive type can be given as a colimit.
@@ -291,8 +297,9 @@ At every step we formally add for each $x : X$ a successor $S_C \> x$, and we ad
 Repeatedly applying this construction to the empty type $\zero$ gives the natural numbers $\mathbb{N}$.
 
 For higher inductive types one would like to do a similar construction.
-However, since extra equalities might be present in the higher inductive type, several tweaks need to be made to the construction.
-Rather than just adding points at every step, identifications need to be made as well.
+The first difference is that instead of starting with nothing and adding each constructor at every step, we start with the nonrecursive constructors, and add recursive constructors at every step.
+Also, since extra equalities might be present in the higher inductive type, we need to make identifications during the construction.
+Rather than just adding points at every step, we also need to glue the right paths.
 
 To understand what should be done more precisely, let us consider an example.
 \lstset{language=Coq}
@@ -302,23 +309,23 @@ Inductive $\mathbb{N}_2$ :=
 | $S$ : $\mathbb{N}_2 \rightarrow \mathbb{N}_2$
 | $p$ : $S(S \> 0) = 0$
 \end{lstlisting}
-The first approximation is the empty type, and after that we add a constructor for 0 to obtain the first approximation.
-After the third step we found inhabitants $0$, $S \> 0$, and $S(S \> 0)$ in the approximation $F(3)$, and now we can make the first identification.
-At this step we can do a homotopy pushout
+The first approximation just has a constructor $0$, and after that we add a constructor for $S \> 0$ to obtain the second approximation.
+In the third approximation, which we call $F \> 3$, we found inhabitants $0$, $S \> 0$, and $S(S \> 0)$, and now we can make the first identification.
+To do so, we take the following homotopy pushout
 \[
 \xymatrix
 {
 	\one + \one \ar[d]_{0 + S(S \> 0)} \ar[r]^-{\delta} & I^1 \ar[d]\\
-	F(3) \ar[r] & F'(3)
+	F \> 3\ar[r] & P \> 3
 }
 \]
-to obtain the fixed third approximation $F'(3)$, and we continue our construction with that.
-To glue in $F \> n$, we need to use the elements from $F(n-2)$.
-So, the approximator $F$ the parameter should be one of the previous approximations of which the identifications can be taken.
+to obtain the actual third approximation $P \> 3$, and we continue our construction with that one.
+Note that to glue during the $n$th step, we need refer to elements from the $(n-2)$th step.
+So, in order to do the identification of the $n$th step, one needs to refer back to a previous approximation.
 
-Note that one always have to go back a fixed number of steps due to the usage of constructor terms.
+Note that one always has to go back a fixed number of steps due to the usage of constructor terms.
 By extending the syntax, one can also think of examples where one needs to go back an arbitrary amount of steps.
-For that we consider the following example.
+For that, we consider the following example.
 \lstset{language=Coq}
 \begin{lstlisting}
 Inductive $\mathbb{N}_2$ :=
@@ -330,7 +337,7 @@ This example might seem like it is allowed in the syntax, but it is not.
 The term $S^n$ is defined as a polymorphic function which needs the type as argument, and that is not allowed with constructor terms.
 In this extension the construction will be more complicated, and the construction is not predicative, so this will not be considered in this paper.
 
-Let us make this idea more precise, and for that we start with a higher inductive type which is given as follows.
+Let us make this idea formal, and for that we start with a higher inductive type which is given as follows.
 \lstset{language=Coq}
 \begin{lstlisting}[label={lst:HIT}]
 Inductive $H$ :=
@@ -338,37 +345,52 @@ Inductive $H$ :=
 | $c_{\rec}$ : $A_{\rec} \> H \rightarrow H$
 | $p_i$ : $\prod (x : B_i \> H), t_i = r_i$ $\quad (i = 1, \ldots, m)$
 \end{lstlisting}
-Note that the nonrecursive and recursive point constructor are separated in this definition.
-Our first approximation will be given using the nonrecursive constructors.
+Note that the nonrecursive and recursive point constructors are separated in this definition.
+The first approximation will be given using the nonrecursive constructors.
 \lstset{language=Coq}
 \begin{lstlisting}
 Inductive $H_{\nonrec}$ :=
 | $c_{\nonrec}'$ : $A_{\nonrec} \rightarrow H_{\nonrec}$
 \end{lstlisting}
 
-Next we need to generate the further approximations, and that will be done in two steps.
-First, we note that using the recursive constructors we can extend a type by using its inhabitants as the arguments.
+Next we need to generate the other approximations, and that will be done in two steps.
+First, we note that types can be extended with a recursive constructor.
 \lstset{language=Coq}
 \begin{lstlisting}
 Inductive $H_{\rec}$ $(P : \Type)$:=
 | $c_{\rec}'$ : $A_{\rec} \> P \rightarrow H_{\rec} \> P$
 \end{lstlisting}
 To do the identifications, we need to be able to interpret the constructor terms.
-For that we realize that each constructor terms uses each constructor only a finite amount of times, and thus there is a maximum number $n$ of times a constructor is used.
-From this we can define the \emph{approximator}.
-With this we can define
+For that we use that each constructor terms only uses each constructor  a finite amount of times, and thus there is a maximum number $n \geq 1$ of times a constructor is used.
+In order to define the approximator, we start with a type $H_{\Con}^n$ in which all the constructor terms can be interpreted.
 \lstset{language=Coq}
 \begin{lstlisting}
-Inductive $H_{\Con}$ $(P : \Type)$:=
+Inductive $H_{\Con}^n$ $(P : \Type)$:=
 | $\term$ : $P + H_{\rec} \> P + \ldots + H_{\rec}^n \> P \rightarrow H_{\Con} \> P$
 \end{lstlisting}
 
+If $n$ is clear from the context, then we shall not write it down.
+
 \begin{lemma}
-A constructor term $t_i$ using a variable $x : B_i \> P$ with depth at most $n$ induces a map $B_i \> P \rightarrow H_{\Con}$.
+Suppose, we have a constructor term $t$ such that $x : F \> T \Vdash t : G \>T$ which uses at most $n$ constructors, and that we have a map $c_{\nonrec}' : A_{\nonrec} \rightarrow P$.
+Then $t$ induces a map $\overline{t} : F \> P \rightarrow G \> H_{\Con}^n$ by replacing the constructors $c_{\nonrec}$ and $c_{\rec}$ by $c_{\nonrec}'$ and $c_{\rec}'$ respectively.
 \end{lemma}
 
+\begin{proof}
+We use induction on the form of the constructor term.
+\begin{itemize}
+	\item $t = a$ with $a : B$ and $B$ does not use $T$. Then we define $\overline{t} \> y = a$.
+	\item $t = x$ with $x : F \> T$. Then we define $\overline{t} \> y = \inn_P y$.
+	\item $t = c_{\nonrec} a$ with $a : A_{\nonrec}$. Then we define $\overline{t} \> y = c_{\nonrec}' a$.
+	\item $t = c_{\rec} r$ with $r : A_{\rec} \> T$ where $r$ uses at most $n-1$ constructors. 
+			  By induction we have a map $\overline{r} : F \> P \rightarrow A_{\rec} \> H_{\Con}^{n-1}$.
+			  Then we define $\overline{t} \> y = c_{\rec}' (\overline{r} \> x)$.
+	\item For the rules for the projection, pairing and injection it is trivial. \qedhere
+\end{itemize}
+\end{proof}
+
 \begin{definition}
-Let a higher inductive type $H$ be given as before, and let the types $H_{\Con}$ be defined as before.
+Let a higher inductive type $H$ be given as before, and let the type $H_{\Con}$ be defined as before.
 Then we define the \emph{approximator} $H_{\Approx}$, which has a parameter $P$, of $H$ the following pushout
 \[
 \xymatrix
@@ -384,7 +406,7 @@ Note that this can be written as the homotopy pushout.
 In the setting as described, we can define a sequence of approximations to $H$ as follows
 \begin{align*}
 F \> 0 &= H_{\nonrec},\\
-F(n+1) &= H_{\Approx}(H \> n) \qedhere
+F(n+1) &= H_{\Approx}(F \> n) \qedhere
 \end{align*}
 \end{definition}
 
