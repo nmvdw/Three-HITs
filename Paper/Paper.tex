@@ -24,7 +24,7 @@
   \texttt{nweide@cs.ru.nl}}
 \authorrunning{A. Bauer and N. van der Weide} %mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et. al.'
 
-%\Copyright{Andrej Bauer and Niels van der Weide}%mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
+\Copyright{Andrej Bauer and Niels van der Weide}%mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
 
 \subjclass{F.4.1 Mathematical Logic}% mandatory: Please choose ACM 1998 classifications from http://www.acm.org/about/class/ccs98-html . E.g., cite as "F.1.1 Models of Computation". 
 \keywords{homotopy type theory, higher inductive types, category theory}% mandatory: Please provide 1-5 keywords
@@ -107,28 +107,28 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent convallis orci
  \end{abstract}
 
 \section{Introduction}
-Higher inductive types (HITs) extend normal inductive types by allowing constructors for both points and paths, rather than just for the points.
-While inductive types are freely generated from a signature, a higher inductive type is freely generated from a signature with equations.
-Numerous examples and definitions of such types have been given in the literature \cite{altenkirch2016quotient,awodey2012inductive,basoldhigher,sojakova2015higher,hottbook}, but a definition with a good metatheory remains to be given.
+Higher inductive types (HITs) generalize normal inductive types by allowing constructors for both points and paths, rather than just for the points.
+While an inductive type is freely generated from a signature, a higher inductive type is freely generated from a signature with some equations.
+Numerous examples and definitions of such types have already been given in the literature \cite{altenkirch2016quotient,awodey2012inductive,basoldhigher,sojakova2015higher,hottbook}, but a definition with a good metatheory is still lacking.
 As a step towards that goal, we simplify the definition given in \cite{basoldhigher} bringing it closer to the intuition and the intended meaning.
 
 Philosophically, one sees an inductive type as a type `which is built step by step'.
 One starts with the nonrecursive constructors, and then at each step new terms are added by applying the recursive constructors to the previously built terms.
 This is explained by a theorem which says that inductive types are initial algebras for a functor \cite{dybjer1994inductive,dybjer2003induction} and another one about how these algebras are obtained \cite{adamek1974free}.
-For higher inductive types one would expect a similar result which explains philosophically what they are.
-The only difference between higher inductive types and normal inductive types is that during the construction of higher inductive types several identifications are made which are described by the path constructors.
+For higher inductive types one would expect a similar result which explains how they are constructed.
+However, since equations are also allowed in the definition of a higher inductive type, one would expect that during the construction identifications are made by gluing paths.
 
-The goal of this paper is to show that the higher inductive types defined in \cite{basoldhigher} can be generated from the interval, homotopy pushouts and colimits, and that formally justifies this intuition on higher inductive types.
+The goal of this paper is to formally justify this idea by showing that the higher inductive types defined in \cite{basoldhigher} can be generated from the interval, homotopy pushout and colimit.
 More concretely, we will prove the following theorem.
 \begin{theorem}[Three-HITs Theorem]
 \label{thm:three-hit}
-In Martin-L\"of Type Theory extended with an interval object, homotopy pushouts and colimits, we can define for each higher inductive type as in \cite{basoldhigher} a tye with the same introduction, elimination and computation rules.
+In Martin-L\"of Type Theory extended with an interval object, homotopy pushouts and colimits, we can define for each higher inductive type from \cite{basoldhigher} a type with the same introduction, elimination and computation rules.
 \end{theorem}
 Also, this generalizes the results in \cite{doorn2016constructing,kraus2014general,kraus2016constructions} where the result is showed for truncations.
-With this result the metatheory of higher inductive types could be simplified significantly, because rather than a general class, one only needs to check metatheoretical properties for three types.
+With this result the metatheory of higher inductive types could be simplified significantly, because rather than a general class, one only needs to check metatheoretical properties for three HITs.
 
-In Section \ref{sec:prelims} we shall discuss some of the required notions for this paper.
-More concretely, we recall the syntax of higher inductive types, and as examples we give the interval, the homotopy pushout, and colimit.
+In Section \ref{sec:prelims} we shall recall some of the required material for this paper.
+More concretely, we give the syntax of higher inductive types, and using that we define the interval, homotopy pushout, and colimit.
 Next we define the approximating sequence of a higher inductive type in Section \ref{sec:approximator}, and in Section \ref{sec:rules} we show that the colimit of this sequence satisfies the rules of the given HIT.
 For this we need some lemmata which are proved in Section \ref{sec:Lemmata}.
 
@@ -147,12 +147,12 @@ A possible extension would be to use arbitrary containers as in \cite{abbott2005
 With that extension the given proof requires the axiom of choice which generally does not hold in type theory.
 One can prove that polynomials are functors, and that given a type family $Y : T \rightarrow \Type$ and a polynomial $F$, we get a lift $\bar{F} : F \> T \rightarrow \Type$.
 We will write $F \> f$ to denote the application of a polynomial $F$ to a map $f$.
-Also, given $f : \prod (x : T), Y \> x$, one can define $\bar{F} \> f : \prod (x : H \> T), \bar{H} \> Y \> x$.
+Also, given a dependent function $f : \prod (x : T), Y \> x$, one can define $\bar{F} \> f : \prod (x : H \> T), \bar{H} \> Y \> x$.
 Precise definitions of these are given in \cite{basoldhigher}.
 
 Next we define the notion of a constructor term.
 \begin{definition}
-Given are functions $c : A \> T \rightarrow T$.
+Given is a function $c : A \> T \rightarrow T$.
 Then we say $t$ is a \emph{constructor term} over $c$ if we can find polynomials $F$ and $G$ such that $x : F \> T \Vdash t : G \> T$ can be derived using the following rules.
 \begin{gather*}
 	\AxiomC{$t : B$}
@@ -206,14 +206,11 @@ where $A$ and each $B_i$ are polynomials, and each $t_i$ and $r_i$ are construct
 
 Before we can give the rules for higher inductive types, we need to define the lift of a constructor term.
 \begin{definition}
-Given are a constructor $c : A \> H \rightarrow H$, a type family $Y : H \rightarrow \Type$, and a term
-\[
- \vdash f : \prod (x: A \> H), \bar{A} \> Y \> x \rightarrow  Y(c \> x).
-\]
-For a constructor term $F \> H \Vdash r : G \> H$ we define the \emph{lift $\dak{r}$ of $r$} with type
-\[
- x : F \> H, h_x : \bar{F} \> Y \> x \vdash \dak{r} : \bar{G} \> Y \> r
-\]
+Given is a constructor $c : A \> H \rightarrow H$, a type family $Y : H \rightarrow \Type$, and a term $f : \prod (x: A \> H), \bar{A} \> Y \> x \rightarrow  Y(c \> x)$.
+For a constructor term $F \> H \Vdash r : G \> H$ we define the \emph{lift $\dak{r}$ of $r$} with type 
+$
+x : F \> H, h_x : \bar{F} \> Y \> x \vdash \dak{r} : \bar{G} \> Y \> r
+$
 by induction in $r$ as follows.
 	\begin{align*}
 		\dak{t} & := t
@@ -227,12 +224,16 @@ by induction in $r$ as follows.
 
 With all these notions we can give the introduction, elimination and computation rules of higher inductive types.
 The introduction rules for $H$ as given in Definition \ref{def:hit} are
+\begin{minipage}{0.6\textwidth}
 \[
-c : A \> H \rightarrow H,
+c : A \> H \rightarrow H
 \]
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
 \[
 p_i : \prod (x : B_i \> H), t_i = r_i.
 \]
+\end{minipage}
 We also have an elimination rule for which we use the lifting of constructor terms.
 \begin{equation*}
 	\AxiomC{$\vdash Y : H \rightarrow \Type$}
@@ -254,7 +255,7 @@ and for each $a : B_i \> H$
 \end{equation*}
 Note that these equalities are definitional rather than propositional.
 
-Let us finish by defining some examples of higher inductive types which will be used a lot in this paper.
+Let us now give some examples of higher inductive types which will be crucial in this paper.
 The first one would be the interval
 \lstset{language=Coq}
 \begin{lstlisting}
@@ -266,7 +267,7 @@ Inductive $I^1$ :=
 Note that for every type $A$ with inhabitants $x$ and $y$ we have a path $x = y$ iff we have a map $I^1$ to $A$ sending 0 and 1 to $x$ and $y$ respectively.
 Let $\one$ be the unit type with point $\pt$.
 Then we can define maps $\delta_0, \delta_1 : \one \rightarrow$ sending $\pt$ to 0 and 1 respectively.
-Also, we define $\delta : \one + \one \rightarrow I^1$ by $\delta_0 + \delta_1$.
+Also, we define the boundary inclusion $\delta : \one + \one \rightarrow I^1$ by $\delta_0 + \delta_1$.
 
 Next we define the homotopy pushout.
 \lstset{language=Coq}
@@ -277,7 +278,7 @@ Inductive $\hpushout$ $(A, B, C : \Type)$ $(f : A \rightarrow B)$ $(g : A \right
 | $\glue$ : $\prod (a : A), \inl (f \> a) = \inr (g \> a)$
 \end{lstlisting}
 Note the similarities with the construction of the pushout.
-Also, we can define the homotopy colimit as a higher inductive type in much the same way.
+Lastly, we can define the homotopy colimit as a higher inductive type in much the same way.
 \lstset{language=Coq}
 \begin{lstlisting}
 Inductive $\hocolim$ $(F : \mathbb{N} \rightarrow \Type)$ $(f : \prod (n : \mathbb{N}, F \> n \rightarrow F(n+1)))$ :=
@@ -318,34 +319,35 @@ Inductive $\mathbb{N}_2$ :=
 | $p$ : $S(S \> 0) = 0$
 \end{lstlisting}
 The first approximation just has a constructor $0$, and after that we add a constructor for $S \> 0$ to obtain the second approximation.
-In the third approximation, which we call $F \> 3$, we found inhabitants $0$, $S \> 0$, and $S(S \> 0)$, and now we can make the first identification.
+In the third approximation, which we call $F' \> 3$, we found inhabitants $0$, $S \> 0$, and $S(S \> 0)$, and now we can make the first identification.
 To do so, we take the following homotopy pushout
 \[
 \xymatrix
 {
 	\one + \one \ar[d]_{0 + S(S \> 0)} \ar[r]^-{\delta} & I^1 \ar[d]\\
-	F \> 3\ar[r] & P \> 3
+	F' \> 3\ar[r] & F \> 3
 }
 \]
-to obtain the actual third approximation $P \> 3$, and we continue our construction with that one.
+to obtain the actual third approximation $F \> 3$, and we continue our construction with that one.
 Note that to glue during the $n$th step, we need refer to elements from the $(n-2)$th step.
 So, in order to do the identification of the $n$th step, one needs to refer back to a previous approximation.
 
 Note that one always has to go back a fixed number of steps due to the usage of constructor terms.
 By extending the syntax, one can also think of examples where one needs to go back an arbitrary amount of steps.
-For that, we consider the following example.
+This happens in the following example.
 \lstset{language=Coq}
 \begin{lstlisting}
-Inductive $\mathbb{N}_2$ :=
-| $0$ : $\mathbb{N}_2$
-| $S$ : $\mathbb{N}_2 \rightarrow \mathbb{N}_2$
-| $p$ : $\prod (n : \mathbb{N}), S^n \> 0 = 0$
+Inductive $H$ :=
+| $c$ : $H$
+| $f$ : $H \rightarrow H$
+| $p$ : $\prod (n : \mathbb{N}), f^n \> 0 = 0$
 \end{lstlisting}
-This example might seem like it is allowed in the syntax, but it is not.
-The term $S^n$ is defined as a polymorphic function which needs the type as argument, and that is not allowed with constructor terms.
-In this extension the construction will be more complicated, and the construction is not predicative, so this will not be considered in this paper.
+This example might seem like it is permitted by the syntax, but it is not.
+The function $f^n$ is defined as a polymorphic map, and using it requires the type $H$ as an argument.
+In constructor terms one cannot use the type, and hence this definition is not allowed
+An extension with such types will make the construction more complicated, and thus they will not be considered in this paper.
 
-Let us make this idea formal, and for that we start with a higher inductive type which is given as follows.
+Let us make this idea formal, and for that we start with a higher inductive type given as follows.
 \lstset{language=Coq}
 \begin{lstlisting}[label={lst:HIT}]
 Inductive $H$ :=
@@ -374,7 +376,7 @@ In order to define the approximator, we start with a type $H_{\Con}^n$ in which 
 \lstset{language=Coq}
 \begin{lstlisting}
 Inductive $H_{\Con}^n$ $(P : \Type)$:=
-| $\term$ : $P + H_{\rec} \> P + \ldots + H_{\rec}^n \> P \rightarrow H_{\Con} \> P$
+| $\term$ : $P + H_{\rec} \> P + \ldots + H_{\rec}^n \> P \rightarrow H_{\Con}^n \> P$
 \end{lstlisting}
 
 If $n$ is clear from the context, then we shall not write it down.
@@ -399,20 +401,21 @@ We use induction on the form of the constructor term.
 
 Now we have enough to define the approximator.
 During the construction one also needs to pay attention to coherency.
-For example, in $P$ we have $c_{\nonrec}$, so in $H_{\Approx} \> P$ we might have duplicates of some terms.
+For example, in $P$ we have terms using $c_{\rec}$ at most $k$ times, so in $H_{\Approx} \> P$ we have duplicates of terms using $c_{\rec}$ less than $k$ times..
 By tweaking the pushout a little bit, one can easily solve these coherency problems.
 
 \begin{definition}
 Let a higher inductive type $H$ be given as before, and let the type $H_{\Con}$ be defined as before.
-Then we define the \emph{approximator} $H_{\Approx}$, which has a parameters $P, Q$ and $f : Q \rightarrow P$, of $H$ the following pushout
+Then we define the \emph{approximator} $H_{\Approx}$, which has a parameters $P, Q$ and $f : H_{\Con} \> Q \rightarrow P$, of $H$ the following pushout
 \[
 \xymatrix
 {
-	((\one + \one) \times B_i \> P) + H_{\Con} \> Q \ar[d]_{\overline{t_i} + \overline{r_i} + H_{\Con} \> f} \ar[rr]^-{\delta + \inl} & & (I^1 \times B_i \> P) + H_{\Approx} Q  \ar[d]^{\inr}\\
-	H_{\Con} \> P \ar[rr]_{\inl} & & H_{\Approx} \> P
+	((\one + \one) \times B_i \> P) + H_{\Con} \> Q \ar[d]_{\overline{t_i} + \overline{r_i} + H_{\Con}(f \circ \inn_1)} \ar[rr]^-{\delta + f} & & (I^1 \times B_i \> P) + P  \ar[d]^{\inr}\\
+	H_{\Con} \> P \ar[rr]_{\inl} & & H_{\Approx} \> P \> Q \> f
 }
 \]
 Note that this can be written as the homotopy pushout.
+Often we will suppress the maps $f$ from the notation.
 \end{definition}
 
 \begin{definition}
@@ -420,13 +423,13 @@ In the setting as described, we simultaneously define a sequence of approximatio
 \begin{align*}
 F \> 0 &= H_{\nonrec},\\
 F \> 1 &= H_{\Approx} \> (F \> 0) \> \zero \> (\zero\frec (F \> 0))\\
-F(n+2) &= H_{\Approx} \> (F(n+1)) \> (F \> n) \> (f \> n) \qedhere
+F(n+2) &= H_{\Approx} \> (F(n+1)) \> (F \> n) \> \inl \qedhere
 \end{align*}
 For the maps maps $f \> n : F \> n \rightarrow F(n + 1)$, note that we always have the following sequence of maps
 \[
 \xymatrix@1
 {
-	P \ar[r] & H_{\Con} \> P \ar[r] & H_{\Approx} P.
+	P \ar[r] & (I^1 \times B_i \> P) + P \ar[r] & H_{\Approx} P.
 }
 \]
 Taking $P$ to be $F \> n$, then we have $F (n+1) = H_{\Approx} (F \> n)$, and thus the composition gives the map $F \> n \rightarrow F(n + 1)$.
@@ -512,16 +515,16 @@ Hence, it suffices to show that the following diagram commutes.
 \xymatrix
 {
 	H_{\Con}(F \> n) \ar[d]_{H_{\Con} \> (f \> n)} \ar[r]^-{\inl}
-		& H_{\Approx}(F \> n) \ar[d]^{f(n+1)}\\
+		& F(n+1) \ar[d]^{f(n+1)}\\
 	H_{\Con}(F(n+1)) \ar[r]_-{\inl}
-		& H_{\Approx}(F(n+1))
+		& H_{\Approx} \> (F(n+1)) \> (F \> n)
 }
 \]
 Note that $H_{\Approx}(F(n+1)) = F(n+2)$ and $H_{\Approx}(F \> n) = F(n+1)$.
-Hence, this diagram commutes, because of the pushout.
+Hence, this diagram commutes, because of the pushout we used to define $H_{\Approx}$.
 
 Next we need to define the introduction rules for the paths.
-Let us start by making a map $\sum_{i = 1}^m I^1 \times B_i \> (\hocolim \> F \> f) \rightarrow \hocolim \> F \> f$.
+Let us start by making maps $I^1 \times B_i \> (\hocolim \> F \> f) \rightarrow \hocolim \> F \> f$.
 Since homotopy colimits commute with polynomials, it suffices to make a map $\hocolim \> (I^1 \times B_i \> F) \> (I^1 \> B_i \> f)  \rightarrow \hocolim \> F \> f$.
 
 For this we use the eliminator of the homotopy colimit.
@@ -530,20 +533,27 @@ By definition we have the following string of maps
 \[
 \xymatrix
 {
-	I^1 \times B_i \> (F \> n) \ar[rr]^-{\inr} & & F(n+1) \ar[rr]^-{\inc(n+1)} & & \hocolim \> F \> f.
+	I^1 \times B_i \> (F \> n) \ar[r]^-{\inn_1} & I^1 \times B_i \> (F \> n) \ar[r]^-{\inn_1} + F \> n \ar[r]^-{\inr}& F(n+1) \ar[rr]^-{\inc(n+1)} & & \hocolim \> F \> f.
 }
 \]
 Next we need to show that the following diagram commutes.
 \[
 \xymatrix
 {
-	I^1 \times B_i \> (F \> n) \ar[rr]^-{\inr} \ar[d]_{I^1 \times B_i \> (f \> n)} & & F(n+1) \ar[d]^{f(n+1)}\\
-	I^1 \times B_i \> (F(n+1)) \ar[rr]^-{\inr} & & F(n+2)
+	I^1 \times B_i \> (F \> n) \ar[r]^-{\inn_1} \ar[d]_{I^1 \times B_i \> (f \> n)} & I^1 \times B_i \> (F \> n) + F \> n \ar[r]^-{\inr} \ar[d]_{I^1 \times B_i \> (f \> n) + f \> n} & F(n+1) \ar[d]^{f(n+1)}\\
+	I^1 \times B_i \> (F(n+1)) \ar[r]_-{\inn_1} & I^1 \times B_i \> (F(n+1)) + F(n+1) \ar[r]_-{\inr}& F(n+2) 
 }
 \]
-This can be proven by induction on $B_i$, and using the definition of $I^1 \times B_i \> (f \> n)$.
-We can use the path $\refl$.
-All in all, we get a map $p_i : \hocolim \> (I^1 \times B_i \> F) \> (I^1 \times B_i \> f) \rightarrow \hocolim \> F \> f$
+Note that the left diagram commutes.
+For the right diagram we can unpack the definition of $f(n+1)$.
+\[
+\xymatrix
+{
+	I^1 \times B_i \> (F \> n) + F \> n \ar[r]^-{\inr} \ar[d]_{I^1 \times B_i \> (f \> n) + f \> n} & F(n+1) \ar[d]^{f(n+1)} \ar[dl]^{\inn_2}\\
+	I^1 \times B_i \> (F(n+1)) + F(n+1) \ar[r]_-{\inr}& F(n+2) 
+}
+\]
+\textbf{Another coherency which should be added.}
 
 Now we have the following diagram
 \[
@@ -586,20 +596,20 @@ c_{Y, \rec} : \prod (x : A_{\rec} \> \hocolim \> F \> f), \overline{A_{\rec}} \>
 \[
 q_{Y, i} : \prod (x : B_i \> H)(h_x : \overline{B_i} \> Y \> x), \hatt_i =_{p_j \, x} \hatr_j
 \]
-In order to make a map $\prod (x : \hocolim \> F \> f), Y \> x$, we use the induction principle of $\hocolim \> F \> f$, and for that we need to make maps $\prod (x : F \> n), Y(\inc \> n \> x)$.
+In order to make a map $\prod (x : \hocolim \> F \> f), Y \> x$, we use the induction principle of $\hocolim \> F \> f$, and for that we first need to make maps $\prod (x : F \> n), Y(\inc \> n \> x)$.
 
-First we need to make a map $\prod (x : F \> 0), Y(\inc \> 0 \> x)$.
+We start by making a map $\prod (x : F \> 0), Y(\inc \> 0 \> x)$.
 Recall that $F \> 0$ was defined to be $H_{\nonrec}$ which only has a constructor $c'_{\nonrec} : A_{\nonrec} \rightarrow H_{\nonrec}$.
 So, let us assume that we have $a : A_{\nonrec}$.
-Since $c_{\nonrec} \> a = \inc \> 0 \> (c\_{\nonrec} a)$, it suffices to find an inhabitant of $Y(c_{\nonrec} \> a)$, and for that we take $c_{Y, \nonrec} \> a$.
+Since $c_{\nonrec} \> a = \inc \> 0 \> (c_{\nonrec} \> a)$, it suffices to find an inhabitant of $Y(c_{\nonrec} \> a)$, and for that we take $c_{Y, \nonrec} \> a$.
 Hence, we get a map $\prod (x : F \> 0), Y(\inc \> 0 \> x)$.
 
-Now suppose that we have a map $\prod (x : F \> n), Y(\inc \> n \> x)$, and our goal is to make a map $\prod  (x : F(n+1)), Y(\inc \> (n+1) x)$.
+Now suppose that we have a map $\prod (x : F \> n), Y(\inc \> n \> x)$, and our goal is to make a map $\prod  (x : F(n+1)), Y(\inc \> (n+1) \> x)$.
 In order to do so, we will first look at how to extend it to a map $\prod (x : H_{\Con} (F \> n)), Y(\inc \> (n+1) \> (\inl \> x))$.
 
 Let us do this in the general case.
-Suppose that we have $g : P \rightarrow \hocolim \> F \> f$, and that we have $h : \prod (x : P), Y(g \> x)$.
-Our goal is to extended the map into a $h' : \prod (x : H_{\rec} P), Y(c_{Y, \rec} \> x)$, and for that we use $H_{\rec}$ induction.
+Suppose, we have a map $g : P \rightarrow \hocolim \> F \> f$, and that we already constructed $h : \prod (x : P), Y(g \> x)$.
+Our goal is to extended the map into a $h' : \prod (x : H_{\rec} P), Y(c_{Y, \rec} \> x)$, and for that we use $H_{\rec}$-induction.
 Note that for each $c'_{\rec} \> x$ with $x : A_{\rec} \> P$ we have the type $Y(c_{\rec} \> (A_{\rec} \> g \> x))$, and thus we have a type family on $H_{\rec}$.
 Now let $x : A_{\rec} \> P$ and $y : \overline{A_{\rec}} \> Y \> x$ be given.
 Then we need to give an element of the type $Y(c_{\rec} \> (A_{\rec} \> g \> x))$ for which we take

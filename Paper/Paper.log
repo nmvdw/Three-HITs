@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.2.2)  1 MAR 2017 17:24
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.2.2)  2 MAR 2017 12:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1231,7 +1231,12 @@ File: cc-by.pdf Graphic file (type pdf)
  <use cc-by.pdf>
 Package pdftex.def Info: cc-by.pdf used on input line 129.
 (pdftex.def)             Requested size: 39.74274pt x 14.0pt.
+LaTeX Font Info:    Try loading font information for TS1+lmr on input line 129.
 
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/lm/ts1lmr.fd
+File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
 <lipics-logo-bw.pdf, id=59, 591.44762pt x 144.42657pt>
 File: lipics-logo-bw.pdf Graphic file (type pdf)
 
@@ -1256,15 +1261,18 @@ Package microtype Info: Character `029' is missing
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <9> on input line 200.
  [2]
+Overfull \hbox (2.2222pt too wide) in paragraph at lines 225--238
+[]$ $[]$
+ []
+
 Package microtype Info: Character `029' is missing
 (microtype)             in font `T1/lmr/m/sc/9'.
 (microtype)             Ignoring protrusion settings for this character.
- [3] <xymatrix 4x1
-120> <xymatrix 2x1 44> <xymatrix 2x1 44> <xymatrix 2x2 171> [4] [5] <xymatrix
-3x2 193> <xymatrix 3x1 82> <xymatrix 5x1 110> [6] <xymatrix 5x1 151> <xymatrix
-3x2 135> <xymatrix 4x2 327> <xymatrix 2x2 188> <xymatrix 5x1 110> [7]
-<xymatrix 3x2 196> <xymatrix 3x2 165>
-Overfull \hbox (5.67902pt too wide) detected at line 555
+[3] <xymatrix 4x1 120> <xymatrix 2x1 44> <xymatrix 2x1 44> <xymatrix 2x2 171>
+[4] <xymatrix 3x2 193> [5] <xymatrix 3x1 82> <xymatrix 5x1 110> [6] <xymatrix
+5x1 151> <xymatrix 3x2 135> <xymatrix 4x2 327> <xymatrix 2x2 188> <xymatrix
+5x1 198> <xymatrix 3x2 325> [7] <xymatrix 2x2 229> <xymatrix 3x2 165>
+Overfull \hbox (5.67902pt too wide) detected at line 565
  $[]$ 
  []
 
@@ -1279,64 +1287,65 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 ) 
 AED: lastpage setting LastPage
 [11]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 709.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 709.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 719.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 719.
  (./Paper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 709.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 709.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 719.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 719.
 Package rerunfilecheck Info: File `Paper.out' has not changed.
 (rerunfilecheck)             Checksum: 0AA4F6F782969A945CFF3AB3AB3E4EA1;492.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 709.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 719.
  ) 
 Here is how much of TeX's memory you used:
- 16376 strings out of 493117
- 238354 string characters out of 6135434
- 423225 words of memory out of 5000000
- 19217 multiletter control sequences out of 15000+600000
- 213859 words of font info for 230 fonts, out of 8000000 for 9000
+ 16411 strings out of 493117
+ 239254 string characters out of 6135434
+ 423295 words of memory out of 5000000
+ 19246 multiletter control sequences out of 15000+600000
+ 214218 words of font info for 232 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 44i,18n,40p,3235b,1081s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 44i,18n,40p,3235b,1034s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/
-texlive/2014/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2014/t
-exmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2014/texmf-dist/
+texlive/2014/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/20
+14/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2014/texmf-dist/
 fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2014/texmf-dist/fonts/enc/
-dvips/lm/lm-mathex.enc}</usr/local/texlive/2014/texmf-dist/fonts/type1/public/l
-m/lmbsy10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmbsy5.
-pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/
-local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texl
-ive/2014/texmf-dist/fonts/type1/public/lm/lmbx5.pfb></usr/local/texlive/2014/te
-xmf-dist/fonts/type1/public/lm/lmbx6.pfb></usr/local/texlive/2014/texmf-dist/fo
-nts/type1/public/lm/lmbx7.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/p
-ublic/lm/lmbx8.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lm
-bx9.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmbxi10.pfb><
-/usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/loca
-l/texlive/2014/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/
-2014/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2014/texmf
--dist/fonts/type1/public/lm/lmmi5.pfb></usr/local/texlive/2014/texmf-dist/fonts
-/type1/public/lm/lmmi6.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/publ
-ic/lm/lmmi7.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmmi9
-.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/
-local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texliv
-e/2014/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2014/texmf
--dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2014/texmf-dist/fonts/
-type1/public/lm/lmr9.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public
-/lm/lmri10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmss10
-.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></u
-sr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/t
-exlive/2014/texmf-dist/fonts/type1/public/lm/lmsy5.pfb></usr/local/texlive/2014
-/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2014/texmf-dist
-/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2014/texmf-dist/fonts/type
-1/public/lm/lmsy9.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm
-/lmtk10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmtt10.pf
-b></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmtt9.pfb></usr/loc
-al/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr
-/local/texlive/2014/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb><
-/usr/local/texlive/2014/texmf-dist/fonts/type1/public/xypic/xycmat10.pfb></usr/
-local/texlive/2014/texmf-dist/fonts/type1/public/xypic/xycmbt10.pfb>
-Output written on Paper.pdf (11 pages, 618947 bytes).
+dvips/lm/lm-mathex.enc}{/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/lm/l
+m-ts1.enc}</usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmbsy10.pfb
+></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmbsy5.pfb></usr/loc
+al/texlive/2014/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive
+/2014/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2014/texm
+f-dist/fonts/type1/public/lm/lmbx5.pfb></usr/local/texlive/2014/texmf-dist/font
+s/type1/public/lm/lmbx6.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/pub
+lic/lm/lmbx7.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmbx
+8.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmbx9.pfb></usr
+/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmbxi10.pfb></usr/local/te
+xlive/2014/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/local/texlive/201
+4/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2014/texmf-di
+st/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2014/texmf-dist/fonts/t
+ype1/public/lm/lmmi5.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public
+/lm/lmmi6.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmmi7.p
+fb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmmi9.pfb></usr/lo
+cal/texlive/2014/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive
+/2014/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2014/texmf-
+dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2014/texmf-dist/fonts/t
+ype1/public/lm/lmr7.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/
+lm/lmr9.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmri10.pf
+b></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmss10.pfb></usr/lo
+cal/texlive/2014/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texl
+ive/2014/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2014/t
+exmf-dist/fonts/type1/public/lm/lmsy5.pfb></usr/local/texlive/2014/texmf-dist/f
+onts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/
+public/lm/lmsy7.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/l
+msy9.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmtk10.pfb><
+/usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local
+/texlive/2014/texmf-dist/fonts/type1/public/lm/lmtt9.pfb></usr/local/texlive/20
+14/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texliv
+e/2014/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/te
+xlive/2014/texmf-dist/fonts/type1/public/xypic/xycmat10.pfb></usr/local/texlive
+/2014/texmf-dist/fonts/type1/public/xypic/xycmbt10.pfb>
+Output written on Paper.pdf (11 pages, 620826 bytes).
 PDF statistics:
- 389 PDF objects out of 1000 (max. 8388607)
- 327 compressed objects within 4 object streams
+ 392 PDF objects out of 1000 (max. 8388607)
+ 330 compressed objects within 4 object streams
  91 named destinations out of 1000 (max. 500000)
- 48729 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 49241 words of extra memory for PDF output out of 51595 (max. 10000000)
 
