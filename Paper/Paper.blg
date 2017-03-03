@@ -10,45 +10,45 @@ Database file #1: lipics-v2016-sample-article.bib
 Warning--empty journal in basoldhigher
 Warning--empty year in basoldhigher
 Warning--can't use both volume and number fields in sojakova2015higher
-You've used 16 entries,
+You've used 17 entries,
             2849 wiz_defined-function locations,
-            708 strings with 7665 characters,
-and the built_in function-call counts, 7047 in all, are:
-= -- 730
-> -- 245
+            713 strings with 7827 characters,
+and the built_in function-call counts, 7349 in all, are:
+= -- 762
+> -- 259
 < -- 8
-+ -- 91
-- -- 72
-* -- 344
-:= -- 1024
-add.period$ -- 51
-call.type$ -- 16
-change.case$ -- 82
++ -- 96
+- -- 76
+* -- 354
+:= -- 1074
+add.period$ -- 54
+call.type$ -- 17
+change.case$ -- 87
 chr.to.int$ -- 0
-cite$ -- 19
-duplicate$ -- 229
-empty$ -- 655
-format.name$ -- 72
-if$ -- 1818
+cite$ -- 20
+duplicate$ -- 235
+empty$ -- 679
+format.name$ -- 76
+if$ -- 1896
 int.to.chr$ -- 0
-int.to.str$ -- 16
+int.to.str$ -- 17
 missing$ -- 18
-newline$ -- 82
-num.names$ -- 32
-pop$ -- 162
+newline$ -- 87
+num.names$ -- 34
+pop$ -- 168
 preamble$ -- 1
-purify$ -- 68
+purify$ -- 72
 quote$ -- 0
-skip$ -- 515
+skip$ -- 540
 stack$ -- 0
-substring$ -- 312
+substring$ -- 317
 swap$ -- 65
 text.length$ -- 8
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 60
+type$ -- 64
 warning$ -- 3
-while$ -- 55
-width$ -- 18
-write$ -- 176
+while$ -- 57
+width$ -- 19
+write$ -- 186
 (There were 3 warnings)

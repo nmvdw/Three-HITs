@@ -60,11 +60,13 @@
 \input{coq.sty}
 \input{bussproofs.sty}
 
+\newcommand{\Boperator}[1]{\mathrm{\mathbf{#1}}}
 \newcommand{\comment}[1]{-- #1 --}
 \newcommand{\remove}[1]{}
-\newcommand{\inn}{{\rm in}}
+\newcommand{\inn}{\Boperator{in}}
 
 \newcommand{\conc}[0]{\bullet}
+\newcommand{\comp}[0]{\circ \,}
 
 \newcommand{\zero}[0]{\textbf{0}}
 \newcommand{\one}[0]{\textbf{1}}
@@ -75,21 +77,22 @@
 \newcommand{\nonrec}[0]{\operatorname{nonrec}}
 
 \newcommand{\ap}[0]{\operatorname{ap}}
-\newcommand{\apd}[0]{\operatorname{apd}}
+\newcommand{\apd}[0]{\operatorname{apD}}
 
 \newcommand{\term}[0]{\textbf{term}}
 \newcommand{\Con}[0]{\textbf{Con}}
 \newcommand{\Approx}[0]{\textbf{Approx}}
 
-\newcommand{\refl}[0]{\operatorname{\textbf{refl}}}
-\newcommand{\hpushout}[0]{\operatorname{\textbf{hpushout}}}
-\newcommand{\hocolim}[0]{\operatorname{\textbf{hocolim}}}
-\newcommand{\seg}[0]{\operatorname{\textbf{seg}}}
-\newcommand{\inl}[0]{\operatorname{\textbf{inl}}}
-\newcommand{\inr}[0]{\operatorname{\textbf{inr}}}
-\newcommand{\glue}[0]{\operatorname{\textbf{glue}}}
-\newcommand{\inc}[0]{\operatorname{\textbf{inc}}}
-\newcommand{\com}[0]{\operatorname{\textbf{com}}}
+\newcommand{\idmap}[0]{\Boperator{Id}}
+\newcommand{\refl}[0]{\Boperator{refl}}
+\newcommand{\hpushout}[0]{\Boperator{hpushout}}
+\newcommand{\hocolim}[0]{\Boperator{hocolim}}
+\newcommand{\seg}[0]{\Boperator{seg}}
+\newcommand{\inl}[0]{\Boperator{inl}}
+\newcommand{\inr}[0]{\Boperator{inr}}
+\newcommand{\glue}[0]{\Boperator{glue}}
+\newcommand{\inc}[0]{\Boperator{inc}}
+\newcommand{\com}[0]{\Boperator{com}}
 \newcommand{\Type}[0]{\operatorname{\textsc{Type}}}
 \newcommand{\pt}[0]{*}
 
@@ -247,11 +250,11 @@ We also have an elimination rule for which we use the lifting of constructor ter
 Let us abbreviate $H\frec(f, q_1, \ldots, q_n)$ by $H\frec$.
 The type $H$ also has computation rules for each point $t : A \> H$
 \begin{equation*}
-H\frec \> (c_i \> t) \equiv f_i \> t \> (\bar{A} \> H\frec \> t),
+H\frec \> (c \> t) \equiv f \> t \> (\bar{A} \> H\frec \> t),
 \end{equation*}
 and for each $a : B_i \> H$
 \begin{equation*}
-\apd \> H\frec \> (p_j \> a) \equiv q_j \> a \> (\bar{B}_i \> H\frec \> a).
+\apd \> H\frec \> (p_i \> a) \equiv q_i \> a \> (\bar{B}_i \> H\frec \> a).
 \end{equation*}
 Note that these equalities are definitional rather than propositional.
 
@@ -277,7 +280,7 @@ Inductive $\hpushout$ $(A, B, C : \Type)$ $(f : A \rightarrow B)$ $(g : A \right
 | $\inr$ : $C \rightarrow$ $\hpushout$ $A$ $B$ $C$ $f$ $g$
 | $\glue$ : $\prod (a : A), \inl (f \> a) = \inr (g \> a)$
 \end{lstlisting}
-Note the similarities with the construction of the pushout.
+Note the similarities with the construction of the pushout \cite{mac2013categories}.
 Lastly, we can define the homotopy colimit as a higher inductive type in much the same way.
 \lstset{language=Coq}
 \begin{lstlisting}
@@ -401,29 +404,50 @@ We use induction on the form of the constructor term.
 
 Now we have enough to define the approximator.
 During the construction one also needs to pay attention to coherency.
-For example, in $P$ we have terms using $c_{\rec}$ at most $k$ times, so in $H_{\Approx} \> P$ we have duplicates of terms using $c_{\rec}$ less than $k$ times..
-By tweaking the pushout a little bit, one can easily solve these coherency problems.
+For example, in $P$ we have terms using $c_{\rec}$ at most $k$ times, so in $H_{\Approx} \> P$ we have duplicates of terms using $c_{\rec}$ less than $k$ times.
+There will be several coherency problems during the proof, so the pushout will seem rather intimidating at first.
 
 \begin{definition}
 Let a higher inductive type $H$ be given as before, and let the type $H_{\Con}$ be defined as before.
-Then we define the \emph{approximator} $H_{\Approx}$, which has a parameters $P, Q$ and $f : H_{\Con} \> Q \rightarrow P$, of $H$ the following pushout
+Given are parameters $P$ and $Q$ with amps $i_l : H_{\Con} \> Q \rightarrow P$ and $i_r : I^1 \times B_i \> Q + Q \rightarrow P$.
+Let us define the following maps.
+\begin{align*}
+\widetilde{i_l} &= i_l \comp \inn_1\\
+g_1 &: ((\one + \one) \times B_i \> P) + H_{\Con} \> Q  + (I^1 \times B_i \> Q + Q)\rightarrow (I^1 \times B_i \> P) + P\\
+g_1 &= (\inn_1 \comp \delta \times \idmap) + (\inn_2 \comp i_l) + (\inn_2 \comp i_r \circ \inn_1)\\
+g_2 &: ((\one + \one) \times B_i \> P) + H_{\Con} \> Q + (I^1 \times B_i \> Q + Q) \rightarrow H_{\Con} \> P + (I^1 \times B_i \> P + P)\\
+g_2 &= (\inn_1 \comp \overline{t_i} + \overline{r_i})+ (\inn_1 \comp H_{\Con} \> \widetilde{i_l}) + (\inn_2 \comp (I^1 \times B_i \> \widetilde{i_l}))
+\end{align*}
+Then we define the \emph{approximator} $H_{\Approx}$ of $H$ the following pushout.
 \[
 \xymatrix
 {
-	((\one + \one) \times B_i \> P) + H_{\Con} \> Q \ar[d]_{\overline{t_i} + \overline{r_i} + H_{\Con}(f \circ \inn_1)} \ar[rr]^-{\delta + f} & & (I^1 \times B_i \> P) + P  \ar[d]^{\inr}\\
-	H_{\Con} \> P \ar[rr]_{\inl} & & H_{\Approx} \> P \> Q \> f
+	((\one + \one) \times B_i \> P) + H_{\Con} \> Q + (I^1 \times B_i \> Q) 
+	\ar[d]_{g_2} 
+	\ar[r]^-{g_1}
+	& (I^1 \times B_i \> P) + P  
+	\ar[d]^-{\inr}\\
+	H_{\Con} \> P + (I^1 \times B_i \> P)  
+	\ar[r]_-{\inl} 
+	& H_{\Approx} \> P \> Q \> i_l \> i_r
 }
 \]
 Note that this can be written as the homotopy pushout.
-Often we will suppress the maps $f$ from the notation.
+Often we will suppress the maps from the notation.
 \end{definition}
+
+The types $Q$ and $P$ represent $F(n-2)$ and $F(n-1)$ respectively, and the maps $i_l$ and $i_r$ are the inclusion maps into $F(n-1)$.
+The new type is extended with constructors and paths given by $\inl \comp \inn_1$ and $\inr \comp \inn_1$ respectively.
+Also, there are coherency conditions added and these are given by the second and third component of the left upper corner.
+Their use will become clear in the Section \ref{sec:rules} when we show the introduction rules.
+Now we can define the approximating sequence.
 
 \begin{definition}
 In the setting as described, we simultaneously define a sequence of approximations $F : \mathbb{N} \rightarrow \Type$ to $H$ and maps $f : \prod(n : \mathbb{N}), F \> n \rightarrow F(n+1)$ as follows
 \begin{align*}
 F \> 0 &= H_{\nonrec},\\
-F \> 1 &= H_{\Approx} \> (F \> 0) \> \zero \> (\zero\frec (F \> 0))\\
-F(n+2) &= H_{\Approx} \> (F(n+1)) \> (F \> n) \> \inl \qedhere
+F \> 1 &= H_{\Approx} \> (F \> 0) \> \zero \> (\zero\frec (F \> 0)) \> (\zero\frec (F \> 0))\\
+F(n+2) &= H_{\Approx} \> (F(n+1)) \> (F \> n) \> \inl \> \inr \qedhere
 \end{align*}
 For the maps maps $f \> n : F \> n \rightarrow F(n + 1)$, note that we always have the following sequence of maps
 \[
@@ -462,20 +486,21 @@ This is slightly more complicated, and for that we first need a lemma which says
 
 \begin{lemma}
 \label{lem:colim_commute_poly}
-The types $A \> (\hocolim \> F \> f)$ and $\hocolim \> (A \circ F) \> (A \> f)$ are isomorphic for all polynomials $A$.
+The types $A \> (\hocolim \> F \> f)$ and $\hocolim \> (A \comp F) \> (A \> f)$ are isomorphic for all polynomials $A$.
 \end{lemma}
 
 \begin{proof}
-
+If $A$ is constant then it follows from Lemma \ref{lem:colimcon}.
+For the identity it is trivial, and for sums and products, it follows from Lemmata \ref{lem:colimsum} and \ref{lem:colimprod} respectively. 
 \end{proof}
 
-Now we will construct the map $A_{\rec} \> (\hocolim \> F \> f) \rightarrow \hocolim \> F \> f$, and by Lemma \ref{lem:colim_commute_poly} it suffices to make a map $\hocolim \> (A_{\rec} \circ F) \> (A \> f) \rightarrow \hocolim \> F \> f$.
+Now we will construct the map $A_{\rec} \> (\hocolim \> F \> f) \rightarrow \hocolim \> F \> f$, and by Lemma \ref{lem:colim_commute_poly} it suffices to make a map $\hocolim \> (A_{\rec} \comp F) \> (A \> f) \rightarrow \hocolim \> F \> f$.
 For this we use the recursion rule of $\hocolim$, and we start with the following string of maps
 \[
 \xymatrix
 {
 		A_{\rec}(F \> n) \ar[r]^-{c_{\rec}'} 
-		& H_{\rec}(F \> n) \ar[rr]^{\term \circ \iota_2} &
+		& H_{\rec}(F \> n) \ar[rr]^{\term \comp \iota_2} &
 		& H_{\Con}(F \> n) \ar[r]^-{\inl}
 		& H_{\Approx}(F \> n) = F(n + 1)
 }
@@ -498,10 +523,10 @@ Let us start with the following rectangle
 \xymatrix
 {
 	A_{\rec}(F \> n) \ar[r]^-{c_{\rec}'} \ar[d]_{A_{\rec}(f \> n)} 
-		& H_{\rec}(F \> n) \ar[rr]^{\term \circ \iota_2} \ar[d]_{H_{\rec}(f \> n)} &
+		& H_{\rec}(F \> n) \ar[rr]^{\term \comp \iota_2} \ar[d]_{H_{\rec}(f \> n)} &
 		& H_{\Con}(F \> n) \ar[d]_{H_{\Con}(f \> n)}\\
 	A_{\rec}(F(n+1)) \ar[r]_-{c_{\rec}'} 
-		& H_{\rec}(F(n+1)) \ar[rr]_{\term \circ \iota_2} &
+		& H_{\rec}(F(n+1)) \ar[rr]_{\term \comp \iota_2} &
 		& H_{\Con}(F(n+1))
 }
 \]
@@ -533,7 +558,7 @@ By definition we have the following string of maps
 \[
 \xymatrix
 {
-	I^1 \times B_i \> (F \> n) \ar[r]^-{\inn_1} & I^1 \times B_i \> (F \> n) \ar[r]^-{\inn_1} + F \> n \ar[r]^-{\inr}& F(n+1) \ar[rr]^-{\inc(n+1)} & & \hocolim \> F \> f.
+	I^1 \times B_i \> (F \> n) \ar[r]^-{\inn_1} & I^1 \times B_i \> (F \> n) + F \> n \ar[r]^-{\inr}& F(n+1) \ar[rr]^-{\inc(n+1)} & & \hocolim \> F \> f.
 }
 \]
 Next we need to show that the following diagram commutes.
@@ -553,9 +578,10 @@ For the right diagram we can unpack the definition of $f(n+1)$.
 	I^1 \times B_i \> (F(n+1)) + F(n+1) \ar[r]_-{\inr}& F(n+2) 
 }
 \]
-\textbf{Another coherency which should be added.}
+On the first coordinate it commutes by definition and on the second it commutes by how $F(n+2)$ was defined.
 
-Now we have the following diagram
+
+Now we check that the defined paths have the right endpoints, and for that we look at the following diagram.
 \[
 \xymatrix
 {
@@ -582,63 +608,90 @@ This is the coherence path which should be added on level $n$.
 
 
 \subsection{Elimination Rule}
-For the next step we define the right eliminator for $\hocolim \> F \> f$. 
-For this we suppose that we have
+For the next step we define the right eliminator for $\hocolim \> F \> f$, so suppose that we are given
 \[
-Y : \hocolim \> F \> f \rightarrow \Type
+Y : \hocolim \> F \> f \rightarrow \Type,
 \]
 \[
-c_{Y, \nonrec} : \prod (a : A_{\nonrec}), Y(c_{\nonrec})
+c_{Y, \nonrec} : \prod (a : A_{\nonrec}), Y(c_{\nonrec} \> a),
 \]
 \[
-c_{Y, \rec} : \prod (x : A_{\rec} \> \hocolim \> F \> f), \overline{A_{\rec}} \> Y \> x \rightarrow Y(c_{\rec} \> x)
+c_{Y, \rec} : \prod (x : A_{\rec} \> \hocolim \> F \> f), \overline{A_{\rec}} \> Y \> x \rightarrow Y(c_{\rec} \> x),
 \]
 \[
-q_{Y, i} : \prod (x : B_i \> H)(h_x : \overline{B_i} \> Y \> x), \hatt_i =_{p_j \, x} \hatr_j
+q_{Y, i} : \prod (x : B_i \> H)(h_x : \overline{B_i} \> Y \> x), \hatt_i =_{p_j \, x} \hatr_j.
 \]
-In order to make a map $\prod (x : \hocolim \> F \> f), Y \> x$, we use the induction principle of $\hocolim \> F \> f$, and for that we first need to make maps $\prod (x : F \> n), Y(\inc \> n \> x)$.
+In order to make a map $h : \prod (x : \hocolim \> F \> f), Y \> x$, we use the induction principle of $\hocolim \> F \> f$, and for that we first need to make maps $h \> n : \prod (x : F \> n), Y(\inc \> n \> x)$ for $n : \mathbb{N}$.
 
-We start by making a map $\prod (x : F \> 0), Y(\inc \> 0 \> x)$.
+We start by making a map $h \> 0 : \prod (x : F \> 0), Y(\inc \> 0 \> x)$.
 Recall that $F \> 0$ was defined to be $H_{\nonrec}$ which only has a constructor $c'_{\nonrec} : A_{\nonrec} \rightarrow H_{\nonrec}$.
 So, let us assume that we have $a : A_{\nonrec}$.
-Since $c_{\nonrec} \> a = \inc \> 0 \> (c_{\nonrec} \> a)$, it suffices to find an inhabitant of $Y(c_{\nonrec} \> a)$, and for that we take $c_{Y, \nonrec} \> a$.
-Hence, we get a map $\prod (x : F \> 0), Y(\inc \> 0 \> x)$.
+Since $c_{\nonrec} \> a = \inc \> 0 \> (c_{\nonrec}' \> a)$, it suffices to find an inhabitant of $Y(c_{\nonrec} \> a)$, and for that we take $c_{Y, \nonrec} \> a$.
+Hence, we get a map $h \> 0$.
 
-Now suppose that we have a map $\prod (x : F \> n), Y(\inc \> n \> x)$, and our goal is to make a map $\prod  (x : F(n+1)), Y(\inc \> (n+1) \> x)$.
-In order to do so, we will first look at how to extend it to a map $\prod (x : H_{\Con} (F \> n)), Y(\inc \> (n+1) \> (\inl \> x))$.
+Now suppose that we have a map $h \> n : \prod (x : F \> n), Y(\inc \> n \> x)$, and our goal is to make a map $h(n+1) : \prod  (x : F(n+1)), Y(\inc \> (n+1) \> x)$.
+In order to do so, we will first look at how to extend $h \> n$ to a map $\prod (x : H_{\Con} (F \> n)), Y(\inc \> (n+1) \> (\inl \> x))$.
 
 Let us do this in the general case.
-Suppose, we have a map $g : P \rightarrow \hocolim \> F \> f$, and that we already constructed $h : \prod (x : P), Y(g \> x)$.
-Our goal is to extended the map into a $h' : \prod (x : H_{\rec} P), Y(c_{Y, \rec} \> x)$, and for that we use $H_{\rec}$-induction.
+Suppose, we have a map $g : P \rightarrow \hocolim \> F \> f$, and that we already constructed $\varphi : \prod (x : P), Y(g \> x)$.
+Our goal is to extended the map into a $\varphi' : \prod (x : H_{\rec} P), Y(c_{Y, \rec} \> x)$, and for that we use $H_{\rec}$-induction.
 Note that for each $c'_{\rec} \> x$ with $x : A_{\rec} \> P$ we have the type $Y(c_{\rec} \> (A_{\rec} \> g \> x))$, and thus we have a type family on $H_{\rec}$.
 Now let $x : A_{\rec} \> P$ and $y : \overline{A_{\rec}} \> Y \> x$ be given.
-Then we need to give an element of the type $Y(c_{\rec} \> (A_{\rec} \> g \> x))$ for which we take
-\[
-c_{Y,\rec} \> (A_{\rec} \> g \> x) \> y
-\]
+Then we need to give an element of the type $Y(c_{\rec} \> (A_{\rec} \> g \> x))$ for which we take $c_{Y,\rec} \> (A_{\rec} \> g \> x) \> y$.
+
 Now we can also extend the map to $H_{\Con}^n \> P$, because we can define this map on each component.
-On the component $P$ it is just $h$, and on the other components we define it via extension.
+On the component $P$ it is just $\varphi$, and on the other components we define it via extension.
 
 Next we need to extend the map to $H_{\Approx} \> P \> Q$.
-For that we need to make a map $h' : \prod (x : I^1 \times B_i \> P), Y()$
-
-Let $(t, x) : I^1 \times B_i \> P$, and now we use $I^1$ induction.
-If $t = 0$, we map it to $\hatt_i (x)$, and for $t = 1$ we map it to $\hatr_i (x)$.
+This is done by the universal mapping property of the pushout, and that requires two steps.
+First, we need to extend the map to $I^1 \times B_i \> P$, and second we need to check that the diagram given by the pushout commutes.
+For that we start with $(y, x) : I^1 \times B_i \> P$, and we use $I^1$-induction.
+If $y = 0$, we map it to $\hatt_i (x)$, and for $y = 1$ we map it to $\hatr_i (x)$.
 Now the path $q_{Y, i}$ gives the image of $\seg$, and that finishes the induction.
 
-For the commutativity of the diagram note that by definition the dependent map from $H_{\Con} \> P$ to $Y$ sends the constructor term $t_i$ to the lift $\hatt_i$.
-This is because the map replaces each $c_{\rec}$ by $c_{Y, \rec}$ which is precisely how the lift was constructed.
+Since $H_{\Approx}$ is a pushout, we also need to show that a diagram commutes.
+The left upper corner is defined to be a sum, and thus it suffices to check it for each of the components.
+For the first, $H_{\Con} \> P$, note that the map $\varphi'$ to $Y$ defined by extension, sends the constructor term $t_i$ to its lift $\hatt_i$, since it replaces each $c_{\rec}$ by $c_{Y, \rec}$.
+On $I^1 \times B_i \> P$ the points are mapped to the lifts $\hatt_i$ as well, and thus the diagram commutes on this component.
 
+Next we do it for the coherency condition on the points where we look at the following corner
+\[
+\xymatrix
+{
+	H_{\Con}(F \> n) \ar[r]^{\inl} \ar[d]_{H_{\Con} (f \> n)} & F(n+1)\\
+	H_{\Con} (F(n+1))
+}
+\]
+Elements of $H_{\Con}(F \> n)$ are terms built from $c_{\rec}$ on $F \> n$.
+In order to show that it commutes for all inhabitants of $H_{\Con}(F \> n)$, we use induction on the depth.
+If the inhabitant is of the form $\inn_1 \> x$ with $x : F \> n$, then it gets mapped to the first component of $H_{\Con} (F(n+1))$ and $F(n+1)$.
+In both cases it is just mapped with $h \> (n+1)$ and thus they are equal.
 
-Next we do it for the coherency.
+To show that it holds for the other inhabitants as well, we take a look at $c_{\rec}' \> x$.
+By $\inl$ it gets mapped $\inl (c_{\rec}' \> x)$.
+Since $h(n+1)$ is defined as the pushout map, it maps $\inl (c_{\rec}' \> x)$ to $h \> (n+1) \> (c_{\rec}' \> x) \equiv c_{Y, \rec}(h \> n \> x)$.
+The map $H_{\Con} (f \> n)$ sends $c_{\rec}' \> x$ to $c_{\rec}' (f \> n \> x)$, and the dependent map $h$ sends it to $c_{Y, \rec}(h \> (n+1) \> (f \> x))$.
+Using the definition of the pushout map, this is equal to $c_{Y, \rec}(h \> n \> x)$
+Hence, this diagram commutes, and thus the first coherency is fine.
 
-Induction on the level (so, ultimately some kind of simultaneous induction?)
+Now we also need to check the second coherency, and then we look at another corner
+\[
+\xymatrix
+{
+	I^1 \times B_i (F \> n) \ar[rr]^-{\inr \circ \inn_1} \ar[d]_{I^1 \times B_i \inl} & & F(n+1)\\
+	I^1 \times B_i(F(n+1)) 
+}
+\]
+Let $(y, x) : I^1 \times B_i (F \> n)$.
+Note that 
+\[
+h \> (n+1) \> (\inr(\inn_1 (y, x))) = h \> n \> (\inn_1 (y, x)) = \overline{q_{Y, i}}(y, h \> n \> x).
+\]
+\[
+h \> (n+1) \> (I^1 \times B_i \> \inl \> (y, x)) = h \> (n+1) \> (y, \inl x) = \overline{q_{Y, i}}(y, h \> (n+1) \> (\inl \> x)) = \overline{q_{Y, i}}(y, h \> n \> x).
+\]
+Hence, this coherency is fine as well.
 
-Then induction on the depth.
-
-Base case: just induction assumption.
-
-Step case: then it can be worked out from the diagram.
 
 
 
@@ -659,7 +712,7 @@ We shall call the eliminator $H\frec$.
 
 \subsection{Computation Rules}
 Lastly, we show that this eliminator also satisfies the computation rules.
-First, we prove that for each $t : A_{\rec}(\hocolim \> F \> f)$ that $H\frec(c_{\rec} \> t) \equiv f_i \> t \> (\overline{A_{\rec}} H\frec t)$.
+First, we prove that for each $t : A_{\rec}(\hocolim \> F \> f)$ that $H\frec(c_{\rec} \> t) \equiv f_i \> t \> (\overline{A_{\rec}} \> H\frec \> t)$.
 Again we use that colimits commute with polynomials.
 
 Let $n : \mathbb{N}$ and $x : A_{\rec}(F \> n)$.
@@ -680,21 +733,42 @@ However, for closed terms, we have a definitional equality.
 This is because $c_{\nonrec} \> a$ for $a : A_{\nonrec}$ is defined to be$\inc \> 0 \> (c_{\nonrec}' \> a)$.
 All the closed terms are thus inhabitants of some $F \> n$, and since at every step the equalities are definitional, we can conclude that for closed terms the equality is definitional.
 
-Now we show the computation rules for the paths.
+Now we show the computation rules for the paths, and in that case we have a parameter $a : B_i \> (\hocolim \> F \> f)$.
+By using that polynomials commute with homotopy colimits, we can again assume that we have $n : \mathbb{N}$ and $x : B_i(F \> n)$.
+\begin{equation*}
+\begin{split}
+\apd \> H\frec \> (p_i \> (\inc \> n \> x))
+&\equiv \apd \> H\frec \> (\apd \> (\inc (n+1)) \> (\inr \> x))\\
+&= \apd \> (H\frec \comp  \> \inc (n+1)) \> (\inr \> x))\\
+&\equiv q_i \> (H\frec x)
+\end{split}
+\end{equation*}
 
 
 \section{Lemmata}
 \label{sec:Lemmata}
+In this section we proof the required lemmata to show that colimits over $\mathbb{N}$ commute with polynomials.
+In category theory this result is standard \cite{mac2013categories}.
 
 \begin{lemma}
-$\hocolim \> (\lambda n . A) \> \operatorname{Id}$ is $A$.
+\label{lem:colimcon}
+$\hocolim \> (\lambda n . A) \> (\lambda n . \operatorname{Id})$ is isomorphic to $A$.
 \end{lemma}
 
+\begin{proof}
+We define $f : A \rightarrow \hocolim \> (\lambda n . A) \> (\lambda n . \operatorname{Id})$ to be $\inc \> 0$.
+Next we define $g : \hocolim \> (\lambda n . A) \> (\lambda n . \operatorname{Id}) \rightarrow A$ by $\hocolim$ recursion.
+We send $\inc \> n \> a$ to $a$, and then the required diagrams commute by reflexivity.
+For the proof that it these maps are mutual inverses, we refer the reader to the accompanying Coq code \cite{CoqImpl}.
+\end{proof}
+
 \begin{lemma}
+\label{lem:colimsum}
 Colimits commute with coproducts.
 \end{lemma}
 
 \begin{lemma}
+\label{lem:colimprod}
 Colimits commute with products.
 \end{lemma}
 

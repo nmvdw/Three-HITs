@@ -34,6 +34,12 @@ Andrej Bauer, Jason Gross, Peter~LeFanu Lumsdaine, Mike Shulman, Matthieu
 \newblock The hott library: A formalization of homotopy type theory in coq.
 \newblock {\em arXiv preprint arXiv:1610.04591}, 2016.
 
+\bibitem{CoqImpl}
+Andrej Bauer and Niels van~der Weide.
+\newblock Accompanying {L}emmas of {T}hree-{H}{I}{T}s {T}heorem in
+  \textsc{Coq}.
+\newblock \url{https://github.com/nmvdw/Three-HITs}, 2016.
+
 \bibitem{bezem2014model}
 Marc Bezem, Thierry Coquand, and Simon Huber.
 \newblock A model of type theory in cubical sets.
