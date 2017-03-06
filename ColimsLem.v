@@ -16,7 +16,8 @@ Axiom com :
     (F : nat -> Type0) 
     (f : forall (n : nat), F n -> F(S n))
     (n : nat) 
-    (x : F n), inc F f n x = inc F f (S n) (f n x).
+    (x : F n), 
+  inc F f n x = inc F f (S n) (f n x).
 
 Fixpoint colim_rec
   (P : Type)
@@ -67,93 +68,10 @@ Axiom colim_ind_beta_com : forall
   , apD (colim_ind F f P Pi Pc) (com F f n x) = Pc n x.
 End Colims.
 
-
-
 (*
-Skiplemma:
-  We can skip the 0th object of the colimit, and still obtain an isomorphic colimit.
+The colimit of F(X) = A is A.
+Lemma 10 in paper.
 *)
-
-(*Section skipLemma.
-
-Lemma toSkip : forall (F : nat -> Type0) (f : forall (n : nat), F n -> F (S n)),
-  colim F f -> colim (fun (n : nat) => F(S n)) (fun (n : nat) => f(S n)).
-Proof.
-intros F f.
-refine (colim_rec _ _ _ _ _).
- Unshelve.
- Focus 2.
- intros n x.
- apply (inc (fun n0 : nat => F n0.+1) (fun n0 : nat => f n0.+1) n (f n x)).
-
- intros.
- compute.
- apply com.
-Defined.
-
-Lemma fromSkip : forall (F : nat -> Type0) (f : forall (n : nat), F n -> F (S n)),
-  colim (fun (n : nat) => F(S n)) (fun (n : nat) => f(S n)) -> colim F f.
-Proof.
-intros F f.
-refine (colim_rec _ _ _ _ _).
- Unshelve.
- Focus 2.
- intros n x.
- apply (inc F f (S n) x).
-
- intros.
- compute.
- apply com.
-Defined.
-
-Lemma fromSkipIso : forall (F : nat -> Type0) (f : forall (n : nat), F n -> F (S n)) (x : colim F f),
-  fromSkip F f (toSkip F f x) = x.
-Proof.
-intros F f.
-refine (colim_ind _ _ _ _ _).
- Unshelve.
- Focus 2.
- intros.
- compute.
- symmetry.
- apply com.
-
- intros.
- rewrite @HoTT.Types.Paths.transport_paths_FlFr.
- rewrite ap_idmap.
- rewrite ap_compose.
- rewrite colim_rec_beta_com.
- rewrite colim_rec_beta_com.
- rewrite concat_pp_p.
- rewrite concat_Vp.
- apply concat_p1.
-Qed.
-
-Lemma toSkipIso : forall (F : nat -> Type0) (f : forall (n : nat), F n -> F (S n)) 
-  (x : colim (fun (n : nat) => F(S n)) (fun (n : nat) => f(S n))),
-  toSkip F f (fromSkip F f x) = x.
-Proof.
-intros F f.
-refine (colim_ind _ _ _ _ _).
- Unshelve.
- Focus 2.
- intros.
- compute.
- apply (com (fun n0 : nat => F n0.+1) (fun n0 : nat => f n0.+1) n x)^.
-
- intros.
- rewrite @HoTT.Types.Paths.transport_paths_FlFr.
- rewrite ap_idmap.
- rewrite ap_compose.
- rewrite colim_rec_beta_com.
- rewrite colim_rec_beta_com.
- rewrite concat_pp_p.
- rewrite concat_Vp.
- apply concat_p1.
-Qed.
-
-End skipLemma.*)
-
 Section ColimConst.
 
 Lemma CC_A : forall (A : Type0),
@@ -168,7 +86,6 @@ refine (colim_rec _ _ _ _ _).
 
  intros.
  reflexivity.
-
 Defined.
 
 Lemma A_CC : forall (A : Type0),
@@ -213,35 +130,11 @@ Defined.
 
 End ColimConst.
 
-
-
-Section ColimElems.
-
-Theorem colim_elem :
-  forall  (F : nat -> Type0)
-          (f : forall (n : nat), F n -> F(S n))
-          (x : colim F f),
-    {i : nat & {y : F i & inc F f i y = x}}.
-Proof.
-intros F f.
-refine (colim_ind _ _ _ _ _).
-Unshelve.
-  Focus 2.
-  intros n x.
-  exists n.
-  exists x.
-  reflexivity.
-
-  intros n x.
-  cbn.
-
-
-
 (*
-
-(* Colims commute with sums *)
+Colimits commute with sums.
+Lemma 11 in paper.
+*)
 Section ColimSum.
-Section ColimProd.
 
 Definition Sum (G1 : Type0 -> Type0) (G2 : Type0 -> Type0) (F : nat -> Type0) : nat -> Type0
   := fun (n : nat) => sum (G1 (F n)) (G2 (F n)).
@@ -349,18 +242,18 @@ Theorem S_iso_1 :
   colim_S F f G1 G2 G1F G2F (S_colim F f G1 G2 G1F G2F i) = i.
 Proof.
 intros F f G1 G2 G1F G2F i.
-destruct i as [x | y].
-Focus 1.
-  refine (colim_ind _ _ _ _ _ x).
+destruct i as [x| y].
+ Focus 1.
+ refine (colim_ind _ _ _ _ _ x).
   Unshelve.
+  Focus 2.
+  intro z.
+  apply
+   (colim_S F f G1 G2 G1F G2F (S_colim F f G1 G2 G1F G2F (inl z)) = inl z).
 
   Focus 2.
-    intro z.
-    apply (colim_S F f G1 G2 G1F G2F (S_colim F f G1 G2 G1F G2F (inl z)) = inl z).
-
-  Focus 2.
-    intros n a.
-    reflexivity.
+  intros n a.
+  reflexivity.
 
   intros n a.
   rewrite @HoTT.Types.Paths.transport_paths_FlFr.
@@ -370,9 +263,60 @@ Focus 1.
   rewrite colim_rec_beta_com.
   apply concat_Vp.
 
-*)
+ refine (colim_ind _ _ _ _ _ y).
+  Unshelve.
+  Focus 2.
+  intro z.
+  apply
+   (colim_S F f G1 G2 G1F G2F (S_colim F f G1 G2 G1F G2F (inr z)) = inr z).
+
+  Focus 2.
+  intros n a.
+  reflexivity.
+
+  intros n a.
+  rewrite @HoTT.Types.Paths.transport_paths_FlFr.
+  rewrite concat_p1.
+  rewrite ap_compose.
+  rewrite colim_rec_beta_com.
+  rewrite colim_rec_beta_com.
+  apply concat_Vp.
+Qed.
 
 
+Theorem S_iso_2 :
+  forall  (F : nat -> Type0)
+          (f : forall (n : nat), F n -> F(S n))
+          (G1 G2 : Type0 -> Type0)
+          (G1F : forall (A B : Type0), (A -> B) -> G1 A -> G1 B)
+          (G2F : forall (A B : Type0), (A -> B) -> G2 A -> G2 B)
+          (i : colim (Sum G1 G2 F) (SMap G1 G2 G1F G2F F f)),
+  S_colim F f G1 G2 G1F G2F (colim_S F f G1 G2 G1F G2F i) = i.
+Proof.
+intros F f G1 G2 G1F G2F.
+refine (colim_ind _ _ _ _ _).
+  Unshelve.
+  Focus 2.
+  destruct x ; reflexivity.
+
+  intros.
+  destruct x ; cbn ;
+    rewrite @HoTT.Types.Paths.transport_paths_FlFr ;
+    rewrite ap_idmap ;
+    rewrite concat_p1 ;
+    rewrite ap_compose ;
+    rewrite colim_rec_beta_com.
+  Focus 1.
+    rewrite <- (ap_compose inl).
+    rewrite colim_rec_beta_com.
+    apply concat_Vp.
+
+    rewrite <- (ap_compose inr).
+    rewrite colim_rec_beta_com.
+    apply concat_Vp.
+Qed.
+
+End ColimSum.
 
 (*
 

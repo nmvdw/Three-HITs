@@ -570,21 +570,50 @@ Next we need to show that the following diagram commutes.
 \[
 \xymatrix
 {
-	I^1 \times B_i \> (F \> n) \ar[r]^-{\inn_1} \ar[d]_{I^1 \times B_i \> (f \> n)} & I^1 \times B_i \> (F \> n) + F \> n \ar[r]^-{\inr} \ar[d]_{I^1 \times B_i \> (f \> n) + f \> n} & F(n+1) \ar[d]^{f(n+1)}\\
-	I^1 \times B_i \> (F(n+1)) \ar[r]_-{\inn_1} & I^1 \times B_i \> (F(n+1)) + F(n+1) \ar[r]_-{\inr}& F(n+2) 
+	I^1 \times B_i \> (F \> n) 
+		\ar[r]^-{\inn_1} \ar[d]_{I^1 \times B_i \> (f \> n)} 
+	& I^1 \times B_i \> (F \> n) + F \> n 
+		\ar[r]^-{\inr} 
+		%\ar[d]_{I^1 \times B_i \> (f \> n) + f \> n} 
+	& F(n+1) 
+		\ar[d]^{f(n+1)}
+	\\
+	I^1 \times B_i \> (F(n+1)) 
+		\ar[r]_-{\inn_1} 
+	& I^1 \times B_i \> (F(n+1)) + F(n+1) 
+		\ar[r]_-{\inr}
+	& F(n+2) 
 }
 \]
-Note that the left diagram commutes.
-For the right diagram we can unpack the definition of $f(n+1)$.
-\[
-\xymatrix
-{
-	I^1 \times B_i \> (F \> n) + F \> n \ar[r]^-{\inr} \ar[d]_{I^1 \times B_i \> (f \> n) + f \> n} & F(n+1) \ar[d]^{f(n+1)} \ar[dl]^{\inn_2}\\
-	I^1 \times B_i \> (F(n+1)) + F(n+1) \ar[r]_-{\inr}& F(n+2) 
-}
-\]
-On the second coordinate it commutes by definition and on the first it commutes by how $F(n+2)$ was defined.
+Note that this diagram commutes.
+For $x : I^1 \times B_i(F \> n)$ the path is $\glue(\inn_3 \> x)$.
+In particular, this means that $\apd \> p_i \> (\com \> n) \equiv \apd \> \inc(n+2) \> \glue(\inn_3 \> x)$
+%For the right diagram we can unpack the definition of $f(n+1)$.
+%\[
+%\xymatrix
+%{
+%	I^1 \times B_i \> (F \> n) + F \> n \ar[r]^-{\inr} \ar[d]_{I^1 \times B_i \> (f \> n) + f \> n} & F(n+1) \ar[d]^{f(n+1)} \ar[dl]^{\inn_2}\\
+%	I^1 \times B_i \> (F(n+1)) + F(n+1) \ar[r]_-{\inr}& F(n+2) 
+%}
+%\]
+%On the second coordinate it commutes by definition and on the first it commutes by how $F(n+2)$ was defined.
 
+In order to check that the paths have the right endpoints, we first need to extend the $\overline{t_i} \> n : B_i(F \> n) \rightarrow H_{\Con} (F \> n)$ to a map $B_i(\hocolim \> F \> f) \rightarrow \hocolim \> F \> f$.
+For $n : \mathbb{N}$ and $(y, x) : 2 \times B_i(F \> n)$, we take 
+\[
+\inc \> (n+1) \> (\inl (g_1 (\inn_1 \> (y, x)))) \equiv \inc \> (n+1) \> (\inl(\overline{t_i} \> n \> (y, x))).
+\]
+For the image of com we have the following propositional equalities.
+\begin{equation*}
+\begin{split}
+\inc &\> (n+2) \> (\inl(\overline{t_i} \> (n+1) \> (y, f \> n \> x)))
+\\
+&= \inc \> (n+2) \> ( f \> (n+1) \> (\inl(\overline{t_i} \> n \> (y, x))))
+\\
+&= \inc \> (n+1) \> (\inl(\overline{t_i} \> n \> (y, x))).
+\end{split}
+\end{equation*}
+The first equation holds by the coherency on the points, and the second by $\com$.
 
 Now we check that the defined paths have the right endpoints, and for that we look at the following diagram.
 \[
@@ -600,11 +629,12 @@ $2 \times B_i(\hocolim \> F \> f)$ is isomorphic to $\hocolim \> (2 \times B_i \
 Induction to second, so we have $(0, x)$ (similar for $1$) and $x : F \> n$.
 This gets mapped to $(0, x)$ which is equal to $t_i$ via the path $\glue (\inl (0, x))$.
 
-Remaining:
+We have
 \begin{equation*}
 \begin{split}
-\com_*(\ap \> (\inc \> n) \> \glue (\inl (0, x))) = \ap \> (\inc (n+1))) \>\glue (\inl (0, f \> n \> x))\\
-(\ap \> \overline{t_i} \> \com)^{-1} \conc \ap \> (\inc \> n) \> \glue (\inl (0, x)) \conc \ap \> p_i \> \com
+(\com \> n)_*(\ap \> (\inc \> n) \> \glue (\inl (0, x))) 
+&= (\ap \> \overline{t_i} \> (\com \> n))^{-1} \conc \ap \> (\inc \> n) \> \glue (\inl (0, x)) \conc \ap \> p_i \> (\com \> n)\\
+= \ap \> (\inc (n+1))) \>\glue (\inl (0, f \> n \> x))\\
 \end{split}
 \end{equation*}
 $(\ap \> \overline{t_i} \> \com)^{-1}$ is like $\ap \> (\inc \> n) \> (\ap \> c \> \ldots (\ldots \ap \> \text{coherence path}))$, because of the computation rule of $c_i$.
@@ -764,13 +794,30 @@ $\hocolim \> (\lambda n . A) \> (\lambda n . \operatorname{Id})$ is isomorphic t
 We define $f : A \rightarrow \hocolim \> (\lambda n . A) \> (\lambda n . \operatorname{Id})$ to be $\inc \> 0$.
 Next we define $g : \hocolim \> (\lambda n . A) \> (\lambda n . \operatorname{Id}) \rightarrow A$ by $\hocolim$ recursion.
 We send $\inc \> n \> a$ to $a$, and then the required diagrams commute by reflexivity.
-For the proof that it these maps are mutual inverses, we refer the reader to the accompanying Coq code \cite{CoqImpl}.
+The proof that these maps are mutual inverses is straightforward but tedious, so we refer the reader to the accompanying Coq code \cite{CoqImpl}.
 \end{proof}
 
 \begin{lemma}
 \label{lem:colimsum}
-Colimits commute with coproducts.
+Colimits commute with coproducts, so $\hocolim \> ((G_1 + G_2) \circ F) \> ((G_1 + G_2) \> f)$ and $\hocolim \> (G_1 \circ F) \> (G_1 \> f) + \hocolim \> (G_2 \circ F) \> (gG2 \> f)$ are isomorphic.. 
 \end{lemma}
+
+\begin{proof}
+This one is not difficult either, so we will be brief and refer the reader to \cite{CoqImpl} for details.
+We start by making a map 
+\[
+\hocolim \> ((G_1 + G_2) \circ F) \> ((G_1 + G_2) \> f) \rightarrow \hocolim \> (G_1 \circ F) \> (G_1 \> f) + \hocolim \> (G_2 \circ F) \> (G_2 \> f).
+\]
+This map is defined by recursion over the colimit, so take any $n : \mathbb{N}$ and $x : F \> n$.
+Then the image of $\inc \> n \> (\inn_i \> x)$ is defined to be $\inn_i (\inc \> n \> x)$, and the image of $\com \> n \> (\inn_i \> x)$ is defined by
+$\ap \> \inn_i \> (\com \> (G1 \circ F) \> (G_1 \> f) \> n \> x)$.
+
+For the map in the other direction, we need to make 
+\[
+\hocolim \> (G_i \circ F) \> (G_i \> f) \rightarrow \hocolim \> ((G_1 + G_2) \circ F) \> ((G_1 + G_2) \> f).
+\]
+We send $\inc \> n \> x$ to $\inc \> n \> (\inn_i \> x)$ and $\com \> n \> x$ to $\com \> n \> (\inn_i \> x)$.
+\end{proof}
 
 \begin{lemma}
 \label{lem:colimprod}
