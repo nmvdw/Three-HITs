@@ -318,9 +318,10 @@ Qed.
 
 End ColimSum.
 
-(*
-
-(* Colims commute with products *)
+(* 
+Colims commute with products.
+Lemma 12 in paper.
+ *)
 Section ColimProd.
 
 Definition P (G1 : Type0 -> Type0) (G2 : Type0 -> Type0) (F : nat -> Type0) : nat -> Type0
@@ -381,6 +382,69 @@ refine (colim_rec _ _ _ _ _).
   apply com.
 Defined.
 
+Inductive leq : nat -> nat -> Type0 :=
+| leqR : forall (n : nat), leq n n
+| leqS : forall (n m : nat), leq n m -> leq n (S m).
+
+Hint Constructors leq.
+
+Lemma leqZ : forall n, leq 0 n.
+Proof.
+induction n; auto.
+Defined.
+
+Lemma leqSS : forall n m, leq n m -> leq (S n) (S m).
+Proof.
+induction 1 ; auto.
+Defined.
+
+Lemma leqSC : forall n m, leq n m -> m = n \/ leq (S n) m.
+Proof.
+intros.
+induction H.
+ left.
+ reflexivity.
+
+ destruct IHleq.
+  right.
+  apply (transport (fun (x : nat) => leq (x.+1) (m.+1)) p (leqR (m.+1))).
+
+  right.
+  apply leqS.
+  apply l.
+Defined.
+
+Lemma leqTot : forall n m, leq n m + leq m n.
+Proof.
+intros.
+induction n.
+- left.
+  apply leqZ.
+- destruct IHn ; auto.
+  destruct (leqSC n m l).
+    * right.
+      apply (transport (fun (x : nat) => leq m (x.+1)) p).
+      apply leqS.
+      apply leqR.
+    * auto.
+Defined.
+
+
+Lemma help
+  (F : nat -> Type0) 
+  (f : forall (n : nat), F n -> F(n.+1)) 
+  (G : Type0 -> Type0) 
+  (GF : forall A B : Type0, (A -> B) -> G A -> G B)
+  : (forall (x y : nat), leq x y -> G(F x) -> G(F y)).
+Proof.
+intros x y p.
+induction p.
+ apply idmap.
+
+ intro x.
+ apply (GF (F m) (F m.+1) (f m) (IHp x)).
+Defined.
+
 Definition P_colim : 
   forall  (F : nat -> Type0)
           (f : forall (n : nat), F n -> F(S n))
@@ -402,4 +466,18 @@ Unshelve.
   refine (colim_rec _ _ _ _ _ snd).
   Unshelve.
     Focus 2.
-*)
+    intros m y.
+    destruct (leqTot n m).
+      apply (inc (P G1 G2 F) (PMap G1 G2 G1F G2F F f) m).
+      apply (help F f G1 G1F n m l x, y).
+
+      apply (inc (P G1 G2 F) (PMap G1 G2 G1F G2F F f) n).
+      apply (x, help F f G2 G2F m n l y).
+
+  cbn.
+  intros m y.
+  induction n.
+    Focus 1.
+    induction m ; apply com.
+
+    induction m.

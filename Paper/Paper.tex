@@ -555,7 +555,7 @@ Hence, this diagram commutes, because of the pushout we used to define $H_{\Appr
 
 Next we need to define the introduction rules for the paths.
 Let us start by making maps $I^1 \times B_i \> (\hocolim \> F \> f) \rightarrow \hocolim \> F \> f$.
-Since homotopy colimits commute with polynomials, it suffices to make a map $\hocolim \> (I^1 \times B_i \> F) \> (I^1 \> B_i \> f)  \rightarrow \hocolim \> F \> f$.
+Since homotopy colimits commute with polynomials, it suffices to make a map $\hocolim \> (I^1 \times B_i \> F) \> (I^1 \times B_i \> f)  \rightarrow \hocolim \> F \> f$.
 
 For this we use the eliminator of the homotopy colimit.
 First, we need to make for all $n$ a map $I^1 \times B_i \> (F \> n)  \rightarrow \hocolim \> F \> f$.
@@ -823,6 +823,10 @@ We send $\inc \> n \> x$ to $\inc \> n \> (\inn_i \> x)$ and $\com \> n \> x$ to
 \label{lem:colimprod}
 Colimits commute with products.
 \end{lemma}
+
+\begin{proof}
+This is the most difficult one, because colimits only commute with products if there are exponentials.
+\end{proof}
 
 \section{Conclusion and Further Work}
 
