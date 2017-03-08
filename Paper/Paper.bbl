@@ -46,6 +46,12 @@ Marc Bezem, Thierry Coquand, and Simon Huber.
 \newblock In {\em 19th International Conference on Types for Proofs and
   Programs (TYPES 2013)}, volume~26, pages 107--128, 2014.
 
+\bibitem{boulier2016}
+Simon Boulier.
+\newblock Colimits in {H}o{T}{T}.
+\newblock \url{https://homotopytypetheory.org/2016/01/08/colimits-in-hott/},
+  2016.
+
 \bibitem{cohen2016cubical}
 Cyril Cohen, Thierry Coquand, Simon Huber, and Anders M{\"o}rtberg.
 \newblock Cubical type theory: a constructive interpretation of the univalence
