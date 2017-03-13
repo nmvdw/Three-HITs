@@ -46,6 +46,12 @@ Marc Bezem, Thierry Coquand, and Simon Huber.
 \newblock In {\em 19th International Conference on Types for Proofs and
   Programs (TYPES 2013)}, volume~26, pages 107--128, 2014.
 
+\bibitem{boulier2015colimites}
+Simon Boulier.
+\newblock Colimites et structure de modele en th{\'e}orie des types
+  homotopique.
+\newblock 2015.
+
 \bibitem{boulier2016}
 Simon Boulier.
 \newblock Colimits in {H}o{T}{T}.

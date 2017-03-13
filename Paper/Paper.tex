@@ -116,16 +116,17 @@ Numerous examples and definitions of such types have already been given in the l
 As a step towards that goal, we simplify the definition given in \cite{basoldhigher} bringing it closer to the intuition and the intended meaning.
 
 Philosophically, one sees an inductive type as a type `which is built step by step'.
-One starts with the nonrecursive constructors, and then at each step new terms are added by applying the recursive constructors to the previously built terms.
-This is explained by a theorem which says that inductive types are initial algebras for a functor \cite{dybjer1994inductive,dybjer2003induction} and another one about how these algebras are obtained \cite{adamek1974free}.
-For higher inductive types one would expect a similar result which explains how they are constructed.
-However, since equations are also allowed in the specification of a higher inductive type, one would expect that during the construction identifications are made by gluing paths.
+Starting with the nonrecursive constructors, new terms are made by applying recursive constructors to previously built terms.
+This is explained by the fact that inductive types are initial algebras for a functor \cite{dybjer1994inductive,dybjer2003induction} and that such algebras are obtained by fixed point iteration \cite{adamek1974free}.
+Following our intuition on higher inductive types, one would expect that they can be constructed in a similar fashion.
+However, since equations are also allowed in the specification, identifications need to be made during the construction.
 
 The goal of this paper is to formally justify this idea by showing that the higher inductive types defined in \cite{basoldhigher} can be generated from the interval, homotopy pushout and colimit.
 More concretely, we will prove the following theorem.
 \begin{theorem}[Three-HITs Theorem]
 \label{thm:three-hit}
-In Martin-L\"of type theory extended with an interval object, homotopy pushouts and colimits, we can interpret each higher inductive type from \cite{basoldhigher}. This means that we can define a type with the same introduction, elimination and computation rules.
+In Martin-L\"of type theory extended with an interval object, homotopy pushouts and colimits, we can interpret each higher inductive type from \cite{basoldhigher}. 
+This means that for each HIT we can define a type with the same introduction, elimination and computation rules.
 \end{theorem}
 Also, this generalizes the results in \cite{doorn2016constructing,kraus2014general,kraus2016constructions} where the result is showed for truncations.
 With this result the metatheory of higher inductive types could be simplified significantly, because rather than a general class, one only needs to check metatheoretical properties for three HITs.
@@ -295,9 +296,9 @@ Inductive $\hocolim$ $(F : \mathbb{N} \rightarrow \Type)$ $(f : \prod (n : \math
 Let us assume that some higher inductive type $H$ is given.
 In order to construct $H$ as a colimit, we first need to give the approximations in the colimit, and for that we define the \emph{approximator}.
 
-Before giving the definition, let us think about how it should be given.
-By Ad\'amek's theorem, every inductive type can be given as a colimit.
-An inductive type $T$ is given by a polynomial functor $F$ and a constructor $c : F \> T \rightarrow T$, and then $T$ is the colimit of the sequence
+Before giving the definition, let us acquire inspiration by looking in more detail at how an inductive type is constructed.
+Such a type $T$ is defined by a constructor $c : F \> T \rightarrow T$ with $F$ polynomial.
+Equivalently, we can define the type with a signature which is a polynomial functor $F$, and then by Ad\'amek's theorem it is the following colimit.
 \[
 \xymatrix
 {
@@ -309,12 +310,12 @@ This means we have two inclusions  $\xymatrix{1 \ar[r] & 1+X}$ and  $\xymatrix{X
 At every step we formally add for each $x : X$ a successor $S_C \> x$, and we add $0_C$.
 Repeatedly applying this construction to the empty type $\zero$ gives the natural numbers $\mathbb{N}$.
 
-For higher inductive types one would like to do a similar construction.
-The first difference is that instead of starting with $\zero$, we start with the nonrecursive constructors.
+One would like to construct higher inductive types in a similar fashion.
+The first difference is that instead of starting with $\zero$, we start with all the nonrecursive constructors.
 Also, in this construction, the functor $F$ is applied at every step.
 Instead we will add terms built from the recursive constructors using previously constructed terms as arguments.
 Since extra equalities might be present in the higher inductive type, we need to make identifications during the construction.
-Rather than just adding points at every step, we also need to specified the right paths.
+Rather than just adding points at every step, we also need to glue the specified paths.
 
 To understand more precisely what should be done, let us consider an example.
 \lstset{language=Coq}
@@ -336,10 +337,10 @@ To do so, we take the following homotopy pushout
 \]
 to obtain the actual third approximation $F \> 3$, and we continue our construction with that one.
 Note that to glue during the $n$th step, we need refer to elements from the $(n-2)$th step.
-So, in order to do the identification of the $n$th step, one needs to refer back to a previous approximation.
+So, in order to do the identification of the $n$th step, inhabitants from a previous approximation need to be used.
 
-Note that one always has to go back a fixed number of steps due to the usage of constructor terms.
-By extending the syntax, one can also think of examples where one needs to go back an arbitrary amount of steps.
+Due to the usage of constructor terms, one always has to go back a fixed number of steps.
+By extending the syntax, it might be needed to go back an arbitrary amount of steps.
 This happens in the following example.
 \lstset{language=Coq}
 \begin{lstlisting}
@@ -348,7 +349,7 @@ Inductive $H$ :=
 | $f$ : $H \rightarrow H$
 | $p$ : $\prod (n : \mathbb{N}), f^n \> 0 = 0$
 \end{lstlisting}
-This example might seem like it is permitted by the syntax, but it is not.
+This example might seem like it is permitted by the syntax, but actually it is not.
 The function $f^n$ is defined as a polymorphic map, and using it requires the type $H$ as an argument.
 In constructor terms one cannot use the type, and hence this definition is not allowed
 An extension with such types will make the construction more complicated, and thus they will not be considered in this paper.
@@ -415,7 +416,7 @@ There will be several coherency problems during the proof, so the pushout will s
 
 \begin{definition}
 Let a higher inductive type $H$ be given as before, and let the type $H_{\Con}$ be defined as before.
-Given are parameters $P$ and $Q$ with amps $i_l : H_{\Con} \> Q \rightarrow P$ and $i_r : I^1 \times B_i \> Q + Q \rightarrow P$.
+Given are parameters $P$ and $Q$ with maps $i_l : H_{\Con} \> Q \rightarrow P$ and $i_r : I^1 \times B_i \> Q + Q \rightarrow P$.
 Let us define the following maps.
 \begin{align*}
 \widetilde{i_l} &= i_l \comp \inn_1\\
@@ -500,7 +501,7 @@ If $A$ is constant then it follows from Lemma \ref{lem:colimcon}.
 For the identity it is trivial, and for sums and products, it follows from Lemmata \ref{lem:colimsum} and \ref{lem:colimprod} respectively. 
 \end{proof}
 
-Now we will construct the map $A_{\rec} \> (\hocolim \> F \> f) \rightarrow \hocolim \> F \> f$, and by Lemma \ref{lem:colim_commute_poly} it suffices to make a map $\hocolim \> (A_{\rec} \comp F) \> (A \> f) \rightarrow \hocolim \> F \> f$.
+Now we will construct the map $A_{\rec} \> (\hocolim \> F \> f) \rightarrow \hocolim \> F \> f$, and by Lemma \ref{lem:colim_commute_poly} it suffices to make a map $\hocolim \> (A_{\rec} \comp F) \> (A_{\rec} \> f) \rightarrow \hocolim \> F \> f$.
 For this we use the recursion rule of $\hocolim$, and we start with the following string of maps
 \[
 \xymatrix
@@ -825,12 +826,28 @@ Colimits commute with products.
 \end{lemma}
 
 \begin{proof}
-This follows from a more general result which says that colimits commute with sigma types which is proven in \cite{boulier2016} under `commutation with sigmas'.
+This follows from a more general result which says that colimits commute with sigma types which is proven in \cite{boulier2015colimites,boulier2016} under `commutation with sigmas'.
 \end{proof}
 
 \section{Conclusion and Further Work}
+Higher inductive types can be thus be constructed if we have the interval, homotopy pushout and homotopy colimits.
+The proof is constructive because it is done in type theory.
+Notice that we did not use that inductive types exist in general, but instead we only used the existence of sum and product types.
+Hence, from this theorem we can also construct all intervals.
 
+There is still some work which remains to be done.
+First of all, we expect that this theorem will have applications in the semantics and the metatheory of higher inductive types.
+The development should be simplified by it.
+Also, it should also allow generic programming in HoTT.
 
+Furthermore, there might be some interesting theoretical possibilities for the Three-HIT Theorem.
+We expect that it can be generalized if a syntax of higher inductive types with a higher dimensional paths is given.
+If constructor terms are used, then most of the proof might be reusable.
+Also, it would be interesting to relate it to other definitions of HITs.
+The work of Sojakova \cite{sojakova2015higher} relates higher inductive types to homotopy initial algebra.
+Since initial algebra are made as a colimit, it would be nice if this construction can be related to homotopy initial algebras some way.
+Also, the work by Altenkirch et al. \cite{altenkirch2016quotient} allows more general constructors which is not allowed in the current syntax.
+If the proof can be extended somehow to also allows these constructors, then that would pave the way towards constructive semantics of QIITs.
 
 \nocite{*}
 

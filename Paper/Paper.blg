@@ -9,46 +9,47 @@ Reallocated singl_function (elt_size=4) to 100 items from 50.
 Database file #1: lipics-v2016-sample-article.bib
 Warning--empty journal in basoldhigher
 Warning--empty year in basoldhigher
+Warning--empty journal in boulier2015colimites
 Warning--can't use both volume and number fields in sojakova2015higher
-You've used 18 entries,
+You've used 19 entries,
             2849 wiz_defined-function locations,
-            717 strings with 7939 characters,
-and the built_in function-call counts, 7615 in all, are:
-= -- 791
-> -- 267
+            719 strings with 8028 characters,
+and the built_in function-call counts, 7906 in all, are:
+= -- 818
+> -- 276
 < -- 8
-+ -- 99
-- -- 78
-* -- 360
-:= -- 1118
-add.period$ -- 57
-call.type$ -- 18
-change.case$ -- 91
++ -- 102
+- -- 80
+* -- 368
+:= -- 1162
+add.period$ -- 60
+call.type$ -- 19
+change.case$ -- 95
 chr.to.int$ -- 0
-cite$ -- 21
-duplicate$ -- 241
-empty$ -- 703
-format.name$ -- 78
-if$ -- 1967
+cite$ -- 23
+duplicate$ -- 251
+empty$ -- 732
+format.name$ -- 80
+if$ -- 2044
 int.to.chr$ -- 0
-int.to.str$ -- 18
-missing$ -- 18
-newline$ -- 92
-num.names$ -- 36
-pop$ -- 173
+int.to.str$ -- 19
+missing$ -- 19
+newline$ -- 97
+num.names$ -- 38
+pop$ -- 183
 preamble$ -- 1
-purify$ -- 75
+purify$ -- 78
 quote$ -- 0
-skip$ -- 564
+skip$ -- 590
 stack$ -- 0
-substring$ -- 322
+substring$ -- 327
 swap$ -- 65
 text.length$ -- 8
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 68
-warning$ -- 3
-while$ -- 59
-width$ -- 20
-write$ -- 196
-(There were 3 warnings)
+type$ -- 72
+warning$ -- 4
+while$ -- 61
+width$ -- 21
+write$ -- 205
+(There were 4 warnings)
