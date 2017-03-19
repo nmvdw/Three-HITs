@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.2.2)  10 MAR 2017 16:34
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.2.2)  19 MAR 2017 22:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1034,28 +1034,28 @@ Proof Tree (bussproofs) style macros. Version 1.1.
 ) (./Paper.aux)
 \openout1 = `Paper.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 104.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 104.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 113.
+LaTeX Font Info:    ... okay on input line 113.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 113.
+LaTeX Font Info:    ... okay on input line 113.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 113.
+LaTeX Font Info:    ... okay on input line 113.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 113.
+LaTeX Font Info:    ... okay on input line 113.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 113.
+LaTeX Font Info:    ... okay on input line 113.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 113.
+LaTeX Font Info:    ... okay on input line 113.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 113.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 113.
 
  (/usr/local/texlive/2014/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Try loading font information for T1+lmr on input line 104.
+LaTeX Font Info:    ... okay on input line 113.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 113.
+LaTeX Font Info:    ... okay on input line 113.
+LaTeX Font Info:    Try loading font information for T1+lmr on input line 113.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
@@ -1095,9 +1095,9 @@ Package lastpage Info: Please have a look at the pageslts package at
 (lastpage)             or
 (lastpage)             http://www.ctan.org/tex-archive/ 
 (lastpage)             install/macros/latex/contrib/pageslts.tds.zip
-(lastpage)             ! on input line 104.
+(lastpage)             ! on input line 113.
 \AtBeginShipoutBox=\box43
-Package hyperref Info: Link coloring OFF on input line 104.
+Package hyperref Info: Link coloring OFF on input line 113.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -1107,9 +1107,9 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count151
 )
-LaTeX Info: Redefining \ref on input line 104.
-LaTeX Info: Redefining \pageref on input line 104.
-LaTeX Info: Redefining \nameref on input line 104.
+LaTeX Info: Redefining \ref on input line 113.
+LaTeX Info: Redefining \pageref on input line 113.
+LaTeX Info: Redefining \nameref on input line 113.
 
 (./Paper.out) (./Paper.out)
 \@outlinefile=\write5
@@ -1118,7 +1118,7 @@ LaTeX Info: Redefining \nameref on input line 104.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: rotating package is loaded.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Info: Redefining \microtypecontext on input line 104.
+LaTeX Info: Redefining \microtypecontext on input line 113.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
@@ -1133,37 +1133,37 @@ Package microtype Info: No adjustment of character kerning.
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
 (RS)
 )
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 104.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 113.
 
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 104.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 113.
 
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 104
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 113
 .
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 104
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 113
 .
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 104.
+(Font)              <10> on input line 113.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 104.
+(Font)              <7> on input line 113.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 104.
-LaTeX Font Info:    Try loading font information for U+msa on input line 104.
+(Font)              <5> on input line 113.
+LaTeX Font Info:    Try loading font information for U+msa on input line 113.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -1171,7 +1171,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2014/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 104.
+LaTeX Font Info:    Try loading font information for U+msb on input line 113.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -1179,8 +1179,8 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/local/texlive/2014/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-Package xypdf Info: Line width: 0.39998pt on input line 104.
-LaTeX Font Info:    Try loading font information for T1+lmss on input line 106.
+Package xypdf Info: Line width: 0.39998pt on input line 113.
+LaTeX Font Info:    Try loading font information for T1+lmss on input line 115.
 
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/t1lmss.fd
@@ -1191,47 +1191,47 @@ Package microtype Info: Loading generic settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <17.28> on input line 106.
+(Font)              <17.28> on input line 115.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 106.
+(Font)              <12> on input line 115.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 106.
+(Font)              <8> on input line 115.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 106.
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 106.
+(Font)              <6> on input line 115.
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 115.
 
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <9.5> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 106.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 115.
 Package microtype Info: Loading generic settings for font family
 (microtype)             `lmtt' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 \openout3 = `Paper.vtc'.
 
-LaTeX Font Info:    Calculating math sizes for size <8.5> on input line 106.
+LaTeX Font Info:    Calculating math sizes for size <8.5> on input line 115.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8.5> on input line 106.
+(Font)              <8.5> on input line 115.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5.94997> on input line 106.
+(Font)              <5.94997> on input line 115.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <4.25> on input line 106.
-LaTeX Font Info:    Calculating math sizes for size <5.94997> on input line 106
+(Font)              <4.25> on input line 115.
+LaTeX Font Info:    Calculating math sizes for size <5.94997> on input line 115
 .
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <4.16495> on input line 106.
+(Font)              <4.16495> on input line 115.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <2.97498> on input line 106.
+(Font)              <2.97498> on input line 115.
 
 <cc-by.pdf, id=55, 88.33pt x 31.11626pt>
 File: cc-by.pdf Graphic file (type pdf)
  <use cc-by.pdf>
-Package pdftex.def Info: cc-by.pdf used on input line 133.
+Package pdftex.def Info: cc-by.pdf used on input line 142.
 (pdftex.def)             Requested size: 39.74274pt x 14.0pt.
-LaTeX Font Info:    Try loading font information for TS1+lmr on input line 133.
+LaTeX Font Info:    Try loading font information for TS1+lmr on input line 142.
 
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/ts1lmr.fd
@@ -1241,7 +1241,7 @@ File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 File: lipics-logo-bw.pdf Graphic file (type pdf)
 
 <use lipics-logo-bw.pdf>
-Package pdftex.def Info: lipics-logo-bw.pdf used on input line 133.
+Package pdftex.def Info: lipics-logo-bw.pdf used on input line 142.
 (pdftex.def)             Requested size: 64.00354pt x 14.0pt.
  [1
 
@@ -1259,55 +1259,57 @@ Package microtype Info: Character `029' is missing
 \myCenter2=\dimen199
 \myScoreEnd2=\dimen200
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 205.
+(Font)              <9> on input line 215.
  [2]
 Package microtype Info: Character `029' is missing
 (microtype)             in font `T1/lmr/m/sc/9'.
 (microtype)             Ignoring protrusion settings for this character.
  [3] <xymatrix 4x1
-120> <xymatrix 2x1 44> <xymatrix 2x1 44> <xymatrix 2x2 171> [4] [5] <xymatrix
-2x2 191> <xymatrix 3x1 82> [6] <xymatrix 5x1 110> <xymatrix 5x1 151> <xymatrix
-3x2 135> <xymatrix 4x2 327> <xymatrix 2x2 188> [7] <xymatrix 5x1 154>
-<xymatrix 3x2 284> <xymatrix 3x2 165>
-Overfull \hbox (2.47914pt too wide) detected at line 626
- $[]$ 
- []
-
-
-Overfull \hbox (48.9385pt too wide) detected at line 640
- $[] []$ 
- []
-
-[8] <xymatrix 2x2 96> [9] <xymatrix 3x2 103> <xymatrix 3x2 193> [10] [11]
-(./Paper.bbl
+120> <xymatrix 2x1 44> <xymatrix 2x1 44> [4] <xymatrix 2x2 171> [5] <xymatrix
+3x1 148> <xymatrix 6x1 160> <xymatrix 7x1 164> [6] <xymatrix 3x1 82> <xymatrix
+5x1 110> [7] <xymatrix 5x1 151> <xymatrix 3x2 135> <xymatrix 4x2 327>
+<xymatrix 2x2 188> <xymatrix 4x2 415> [8] [9] <xymatrix 2x2 96> <xymatrix 3x2
+103> [10] <xymatrix 5x2 111> <xymatrix 3x2 193> [11] [12] (./Paper.bbl
+LaTeX Font Info:    Calculating math sizes for size <9.5> on input line 48.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9.5> on input line 48.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6.64996> on input line 48.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <4.75> on input line 48.
 Package microtype Info: Character `029' is missing
 (microtype)             in font `T1/lmr/m/sc/9.5'.
 (microtype)             Ignoring protrusion settings for this character.
-LaTeX Font Info:    Calculating math sizes for size <9.5> on input line 41.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9.5> on input line 41.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6.64996> on input line 41.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <4.75> on input line 41.
- [12]) 
+ [13]
+Underfull \hbox (badness 1281) in paragraph at lines 72--78
+[]\T1/lmr/m/n/9.5 Simon Boulier.  Colim-ites et Struc-ture de Modele en Théorie
+ des Types Ho-mo-
+ []
+
+
+Underfull \hbox (badness 1742) in paragraph at lines 72--78
+\T1/lmr/m/n/9.5 to-pique.  []$\T1/lmtt/m/n/9.5 http : / / perso . eleves . ens-
+[]rennes . fr / ~sboul434 / documents / rapport _ de _
+ []
+
+) 
 AED: lastpage setting LastPage
-[13]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 866.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 866.
+[14]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 941.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 941.
  (./Paper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 866.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 866.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 941.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 941.
 Package rerunfilecheck Info: File `Paper.out' has not changed.
 (rerunfilecheck)             Checksum: 0AA4F6F782969A945CFF3AB3AB3E4EA1;492.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 866.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 941.
  ) 
 Here is how much of TeX's memory you used:
- 16466 strings out of 493117
- 239997 string characters out of 6135434
- 422480 words of memory out of 5000000
- 19269 multiletter control sequences out of 15000+600000
- 235779 words of font info for 252 fonts, out of 8000000 for 9000
+ 16487 strings out of 493117
+ 240218 string characters out of 6135434
+ 421731 words of memory out of 5000000
+ 19284 multiletter control sequences out of 15000+600000
+ 235649 words of font info for 251 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  44i,18n,40p,3235b,1034s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/
@@ -1348,10 +1350,10 @@ msy9.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmtk10.pfb><
 e/2014/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/te
 xlive/2014/texmf-dist/fonts/type1/public/xypic/xycmat10.pfb></usr/local/texlive
 /2014/texmf-dist/fonts/type1/public/xypic/xycmbt10.pfb>
-Output written on Paper.pdf (13 pages, 632533 bytes).
+Output written on Paper.pdf (14 pages, 645264 bytes).
 PDF statistics:
- 425 PDF objects out of 1000 (max. 8388607)
- 361 compressed objects within 4 object streams
- 96 named destinations out of 1000 (max. 500000)
+ 451 PDF objects out of 1000 (max. 8388607)
+ 386 compressed objects within 4 object streams
+ 104 named destinations out of 1000 (max. 500000)
  52825 words of extra memory for PDF output out of 61914 (max. 10000000)
 

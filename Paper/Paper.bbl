@@ -2,37 +2,59 @@
 
 \bibitem{abbott2005containers}
 Michael Abbott, Thorsten Altenkirch, and Neil Ghani.
-\newblock Containers: constructing strictly positive types.
+\newblock Containers: {C}onstructing {S}trictly {P}ositive {T}ypes.
 \newblock {\em Theoretical Computer Science}, 342(1):3--27, 2005.
 
 \bibitem{adamek1974free}
 Ji{\v{r}}{\'\i} Ad{\'a}mek.
-\newblock Free algebras and automata realizations in the language of
-  categories.
+\newblock Free {A}lgebras and {A}utomata {R}ealizations in the {L}anguage of
+  {C}ategories.
 \newblock {\em Commentationes Mathematicae Universitatis Carolinae},
   15(4):589--602, 1974.
 
 \bibitem{altenkirch2016quotient}
 Thorsten Altenkirch, Paolo Capriotti, Gabe Dijkstra, and Fredrik~Nordvall
   Forsberg.
-\newblock Quotient inductive-inductive types.
+\newblock Quotient {I}nductive-{I}nductive {T}ypes.
 \newblock {\em arXiv preprint arXiv:1612.02346}, 2016.
+
+\bibitem{altenkirch2003generic}
+Thorsten Altenkirch and Conor McBride.
+\newblock Generic {P}rogramming within {D}ependently {T}yped {P}rogramming.
+\newblock In {\em Generic Programming}, pages 1--20. Springer, 2003.
+
+\bibitem{arndt2011homotopy}
+Peter Arndt and Krzysztof Kapulkin.
+\newblock Homotopy-{T}heoretic {M}odels of {T}ype {T}heory.
+\newblock In {\em International Conference on Typed Lambda Calculi and
+  Applications}, pages 45--60. Springer, 2011.
 
 \bibitem{awodey2012inductive}
 Steve Awodey, Nicola Gambino, and Kristina Sojakova.
-\newblock Inductive types in homotopy type theory.
+\newblock Inductive {T}ypes in {H}omotopy {T}ype {T}heory.
 \newblock In {\em Proceedings of the 2012 27th Annual IEEE/ACM Symposium on
   Logic in Computer Science}, pages 95--104. IEEE Computer Society, 2012.
 
+\bibitem{awodey2009homotopy}
+Steve Awodey and Michael~A Warren.
+\newblock Homotopy {T}heoretic {M}odels of {I}dentity {T}ypes.
+\newblock In {\em Mathematical Proceedings of the Cambridge Philosophical
+  Society}, volume 146, pages 45--55. Cambridge Univ Press, 2009.
+
 \bibitem{basoldhigher}
 Henning Basold, Herman Geuvers, and Niels van~der Weide.
-\newblock Higher inductive types in programming.
+\newblock Higher {I}nductive {T}ypes in {P}rogramming.
+\newblock {\em Journal of Universal Computer Science}, 23(1):63--88, jan 2017.
+\newblock \url{http://www.jucs.org/jucs_23_1/higher_inductive_types_in}.
 
 \bibitem{bauer2016hott}
-Andrej Bauer, Jason Gross, Peter~LeFanu Lumsdaine, Mike Shulman, Matthieu
+Andrej Bauer, Jason Gross, Peter~LeFanu Lumsdaine, Michael Shulman, Matthieu
   Sozeau, and Bas Spitters.
-\newblock The hott library: A formalization of homotopy type theory in coq.
-\newblock {\em arXiv preprint arXiv:1610.04591}, 2016.
+\newblock The {H}o{T}{T} {L}ibrary: {A} {F}ormalization of {H}omotopy {T}ype
+  {T}heory in \textsc{Coq}.
+\newblock In {\em Proceedings of the 6th {ACM} {SIGPLAN} Conference on
+  Certified Programs and Proofs, {CPP} 2017, Paris, France, January 16-17,
+  2017}, pages 164--172, 2017.
 
 \bibitem{CoqImpl}
 Andrej Bauer and Niels van~der Weide.
@@ -42,15 +64,17 @@ Andrej Bauer and Niels van~der Weide.
 
 \bibitem{bezem2014model}
 Marc Bezem, Thierry Coquand, and Simon Huber.
-\newblock A model of type theory in cubical sets.
+\newblock A {M}odel of {T}ype {T}heory in {C}ubical {S}ets.
 \newblock In {\em 19th International Conference on Types for Proofs and
   Programs (TYPES 2013)}, volume~26, pages 107--128, 2014.
 
 \bibitem{boulier2015colimites}
 Simon Boulier.
-\newblock Colimites et structure de modele en th{\'e}orie des types
-  homotopique.
-\newblock 2015.
+\newblock Colimites et {S}tructure de {M}odele en {T}h{\'e}orie des {T}ypes
+  {H}omotopique.
+\newblock
+  \url{http://perso.eleves.ens-rennes.fr/~sboul434/documents/rapport_de_stage_M2_Nantes.pdf},
+  2015.
 
 \bibitem{boulier2016}
 Simon Boulier.
@@ -60,50 +84,61 @@ Simon Boulier.
 
 \bibitem{cohen2016cubical}
 Cyril Cohen, Thierry Coquand, Simon Huber, and Anders M{\"o}rtberg.
-\newblock Cubical type theory: a constructive interpretation of the univalence
-  axiom.
+\newblock Cubical {T}ype {T}heory: {A} {C}onstructive {I}nterpretation of the
+  {U}nivalence {A}xiom.
 \newblock {\em arXiv preprint arXiv:1611.02108}, 2016.
 
 \bibitem{doorn2016constructing}
 Floris~van Doorn.
-\newblock Constructing the propositional truncation using non-recursive hits.
+\newblock Constructing the {P}ropositional {T}runcation using {N}on-{R}ecursive
+  {H}{I}{T}s.
 \newblock In {\em Proceedings of the 5th ACM SIGPLAN Conference on Certified
   Programs and Proofs}, pages 122--129. ACM, 2016.
 
 \bibitem{dybjer1994inductive}
 Peter Dybjer.
-\newblock Inductive families.
+\newblock Inductive {F}amilies.
 \newblock {\em Formal aspects of computing}, 6(4):440--465, 1994.
 
 \bibitem{dybjer2003induction}
 Peter Dybjer and Anton Setzer.
-\newblock Induction--recursion and initial algebras.
+\newblock Induction--{R}ecursion and {I}nitial {A}lgebras.
 \newblock {\em Annals of Pure and Applied Logic}, 124(1-3):1--47, 2003.
+
+\bibitem{kapulkin2012simplicial}
+Chris Kapulkin and Peter~LeFanu Lumsdaine.
+\newblock The {S}implicial {M}odel of {U}nivalent {F}oundations (after
+  {V}oevodsky).
+\newblock {\em arXiv preprint arXiv:1211.2851}, 2012.
 
 \bibitem{kraus2014general}
 Nicolai Kraus.
-\newblock The general universal property of the propositional truncation.
+\newblock The {G}eneral {U}niversal {P}roperty of the {P}ropositional
+  {T}runcation.
 \newblock {\em arXiv preprint arXiv:1411.2682}, 2014.
 
 \bibitem{kraus2016constructions}
 Nicolai Kraus.
-\newblock Constructions with non-recursive higher inductive types.
+\newblock Constructions with {N}on-{R}ecursive {H}igher {I}nductive {T}ypes.
 \newblock In {\em Proceedings of the 31st Annual ACM/IEEE Symposium on Logic in
   Computer Science}, pages 595--604. ACM, 2016.
 
 \bibitem{mac2013categories}
 Saunders Mac~Lane.
-\newblock {\em Categories for the working mathematician}, volume~5.
+\newblock {\em Categories for the {W}orking {M}athematician}, volume~5.
 \newblock Springer Science \& Business Media, 2013.
 
 \bibitem{sojakova2015higher}
 Kristina Sojakova.
-\newblock Higher inductive types as homotopy-initial algebras.
-\newblock In {\em ACM SIGPLAN Notices}, volume~50, pages 31--42. ACM, 2015.
+\newblock Higher {I}nductive {T}ypes as {H}omotopy-{I}nitial {A}lgebras.
+\newblock In {\em Proceedings of the 42nd Annual {ACM} {SIGPLAN-SIGACT}
+  Symposium on Principles of Programming Languages, {POPL} 2015, Mumbai, India,
+  January 15-17, 2015}, pages 31--42, 2015.
 
 \bibitem{hottbook}
 The {Univalent Foundations Program}.
-\newblock {\em Homotopy Type Theory: Univalent Foundations of Mathematics}.
+\newblock {\em Homotopy {T}ype {T}heory: {U}nivalent {F}oundations of
+  {M}athematics}.
 \newblock \url{https://homotopytypetheory.org/book}, Institute for Advanced
   Study, 2013.
 

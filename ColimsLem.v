@@ -1,4 +1,6 @@
 Require Import HoTT.
+Require Import HIT.Colimits.
+Require Export HIT.Colimits.
 Require Export HoTT.
 
 Ltac reduceTransport :=
