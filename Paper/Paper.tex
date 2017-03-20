@@ -425,34 +425,17 @@ Note that this type is actually a labeled sum.
 This is because $H_{\rec} \> P$ is isomorphic to $A_{\rec} \> P$, and thus this $H_{\Con}^n \> P$ is actually $P + A_{\rec} \> P + \ldots + A_{\rec}^n \> P$.
 Hence, we do not need inductive types in general for the construction, but we just need to have sums and products.
 If $n$ is clear from the context, then we shall not write it down.
-
-\begin{lemma}
-Suppose, we have a constructor term $t$ such that $x : F \> T \Vdash t : G \>T$ which uses at most $n$ constructors, and that we have a map $c_{\nonrec}' : A_{\nonrec} \rightarrow P$.
-Then $t$ induces a map $\overline{t} : F \> P \rightarrow G(H_{\Con}^n \> P)$ by replacing the constructors $c_{\nonrec}$ and $c_{\rec}$ by $c_{\nonrec}'$ and $c_{\rec}'$ respectively.
-\end{lemma}
-
-\begin{proof}
-We use induction on the form of the constructor term.
-\begin{itemize}
-	\item $t = a$ with $a : B$ and $B$ does not use $T$. Then we define $\overline{t} \> y = a$.
-	\item $t = x$ with $x : F \> T$. Then we define $\overline{t} \> y = \inn_P y$.
-	\item $t = c_{\nonrec} a$ with $a : A_{\nonrec}$. Then we define $\overline{t} \> y = c_{\nonrec}' a$.
-	\item $t = c_{\rec} r$ with $r : A_{\rec} \> T$ where $r$ uses at most $n-1$ constructors. 
-			  By induction we have a map $\overline{r} : F \> P \rightarrow A_{\rec} \> H_{\Con}^{n-1}$.
-			  Then we define $\overline{t} \> y = c_{\rec}' (\overline{r} \> x)$.
-	\item For the rules for the projection, pairing and injection it is trivial. \qedhere
-\end{itemize}
-\end{proof}
+From Lemma \ref{lem:constrTerm} we can conclude that we can interpret the constructor terms in $H_{\Con} \> P$
 
 Now we have sufficient to define the approximator.
 Given is the following data
-\begin{enumerate}
+\begin{itemize}
 	\item Types $P, Q, R$;
 	\item A map $j_Q : H_{\Con} \> Q \rightarrow P$;
 	\item An inclusion $j_R : H_{\Con} \> R \rightarrow Q$;
 	\item Paths $p_Q : \prod (x : Q), j_Q(\overline{t_i} \> x) = j_Q(\overline{r_i} \> x)$;
 	\item Paths $p_R : \prod (x : R), j_R(\overline{t_i} \> x) = j_R(\overline{r_i} \> x)$.
-\end{enumerate}
+\end{itemize}
 The type $H_{\Approx}$ depends on the given data, but for clarity we will suppress it from the notation.
 We start with $H_{\Con} \> P$.
 
@@ -480,48 +463,31 @@ To explain what this does, let us assume for a moment that we have one construct
 For $c' \> x$ with $x : Q$, the upper map is the inclusion of $H_{\Con} \> Q$ on the first coordinate of $H_{\Con} \> P$.
 The lower map sends $c' \> x$ to $c' \> (j_Q \> (\inn_1 \> x))$, so it replaces $x$ by its image in $P$.
 
-Another coherency we need is for the paths.
-The paths use arguments from $B_i \> H$, and we want to prevent the presence of duplicates.
-For this we define $C_3$ as the coequalizer of the following two arrows.
-\[
-\xymatrix
-{
-	B_i \> Q
-	\ar@<-.5ex>[rrr]_-{H_{\Con} \> i \circ \overline{t_i}} \ar@<.5ex>[rrr]^-{\overline{t_i} \circ B_i(i \circ \inn_1)} 
-	& & & 
-	H_{\Con} \> P \ar[rrr]^-{\inC_2 \circ \inC_1}
-	& & &
-	C_2 
-}
-\]
-Similarly, we define $C_4$ by replacing $\overline{t_i}$ by $\overline{r_i}$.
-
 Lastly, we define $H_\Approx$, and for this we make one more identification.
 Instead of identifying points, we will identify paths in this step.
 Since also paths are added during the construction, there might also be duplicated paths.
 The resulting type should be free, so these paths should be identified.
-We define a map $q : B_i \> R \rightarrow \Sigma (x, y : P), (x = y) \times (x = y)$ sending $x : B_i \> R$ to the pair
+We define a map $q : B_i \> R \rightarrow \sum (x, y : P), (x = y) \times (x = y)$ sending $x : B_i \> R$ to the pair
 \[
-(\overline{t_i} \> x, \overline{r_i} \> x, \ap \> (i \circ \inn_1) \> (p_R \> x), p_Q \> (i_R \> x))
+(\overline{t_i} \> x, \overline{r_i} \> x, \ap \> (j_Q \circ \inn_1) \> (p_R \> x), p_Q \> (j_R \> x))
 \]
-Concluding the construction, we define $H_{\Approx}$ as $\pcoeq \> (B_i \> R) \> C_4 \> q$.
+Concluding the construction, we define $H_{\Approx}$ as $\pcoeq \> (B_i \> R) \> C_2 \> q$.
 
 Now we can define the approximating sequence.
 
 \begin{definition}
-In the setting as described, we simultaneously define a sequence of approximations $F : \mathbb{N} \rightarrow \Type$ to $H$ and maps $f : \prod(n : \mathbb{N}), F \> n \rightarrow F(n+1)$ as follows
-\begin{align*}
-	F \> 0 &= H_{\nonrec},\\
-	F \> 1 &= H_{\Approx} \> (F \> 0) \> \zero \> \zero \> \zero\frec \> \zero\frec \> \zero\frec \> \zero \frec \> \zero\frec\\
-	F \> 2 &= H_{\Approx} \> (F \> 1) \> (F \> 0) \> \zero \> \inl \> \inr \> \zero\frec \> \zero\frec \> \zero\frec\\
-	F(n+3) &= H_{\Approx} \> (F(n+2)) \> (F(n+1)) \> (F \> n) \> \inl \> \inr \> (f \> n) \> \overline{\glue} \> \overline{\glue} \qedhere
-\end{align*}
-where $\overline{\glue}$ is the map induced by the path $\glue$.
-For the maps maps $f \> n : F \> n \rightarrow F(n + 1)$, note that we always have the following sequence of maps
+In the setting as described, we simultaneously define a sequence of approximations $F : \mathbb{N} \rightarrow \Type$ to $H$ and maps $f : \prod(n : \mathbb{N}), F \> n \rightarrow F(n+1)$ as follows.
+\begin{itemize}
+	\item We define $F \> 0 = H_{\nonrec}$.
+	\item We define $F \> 1 = H_{\Approx}$ taking $P = F \> 0$ and $Q, R = \zero$ and the maps are defined by $\zero\frec$.
+	\item We define $F \> 2 = H_{\Approx}$ with $P= F \> 1, Q = F \> 0$ and $R =\zero$. We have a map $Q \rightarrow P$ defined to be the composition of all $\inC$ with $\inn_1$.
+	\item We define $F(n+3) = H_{\Approx}$ with $P = (F(n+2)$, $Q = F(n+1)$, and $R = F \> n$. The maps $Q \rightarrow P$ and $R \rightarrow Q$ are defined to be the composition of $\inC$ with $\inn_1$ as in the construction. The paths $p_Q$ and $p_R$ are given by the path $\glueC$ from the first coequalizer.
+\end{itemize}
+For the maps $f \> n : F \> n \rightarrow F(n + 1)$, note that we always have the following sequence of maps
 \[
 \xymatrix@1
 {
-	P \ar[r] & (I^1 \times B_i \> P) + P \ar[r] & H_{\Approx}.
+	F \> n \ar[r] & H_{\Con} \> (F \> n) \ar[r] & C_1 \ar[r] & \ldots \ar[r] & C_4 \ar[r] & H_{\Approx}.
 }
 \]
 Taking $P$ to be $F \> n$, then we have $F (n+1) = H_{\Approx} (F \> n)$, and thus the composition gives the map $F \> n \rightarrow F(n + 1)$.
@@ -650,7 +616,7 @@ Now we need to check the commutativity of the following diagram
 }
 \]
 The right rectangle commutes, because the maps $\inC$ are built by composing constructors of the coequalizer, and thus it commutes by definition.
-Now it computes overall due to the second added coherency which says that $\inC(\overline{t_i}(B_i(f \> n) \> x))$ and $\inC(H_{\Con}(f \> n)(\overline{t_i} \> x))$ are equal for all $x : B_i(F \> n)$.
+Now it computes overall due to Lemma \ref{lem:constrCoh} which says that $\inC(\overline{t_i}(B_i(f \> n) \> x))$ and $\inC(H_{\Con}(f \> n)(\overline{t_i} \> x))$ are equal for all $x : B_i(F \> n)$.
 
 In order to show that we indeed have paths $p_i$, we use the eliminator of the homotopy colimit.
 We need to show that for all $x : \hocolim \> F \> f$ we have $t_i \> x = r_i \> x$. 
@@ -693,7 +659,7 @@ Since $c_{\nonrec} \> a = \inc \> 0 \> (c_{\nonrec}' \> a)$, it suffices to find
 Hence, we get a map $h \> 0$.
 
 Now suppose that we have a map $h \> n : \prod (x : F \> n), Y(\inc \> n \> x)$, and our goal is to make a map $h(n+1) : \prod  (x : F(n+1)), Y(\inc \> (n+1) \> x)$.
-In order to do so, we will first look at how to extend $h \> n$ to a map $\prod (x : H_{\Con} (F \> n)), Y(\inc \> (n+1) \> (\inl \> x))$.
+In order to do so, we will first look at how to extend $h \> n$ to a map $\prod (x : H_{\Con} (F \> n)), Y(\inc \> (n+1) \> (\inC \> x))$.
 
 Let us do this in the general case.
 Suppose, we have a map $g : P \rightarrow \hocolim \> F \> f$, and that we already constructed $\varphi : \prod (x : P), Y(g \> x)$.
@@ -705,32 +671,56 @@ Then we need to give an element of the type $Y(c_{\rec} \> (A_{\rec} \> g \> x))
 Now we can also extend the map to $H_{\Con}^n \> P$, because we can define this map on each component.
 On the component $P$ it is just $\varphi$, and on the other components we define it via extension.
 
-Next we need to extend the map to $H_{\Approx} \> P \> Q$.
-This is done by the universal mapping property of the pushout, and that requires two steps.
-First, we need to extend the map to $I^1 \times B_i \> P$, and second we need to check that the diagram given by the pushout commutes.
-For that we start with $(y, x) : I^1 \times B_i \> P$, and we use $I^1$-induction.
-If $y = 0$, we map it to $\hatt_i (x)$, and for $y = 1$ we map it to $\hatr_i (x)$.
-Now the path $q_{Y, i}$ gives the image of $\seg$, and that finishes the induction.
+Next we need to extend the map to $H_{\Approx}$.
+This is done by the universal mapping property of the coequalizer, and that requires some steps.
+First, to give an paths between the images of $t_i \> x$ and $r_i \> x$.
+Note that the images of these are $\hatt_i \> x$ and $\hatr_i \> x$ respectively, and then $q_{Y, i}$ gives the desired paths..
 
-Since $H_{\Approx}$ is a pushout, we also need to show that a diagram commutes.
-The left upper corner is defined to be a sum, and thus it suffices to check it for each of the components.
-For the first, $H_{\Con} \> P$, note that the map $\varphi'$ to $Y$ defined by extension, sends the constructor term $t_i$ to its lift $\hatt_i$, since it replaces each $c_{\rec}$ by $c_{Y, \rec}$.
-On $I^1 \times B_i \> P$ the points are mapped to the lifts $\hatt_i$ as well, and thus the diagram commutes on this component.
+Next we check the coherency conditions, and we start with the first.
+We need to check that $\inn_1(\inC \> x)$ and $H_{\Con} \> \inC \> x$ get mapped to the same element for $x : H_{\Con}(F \> n)$.
+To do so, we use a case distinction on $H_{\Con}(F \> n)$, and for the case $x \equiv \inn_1 \> y$ with $y : F \> n$, we have the following equations 
+\begin{equation*}
+\begin{split}
+h \> (n+1) \> (\inn_1(\inC \> (\inn_1 \> y))) 
+\equiv 
+h \> (n+1) \> (\inn_1(f \> n \> y)),
+\end{split}
+\end{equation*}
+\begin{equation*}
+\begin{split}
+h \> (n+1) \> (H_{\Con} \> (\inC \circ \inn_1) \> (\inn_1 \> y)) 
+&\equiv 
+h \> (n+1) \> (\inn_1(\inC(\inn_1 \> y)))
+\\
+&\equiv
+h \> (n+1) \> (\inn_1(f \> n \> y)).
+\end{split}
+\end{equation*}
+Here we use that $f \> x$ is defined to be $\inC(\inn_1 \> x)$.
+Since they are definitionally equal, we can just use the path $\refl$.
 
-Next we do it for the coherency condition on the points where we look at the following corner
-\[
-\xymatrix
-{
-	H_{\Con}(F \> n) \ar[r]^{\inl} \ar[d]_{H_{\Con} (f \> n)} & F(n+1)\\
-	H_{\Con} (F(n+1))
-}
-\]
-Elements of $H_{\Con}(F \> n)$ are terms built from $c_{\rec}$ on $F \> n$.
-In order to show that it commutes for all inhabitants of $H_{\Con}(F \> n)$, we use induction on the depth.
-If the inhabitant is of the form $\inn_1 \> x$ with $x : F \> n$, then it gets mapped to the first component of $H_{\Con} (F(n+1))$ and $F(n+1)$.
-In both cases it is just mapped with $h \> (n+1)$ and thus they are equal.
+For the other cases, we take a look at $c_{\rec}' \> y$.
+\begin{equation*}
+\begin{split}
+h \> (n+1) \> (\inn_1(\inC \> (c_{\rec}' \> y))) 
+&\equiv h \> (n+1) \> (\inC \> (c_{\rec}' \> y))\\
+&\equiv h \> (n+1) \> (c_{\rec}' \> y)\\
+&\equiv c_{Y, \rec} (h \> n \> y)
+\end{split}
+\end{equation*}
+\begin{equation*}
+\begin{split}
+h \> (n+1) \> (H_{\Con} \> (\inC \circ \inn_1) \> (c_{\rec}' \> y)) 
+&\equiv 
+h \> (n+1) \> (c_{\rec}' \> (f \> n \> y))
+\\
+&\equiv
+c_{Y, \rec} \> (h \> (n+1) \> (f \> n \> y)\\
+&\equiv
+c_{Y, \rec} \> (h \> (n+1) \> (\inC(\inn_1 \> y)).
+\end{split}
+\end{equation*}
 
-To show that it holds for the other inhabitants as well, we take a look at $c_{\rec}' \> x$.
 By $\inl$ it gets mapped $\inl (c_{\rec}' \> x)$.
 Since $h(n+1)$ is defined as the pushout map, it maps $\inl (c_{\rec}' \> x)$ to $h \> (n+1) \> (c_{\rec}' \> x) \equiv c_{Y, \rec}(h \> n \> x)$.
 The map $H_{\Con} (f \> n)$ sends $c_{\rec}' \> x$ to $c_{\rec}' (f \> n \> x)$, and the dependent map $h$ sends it to $c_{Y, \rec}(h \> (n+1) \> (f \> x))$.
@@ -738,53 +728,8 @@ Using the definition of the pushout map, this is equal to $c_{Y, \rec}(h \> n \>
 Hence, this diagram commutes, and thus the first coherency is fine.
 The equality between the points is $\refl$ as they are definitionally equal.
 
-Now we also need to check the second coherency, and then we look at another corner
-\[
-\xymatrix
-{
-	I^1 \times B_i (F \> n) \ar[rr]^-{\inr \circ \inn_1} \ar[d]_{I^1 \times B_i \inl} & & F(n+1)\\
-	I^1 \times B_i(F(n+1)) 
-}
-\]
-Let $(y, x) : I^1 \times B_i (F \> n)$.
-Note that 
-\[
-h \> (n+1) \> (\inr(\inn_1 (y, x))) \equiv h \> n \> (\inn_1 (y, x)) \equiv \overline{q_{Y, i}}(y, h \> n \> x).
-\]
-\[
-h \> (n+1) \> (I^1 \times B_i \> \inl \> (y, x)) \equiv h \> (n+1) \> (y, \inl \> x) \equiv \overline{q_{Y, i}}(y, h \> (n+1) \> (\inl \> x)) \equiv \overline{q_{Y, i}}(y, h \> n \> x).
-\]
-Hence, this coherency is fine as well.
-Since they are definitionally equal, we can just take the path $\refl$.
+For the second coherency we need to check that
 
-Lastly, we need to check a coherency condition for the path $\glue$, and here the point is that all coherencies, including this one, are mapped to $\refl$.
-This means that $\glue$ gets mapped mapped to $\refl$.
-We thus take a look at the following corner
-\[
-\xymatrix
-{
-	(\two \times B_i \> (F \> n)) \times I^1
-	\ar[d]_{(f \> n) \circ \overline{\glue}}
-	\ar[rrrr]^-{\overline{\glue} \circ (\two \times B_i \> (f(n+1)))}
-	& & & & F(n+2)
-	\\
-	F(n+2)
-}
-\]
-The maps are induced by $\glue$.
-\[
-\ap \> (h \> (n+2)) \> (\glue(y, f \> n \> x)) = \refl?
-\]
-\begin{equation*}
-\begin{split}
-\ap & \> (h \> (n+2)) \> (\ap \> (f(n+1)) \> (\overline{\glue} \> (y, x)))
-\\
-&=
-\ap \> (h \> (n+2) \circ f(n+1)) \> (\overline{\glue} \> (y, x))\\
-&=
-\ap \> (h \> (n+1)) \> (\overline{\glue} \> (y, x))\\
-\end{split}
-\end{equation*}
 
 
 
@@ -840,8 +785,75 @@ By using that polynomials commute with homotopy colimits, we can again assume th
 
 \section{Lemmata}
 \label{sec:Lemmata}
-In this section we prove the required lemmata to show that colimits over $\mathbb{N}$ commute with polynomials.
-In category theory this result is standard \cite{mac2013categories}.
+\begin{lemma}
+\label{lem:constrTerm}
+Suppose, we have a constructor term $t$ such that $x : F \> T \Vdash t : G \>T$ which uses at most $n$ constructors, and that we have a map $c_{\nonrec}' : A_{\nonrec} \rightarrow P$.
+Then $t$ induces a map $\overline{t} : F \> P \rightarrow H_{\Con}^n \> (G \> P)$ by replacing the constructors $c_{\nonrec}$ and $c_{\rec}$ by $c_{\nonrec}'$ and $c_{\rec}'$ respectively.
+\end{lemma}
+
+\begin{proof}
+We use induction on the form of the constructor term.
+\begin{itemize}
+	\item $t = a$ with $a : B$ and $B$ does not use $T$. Then we define $\overline{t} \> y = \inn_1 \> a$.
+	\item $t = x$ with $x : F \> T$. Then we define $\overline{t} \> y = \inn_1 \> y$.
+	\item $t = c_{\nonrec} \> a$ with $a : A_{\nonrec}$. Then we define $\overline{t} \> y = \inn_1 \> (c_{\nonrec}' \> a)$.
+	\item $t = c_{\rec} \> r$ with $r : A_{\rec} \> T$ where $r$ uses at most $n-1$ constructors. 
+	By induction we have a map $\overline{r} : F \> P \rightarrow A_{\rec} \> H_{\Con}^{n-1}$.
+	Then we define $\overline{t} \> y = c_{\rec}' (\overline{r} \> x)$.
+	\item For the rules for the projection, pairing and injection it is trivial. \qedhere
+\end{itemize}
+\end{proof}
+
+\begin{lemma}
+\label{lem:constrCoh}
+Suppose, we have a constructor term $t$ such that $x : F \> T \Vdash t : G \> T$ which uses at most $n$ constructors, and that we have a map $c_{\nonrec}' : A_{\nonrec} \rightarrow Q$.
+Furthermore, we assume that we have a map $f : Q \rightarrow P$
+Then for all $x : F \> P$ the terms $\overline{t}(F \> f \> x)$ and $(H_{\Con} \circ G) \> f \> (\overline{t} \> x)$ are equal.
+\end{lemma}
+
+\begin{proof}
+Again we use induction on the constructor term.
+\begin{itemize}
+	\item $t = a$ with $a : B$ and $B$ does not use $T$. 
+	Then we have $G \> P = B$, and thus 
+	$
+	\overline{t}(F \> f \> x) = a.
+	$
+	On the other hand, we have, 
+	\[
+	(H_{\Con} \circ G) \> f \> (\overline{t} \> x) = G \> f \> a = a.
+	\]
+	\item $t = x$ with $x : F \> T$. 
+	Then $G \> P = F \> P$, and thus
+	$
+	\overline{t}(F \> f \> x) = \inn_1(F \> f \> x).
+	$
+	Also,
+	\[
+	(H_{\Con} \circ G) \> f \> (\overline{t} \> x) = (H_{\Con} \circ G) \> f \> (\inn_1 \> x) = \inn_1(G \> f \> x) = \inn_1(F \> f \> x).
+	\]
+	\item $t = c_{\nonrec} \> a$ with $a : A_{\nonrec}$. 
+	Then $G \> P = P$, and thus
+	$
+	\overline{t}(F \> f \> x) = \inn_1(f(c'_{\nonrec} \> a))
+	$.
+	Also,
+	\[
+	(H_{\Con} \circ G) \> f \> (\overline{t} \> x) = H_{\Con} \> f \> (\inn_1(c'_{\nonrec} \> a)) = \inn_1(f(c'_{\nonrec} \> a))
+	\]
+	\item $t = c_{\rec} \> r$ with $r : A_{\rec} \> T$ where $r$ uses at most $n-1$ constructors. 
+	The induction hypothesis in this case is that $H_{\Con} \> f \> (\overline{r} \> x) = \overline{r}(F \> f \> x)$.
+	Then again $G \> P = P$, and thus
+	$
+	\overline{t}(F \> f \> x) = c'_{\rec} \> (\overline{r}(F \> f \> x))
+	$.
+	Furthermore,
+	\[
+	(H_{\Con} \circ G) \> f \> (\overline{t} \> x) = H_{\Con} \> f \> (c'_{\rec} \> (\overline{r} \> x)) = c'_{\rec} \> (H_{\Con} \> f \> (\overline{r} \> x)) = c'_{\rec} \> (\overline{r}(F \> f \> x))
+	\]
+	\item For the rules for the projection, pairing and injection it is trivial. \qedhere
+\end{itemize}
+\end{proof}
 
 \begin{lemma}
 \label{lem:colimcon}
