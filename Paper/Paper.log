@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.2.2)  20 MAR 2017 13:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2015.2.2)  20 MAR 2017 17:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1269,6 +1269,7 @@ Package microtype Info: Character `029' is missing
 3x1 148> <xymatrix 6x1 160> [6] <xymatrix 6x1 196> <xymatrix 5x1 110>
 <xymatrix 5x1 151> <xymatrix 3x2 135> [7] <xymatrix 4x2 327> <xymatrix 2x2
 188> <xymatrix 4x2 415> [8] [9] <xymatrix 3x2 193> [10] [11] [12] (./Paper.bbl
+[13]
 LaTeX Font Info:    Calculating math sizes for size <9.5> on input line 48.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <9.5> on input line 48.
@@ -1291,24 +1292,24 @@ Underfull \hbox (badness 1742) in paragraph at lines 72--78
 []rennes . fr / ~sboul434 / documents / rapport _ de _
  []
 
-[13]) 
+) 
 AED: lastpage setting LastPage
 [14]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 953.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 953.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 990.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 990.
  (./Paper.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 953.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 953.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 990.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 990.
 Package rerunfilecheck Info: File `Paper.out' has not changed.
 (rerunfilecheck)             Checksum: 0AA4F6F782969A945CFF3AB3AB3E4EA1;492.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 953.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 990.
  ) 
 Here is how much of TeX's memory you used:
- 16485 strings out of 493117
- 240246 string characters out of 6135434
+ 16481 strings out of 493117
+ 240202 string characters out of 6135434
  421785 words of memory out of 5000000
  19284 multiletter control sequences out of 15000+600000
- 235732 words of font info for 252 fonts, out of 8000000 for 9000
+ 235566 words of font info for 250 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  44i,18n,40p,3235b,1034s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/
@@ -1349,10 +1350,10 @@ msy9.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmtk10.pfb><
 e/2014/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/te
 xlive/2014/texmf-dist/fonts/type1/public/xypic/xycmat10.pfb></usr/local/texlive
 /2014/texmf-dist/fonts/type1/public/xypic/xycmbt10.pfb>
-Output written on Paper.pdf (14 pages, 643084 bytes).
+Output written on Paper.pdf (14 pages, 644067 bytes).
 PDF statistics:
- 447 PDF objects out of 1000 (max. 8388607)
- 382 compressed objects within 4 object streams
+ 449 PDF objects out of 1000 (max. 8388607)
+ 384 compressed objects within 4 object streams
  100 named destinations out of 1000 (max. 500000)
  52825 words of extra memory for PDF output out of 61914 (max. 10000000)
 

@@ -469,7 +469,7 @@ Since also paths are added during the construction, there might also be duplicat
 The resulting type should be free, so these paths should be identified.
 We define a map $q : B_i \> R \rightarrow \sum (x, y : P), (x = y) \times (x = y)$ sending $x : B_i \> R$ to the pair
 \[
-(\overline{t_i} \> x, \overline{r_i} \> x, \ap \> (j_Q \circ \inn_1) \> (p_R \> x), p_Q \> (j_R \> x))
+(\overline{t_i} \> x, \overline{r_i} \> x, \ap \> (j_Q \circ \inn_1) \> (p_R \> x), p_Q \> (B_i \> j_R \> x))
 \]
 Concluding the construction, we define $H_{\Approx}$ as $\pcoeq \> (B_i \> R) \> C_2 \> q$.
 
@@ -663,73 +663,110 @@ In order to do so, we will first look at how to extend $h \> n$ to a map $\prod 
 
 Let us do this in the general case.
 Suppose, we have a map $g : P \rightarrow \hocolim \> F \> f$, and that we already constructed $\varphi : \prod (x : P), Y(g \> x)$.
-Our goal is to extended the map into a $\varphi' : \prod (x : H_{\rec} P), Y(c_{Y, \rec} \> x)$, and for that we use $H_{\rec}$-induction.
+Our goal is to extend the map into $\varphi' : \prod (x : H_{\rec} P), Y(c_{Y, \rec} \> x)$, and for that we use $H_{\rec}$-induction.
 Note that for each $c'_{\rec} \> x$ with $x : A_{\rec} \> P$ we have the type $Y(c_{\rec} \> (A_{\rec} \> g \> x))$, and thus we have a type family on $H_{\rec}$.
 Now let $x : A_{\rec} \> P$ and $y : \overline{A_{\rec}} \> Y \> x$ be given.
 Then we need to give an element of the type $Y(c_{\rec} \> (A_{\rec} \> g \> x))$ for which we take $c_{Y,\rec} \> (A_{\rec} \> g \> x) \> y$.
 
 Now we can also extend the map to $H_{\Con}^n \> P$, because we can define this map on each component.
 On the component $P$ it is just $\varphi$, and on the other components we define it via extension.
+We call this map $h_1$.
 
 Next we need to extend the map to $H_{\Approx}$.
 This is done by the universal mapping property of the coequalizer, and that requires some steps.
 First, to give an paths between the images of $t_i \> x$ and $r_i \> x$.
-Note that the images of these are $\hatt_i \> x$ and $\hatr_i \> x$ respectively, and then $q_{Y, i}$ gives the desired paths..
+Note that the images of these are $\hatt_i \> x$ and $\hatr_i \> x$ respectively, and then $q_{Y, i}$ gives the desired paths.
+This gives an extension $h_2$ to $C_1$.
 
 Next we check the coherency conditions, and we start with the first.
-We need to check that $\inn_1(\inC \> x)$ and $H_{\Con} \> \inC \> x$ get mapped to the same element for $x : H_{\Con}(F \> n)$.
+We need to check that $\inn_1(\inC \> x)$ and $H_{\Con} \> \inC \> x$ get mapped to the same element for $x : H_{\Con}(F \> n)$ by $h_2$.
 To do so, we use a case distinction on $H_{\Con}(F \> n)$, and for the case $x \equiv \inn_1 \> y$ with $y : F \> n$, we have the following equations 
 \begin{equation*}
 \begin{split}
-h \> (n+1) \> (\inn_1(\inC \> (\inn_1 \> y))) 
-\equiv 
-h \> (n+1) \> (\inn_1(f \> n \> y)),
+h_2 \> (\inC(\inn_1(\inC \> (\inn_1 \> y))))
+&\equiv
+h_1 \> (\inn_1(\inC \> (\inn_1 \> y))) \\
+&\equiv 
+h_1 \> (\inn_1(f \> n \> y))\\
+&\equiv 
+h_1 \> (\inn_1(\inC(\inn_1 \> y))),
 \end{split}
 \end{equation*}
 \begin{equation*}
 \begin{split}
-h \> (n+1) \> (H_{\Con} \> (\inC \circ \inn_1) \> (\inn_1 \> y)) 
-&\equiv 
-h \> (n+1) \> (\inn_1(\inC(\inn_1 \> y)))
-\\
+h_2 \> (\inC(H_{\Con} \> (\inC \circ \inn_1) \> (\inn_1 \> y)))
 &\equiv
-h \> (n+1) \> (\inn_1(f \> n \> y)).
+h_1 \> (H_{\Con} \> (\inC \circ \inn_1) \> (\inn_1 \> y))\\
+&\equiv 
+h_1 \> (\inn_1(\inC(\inn_1 \> y)))
 \end{split}
 \end{equation*}
-Here we use that $f \> x$ is defined to be $\inC(\inn_1 \> x)$.
+Here we use that $f \> n \> x$ is defined to be $\inC(\inn_1 \> x)$.
 Since they are definitionally equal, we can just use the path $\refl$.
 
-For the other cases, we take a look at $c_{\rec}' \> y$.
+For the other cases, we take a look at $c_{\rec}' \> y$, and for $y$ we assume that $h_1(\inn_1(\inC \> y)) = h_1(H_{\Con} \> (\inC \circ \inn_1) \> y)$.
+Note that at each level $h$ is defined using the eliminator of the coequalizer.
+This means that $h \> n \> (\inC \> (c_{\rec}' \> y))$ and $c_{Y, \rec}(h \> n \> (\inC \> y))$ are equal by definition, and thus we can make the following computations.
 \begin{equation*}
 \begin{split}
-h \> (n+1) \> (\inn_1(\inC \> (c_{\rec}' \> y))) 
-&\equiv h \> (n+1) \> (\inC \> (c_{\rec}' \> y))\\
-&\equiv h \> (n+1) \> (c_{\rec}' \> y)\\
-&\equiv c_{Y, \rec} (h \> n \> y)
+h_1 \> (\inn_1(\inC \> (c_{\rec}' \> y))) 
+&\equiv 
+h \> n \> (\inC \> (c_{\rec}' \> y))\\
+&
+= c_{Y, \rec} (h \> n \> (\inC \> y))
 \end{split}
 \end{equation*}
 \begin{equation*}
 \begin{split}
-h \> (n+1) \> (H_{\Con} \> (\inC \circ \inn_1) \> (c_{\rec}' \> y)) 
+h_1 \> (H_{\Con} \> (\inC \circ \inn_1) \> (c_{\rec}' \> y)) 
 &\equiv 
-h \> (n+1) \> (c_{\rec}' \> (f \> n \> y))
+h_1 \> (c_{\rec}' \> (H_{\Con} \> (\inC \circ \inn_1) \> y))
 \\
 &\equiv
-c_{Y, \rec} \> (h \> (n+1) \> (f \> n \> y)\\
+c_{Y, \rec} \> (h_1 \> (H_{\Con} \> (\inC \circ \inn_1) \> y))\\
+&=
+c_{Y, \rec} \> (h_1(\inn_1(\inC \> y)))\\
 &\equiv
-c_{Y, \rec} \> (h \> (n+1) \> (\inC(\inn_1 \> y)).
+c_{Y, \rec} \> (h \> n \> (\inC \> y)).
 \end{split}
 \end{equation*}
 
-By $\inl$ it gets mapped $\inl (c_{\rec}' \> x)$.
-Since $h(n+1)$ is defined as the pushout map, it maps $\inl (c_{\rec}' \> x)$ to $h \> (n+1) \> (c_{\rec}' \> x) \equiv c_{Y, \rec}(h \> n \> x)$.
-The map $H_{\Con} (f \> n)$ sends $c_{\rec}' \> x$ to $c_{\rec}' (f \> n \> x)$, and the dependent map $h$ sends it to $c_{Y, \rec}(h \> (n+1) \> (f \> x))$.
-Using the definition of the pushout map, this is equal to $c_{Y, \rec}(h \> n \> x)$
-Hence, this diagram commutes, and thus the first coherency is fine.
-The equality between the points is $\refl$ as they are definitionally equal.
 
-For the second coherency we need to check that
-
+For the second coherency we need to check that the paths $\ap \> h_2 \> (\ap \> (f \> n) \> (p_i \> x))$ and $\ap \> h_2 \> (p_i \> (f \> n \> x))$ are equal.
+Here we use several Lemmata, namely Lemma 2.2.2 from \cite{hottbook} and Lemma \ref{lem:pathext}.
+For the first path we can show that it is equal to $q_{Y, i} \> (h \> n \> x)$.
+\begin{equation*}
+\begin{split}
+\ap \> h_2 \> (\ap \> (f \> n) \> (p_i \> x))
+&\equiv
+\ap \> h_2 \> (\ap \> (\inC \circ \inn_1) \> (p_i \> x))\\
+&=
+\ap \> (h_2 \circ \inC) \> (\ap \> \inn_1 \> (p_i \> x))\\
+&=
+\ap \> h_1 \> (\ap \> \inn_1 \> (p_i \> x))\\
+&=
+\ap \> (h_1 \circ \inn_1) \> \> (p_i \> x)\\
+&=
+\ap \> (h \> n) \> \> (p_i \> x)\\
+&\equiv
+q_{Y, i} \> (h \> n \> x)
+\end{split}
+\end{equation*}
+Since $(h_2 \circ \inC) \> x \equiv h_1 \> x$ and $(h_1 \circ \inn_1) \> x \equiv h \> n \> x$, we can use the path $\refl$, and thus the transport is the identity.
+For the other path we can do the same.
+\begin{equation*}
+\begin{split}
+\ap \> h_2 \> (p_i \> (f \> n \> x))
+&\equiv
+q_{Y, i} \> (h_2 \> (f \> n \> x))\\
+&\equiv
+q_{Y, i} \> (h_2 \> (\inC \> \inn_1 \> x))\\
+&\equiv
+q_{Y, i} \> (h_1 \> (\inn_1 \> x))\\
+&\equiv
+q_{Y, i} \> (h \> n \> x)
+\end{split}
+\end{equation*}
 
 
 
