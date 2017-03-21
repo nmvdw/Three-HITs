@@ -73,6 +73,7 @@
 \newcommand{\two}[0]{\textbf{2}}
 
 \newcommand{\frec}[0]{\!\operatorname{rec}}
+\newcommand{\ind}[0]{\!\operatorname{ind}}
 \newcommand{\rec}[0]{\operatorname{rec}}
 \newcommand{\nonrec}[0]{\operatorname{nonrec}}
 
@@ -534,7 +535,7 @@ For this we use the recursion rule of $\hocolim$, and we start with the followin
 \xymatrix
 {
 		A_{\rec}(F \> n) \ar[r]^-{c_{\rec}'} 
-		& H_{\rec}(F \> n) \ar[rr]^{\term \comp \inn_2} &
+		& H_{\rec}(F \> n) \ar[rr]^-{\term \comp \inn_2} &
 		& H_{\Con}(F \> n) \ar[r]^-{\inC}
 		& H_{\Approx}(F \> n) = F(n + 1)
 }
@@ -623,7 +624,10 @@ We need to show that for all $x : \hocolim \> F \> f$ we have $t_i \> x = r_i \>
 First, we need to give for all $x : F \> n$ an inhabitant of $t_i \> (\inc \> n \> x) = r_i \> (\inc \> n \> x)$.
 By the first identification we have a path $\glueC \> x$ between $\overline{t_i} \> x$ and $\overline{r_i} \> x$, and thus the right path is $\ap \> (\inc \> n) \> (\glueC \> x)$. 
 
-To finish the proof, we need to show that $\com_*(\ap \> (\inc \> n) \> (\glueC \> x)) = \ap \> (\inc \> (n+1)) \> (\glueC \> ((B_i \>(f \>n)) \> x))$.
+To finish the proof, we need to show that 
+\[
+(\com \> n \> x)_*(\ap \> (\inc \> n) \> (\glueC \> x)) = \ap \> (\inc \> (n+1)) \> (\glueC \> ((B_i \>(f \>n)) \> x)).
+\]
 This follows from the following computation.
 \begin{equation*}
 \begin{split}
@@ -637,7 +641,7 @@ The first step follows from the third added coherency, the second from Lemma 2.2
 
 
 \subsection{Elimination Rule}
-For the next step we define the right eliminator for $\hocolim \> F \> f$, so suppose that we are given
+For the next step we define the right eliminator for $\hocolim \> F \> f$, so suppose that we are given the following data
 \[
 Y : \hocolim \> F \> f \rightarrow \Type,
 \]
@@ -667,6 +671,7 @@ Our goal is to extend the map into $\varphi' : \prod (x : H_{\rec} P), Y(c_{Y, \
 Note that for each $c'_{\rec} \> x$ with $x : A_{\rec} \> P$ we have the type $Y(c_{\rec} \> (A_{\rec} \> g \> x))$, and thus we have a type family on $H_{\rec}$.
 Now let $x : A_{\rec} \> P$ and $y : \overline{A_{\rec}} \> Y \> x$ be given.
 Then we need to give an element of the type $Y(c_{\rec} \> (A_{\rec} \> g \> x))$ for which we take $c_{Y,\rec} \> (A_{\rec} \> g \> x) \> y$.
+We will often leave the argument $A_{\rec} \> g \> x$ implicit.
 
 Now we can also extend the map to $H_{\Con}^n \> P$, because we can define this map on each component.
 On the component $P$ it is just $\varphi$, and on the other components we define it via extension.
@@ -684,10 +689,6 @@ To do so, we use a case distinction on $H_{\Con}(F \> n)$, and for the case $x \
 \begin{equation*}
 \begin{split}
 h_2 \> (\inC(\inn_1(\inC \> (\inn_1 \> y))))
-&\equiv
-h_1 \> (\inn_1(\inC \> (\inn_1 \> y))) \\
-&\equiv 
-h_1 \> (\inn_1(f \> n \> y))\\
 &\equiv 
 h_1 \> (\inn_1(\inC(\inn_1 \> y))),
 \end{split}
@@ -701,7 +702,6 @@ h_1 \> (H_{\Con} \> (\inC \circ \inn_1) \> (\inn_1 \> y))\\
 h_1 \> (\inn_1(\inC(\inn_1 \> y)))
 \end{split}
 \end{equation*}
-Here we use that $f \> n \> x$ is defined to be $\inC(\inn_1 \> x)$.
 Since they are definitionally equal, we can just use the path $\refl$.
 
 For the other cases, we take a look at $c_{\rec}' \> y$, and for $y$ we assume that $h_1(\inn_1(\inC \> y)) = h_1(H_{\Con} \> (\inC \circ \inn_1) \> y)$.
@@ -768,35 +768,33 @@ q_{Y, i} \> (h \> n \> x)
 \end{split}
 \end{equation*}
 
-
-
 To finish the proof, we need to give the image for the path $\com$.
 More concretely, we need to show that $\inc \> n \> x$ and $\inc \> (n+1) \> (f \> x)$ are mapped to the same element.
-The map $f : F \> n \rightarrow F(n + 1)$ is defined by the pushout as follows
+The map $f : F \> n \rightarrow F(n + 1)$ is defined by the elimination rule of the coequalizer as follows
 \[
 \xymatrix
 {
-	(\two \times B_i \> (F(n+1))) + H_{\Con} \>  (F \> n) \ar[d]_{\overline{t_i} + \overline{r_i} + H_{\Con} \> f} \ar[rr]^-{\delta + \inl} & & (I^1 \times B_i \> (F(n+1))) + F(n+1)  \ar[d]^{\inr}\\
-	H_{\Con} \> (F(n+1)) \ar[rr]_{\inl} & & F(n+2)
+	F \> n \ar[r]^-{\inn_1} & H_{\Con} \> (F \> n) \ar[r]^-{\inC} & \ldots \ar[r]^-{\inC} & F(n+1)
 }
 \]
-Since the map to $Y$ was defined as the pushout map, it will commute automatically.
+Since the map to $Y$ was defined via the universal property of the coequalizer, it will commute automatically.
+The commutativity is given by the computation rule of the coequalizer.
 
 All in all, we have acquired a map $\prod (x : \hocolim \> F \> f), Y \> x$, and this way we defined the right eliminator for $\hocolim \> F \> f$.
-We shall call the eliminator $H\frec$.
+We shall call the eliminator $H\ind$.
 
 \subsection{Computation Rules}
 Lastly, we show that this eliminator also satisfies the computation rules.
-First, we prove that for each $t : A_{\rec}(\hocolim \> F \> f)$ that $H\frec(c_{\rec} \> t) \equiv f_i \> t \> (\overline{A_{\rec}} \> H\frec \> t)$.
+First, we prove that for each $t : A_{\rec}(\hocolim \> F \> f)$ that $H\ind(c_{\rec} \> t) \equiv f_i \> t \> (\overline{A_{\rec}} \> H\ind \> t)$.
 Again we use that colimits commute with polynomials.
 
 Let $n : \mathbb{N}$ and $x : A_{\rec}(F \> n)$.
-Then by the computation rules we have
+Now we can perform the computations in an intermediate stage of the construction, and using the computation rules we get
 \begin{equation*}
 \begin{split}
-H\frec(c_{\rec} \> x) 
-&\equiv H\frec(\inc \> (n+1) \> (c_{\rec}' x)) \\
-&\equiv c_{Y,\rec} \> (A_{\rec} \> (\inc \> n) \> x) \> (\overline{A} \> H\frec \> x)\\
+H\ind(c_{\rec} \> (\inc \> n \> x)) 
+&\equiv H\ind(\inc \> (n+1) \> (c_{\rec}' x)) \\
+&\equiv c_{Y,\rec} \> (A_{\rec} \> (\inc \> n) \> x) \> (\overline{A} \> H\ind \> x)
 \end{split}
 \end{equation*}
 Hence, we can always take $\refl$ to be the path.
@@ -804,18 +802,19 @@ This will also give an image for $\com$, and thus the computation rules for the 
 
 Note that the this computation rule is a propositional equality.
 This is logical, because it is proven all $x : A_{\rec}(F \> n)$.
-However, for closed terms, we have a definitional equality.
-This is because $c_{\nonrec} \> a$ for $a : A_{\nonrec}$ is defined to be$\inc \> 0 \> (c_{\nonrec}' \> a)$.
+However, for terms built from $c_{\nonrec}$ and $c_{\rec}$, we have a definitional equality.
+This is because $c_{\nonrec} \> a$ for $a : A_{\nonrec}$ is defined to be $\inc \> 0 \> (c_{\nonrec}' \> a)$.
 All the closed terms are thus inhabitants of some $F \> n$, and since at every step the equalities are definitional, we can conclude that for closed terms the equality is definitional.
 
 Now we show the computation rules for the paths, and in that case we have a parameter $a : B_i \> (\hocolim \> F \> f)$.
 By using that polynomials commute with homotopy colimits, we can again assume that we have $n : \mathbb{N}$ and $x : B_i(F \> n)$.
 \begin{equation*}
 \begin{split}
-\apd \> H\frec \> (p_i \> (\inc \> n \> x))
-&\equiv \apd \> H\frec \> (\apd \> (\inc (n+1)) \> (\inr \> x))\\
-&= \apd \> (H\frec \comp  \> \inc (n+1)) \> (\inr \> x))\\
-&\equiv q_i \> (H\frec x)
+\apd \> H\ind \> (p_i \> (\inc \> n \> x))
+&\equiv \apd \> H\ind \> (\ap \> (\inc \> (n+1)) \> \glueC \> x)\\
+&= \apd \> (H\ind \comp  \> \inc (n+1)) \> (\glueC \> x)\\
+&= \apd \> (h \> n) \> (\glueC \> x)\\
+&\equiv q_i \> (B_i \> H\frec \> x)
 \end{split}
 \end{equation*}
 
@@ -946,8 +945,8 @@ Then for all $x : A$ we have a path
 \end{lemma}
 
 \begin{proof}
-This follows from path induction on $e$.
-In the case $e$ happens to be $\refl$, then $(e \> x)_*$ is $\idmap$.
+This follows from path induction on $e \> x$.
+In the case $e \> x$ happens to be $\refl$, then $(e \> x)_*$ is $\idmap$.
 Then the desired path is just $\refl$.
 \end{proof}
 
