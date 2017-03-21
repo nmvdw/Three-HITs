@@ -4,7 +4,7 @@
 %for A4 paper format use option "a4paper", for US-letter use option "letterpaper"
 %for british hyphenation rules use option "UKenglish", for american hyphenation rules use option "USenglish"
 % for section-numbered lemmas etc., use "numberwithinsect"
- 
+
 \usepackage{microtype}%if unwanted, comment out or use option "draft"
 
 %\graphicspath{{./graphics/}}%helpful if your graphic files are in another directory
@@ -60,7 +60,7 @@
 \input{coq.sty}
 \input{bussproofs.sty}
 
-\newcommand{\Boperator}[1]{\mathrm{\mathbf{#1}}}
+\newcommand{\Boperator}[1]{\mathsf{#1}}
 \newcommand{\comment}[1]{-- #1 --}
 \newcommand{\remove}[1]{}
 \newcommand{\inn}{\Boperator{in}}
@@ -121,7 +121,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent convallis orci
 
 \section{Introduction}
 Higher inductive types (HITs) generalize normal inductive types by allowing constructors for both points and paths, rather than just for the points.
-While an inductive type is freely generated from a signature, a higher inductive type is freely generated from a signature with some equations.
+While an inductive type is freely generated from a signature, a higher inductive type is freely generated from a signature together with constructors for equations.
 Numerous examples and definitions of such types have already been given in the literature \cite{altenkirch2016quotient,awodey2012inductive,basoldhigher,sojakova2015higher,hottbook}, but a definition with a good metatheory is still lacking.
 As a step towards that goal, we simplify the definition given in \cite{basoldhigher} bringing it closer to the intuition and the intended meaning.
 
@@ -168,6 +168,7 @@ Precise definitions of these are given in \cite{basoldhigher}.
 
 Next we define the notion of a constructor term.
 \begin{definition}
+\label{def:constructor-term}
 Given is a function $c : A \> T \rightarrow T$.
 Then we say $t$ is a \emph{constructor term} over $c$ if we can find polynomials $F$ and $G$ such that $x : F \> T \Vdash t : G \> T$ can be derived using the following rules.
 \begin{gather*}
