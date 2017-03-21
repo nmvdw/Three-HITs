@@ -18,11 +18,11 @@
 %% Please provide for each author the \author and \affil macro, even when authors have the same affiliation, i.e. for each author there needs to be the  \author and \affil macros
 \author[1]{Andrej Bauer}
 \author[2]{Niels van der Weide}
-\affil[1]{Department of Mathematics and Physics, University of Ljubljana, Ljubljana, Slovenia\\
+\affil[1]{Faculty of Mathematics and Physics, University of Ljubljana, Ljubljana, Slovenia\\
   \texttt{Andrej.Bauer@andrej.com}}
 \affil[2]{Department of Computer Science, Radboud University, Nijmegen, The Netherlands\\
   \texttt{nweide@cs.ru.nl}}
-\authorrunning{A. Bauer and N. van der Weide} %mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et. al.'
+\authorrunning{A.\ Bauer and N.\ van der Weide} %mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et. al.'
 
 \Copyright{Andrej Bauer and Niels van der Weide}%mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
 
@@ -171,39 +171,39 @@ Next we define the notion of a constructor term.
 Given is a function $c : A \> T \rightarrow T$.
 Then we say $t$ is a \emph{constructor term} over $c$ if we can find polynomials $F$ and $G$ such that $x : F \> T \Vdash t : G \> T$ can be derived using the following rules.
 \begin{gather*}
-	\AxiomC{$t : B$}
-	\AxiomC{$T$ does not occur in $B$}
-	\BinaryInfC{$x:F \> T \Vdash t : B$}
-	\bottomAlignProof
-	\DisplayProof 
-	 \quad
-	\AxiomC{}
-	\UnaryInfC{$x : F \> T \Vdash x : F \> T$}
-	\bottomAlignProof
-	\DisplayProof
-	\quad
-	\AxiomC{$x : F \> T \Vdash r : A \> T$}
-	\UnaryInfC{$x : F \> T \Vdash c \> r : T$}
-	\bottomAlignProof
-	\DisplayProof
-	\\[7pt]
-	\AxiomC{$j \in \{1, 2\}$}
-	\AxiomC{$x : F \> T \Vdash r : G_1 \> T \times G_2 \> T$}
-	\BinaryInfC{$x : F \> T \Vdash\pi_j \> r : G_j \> T$}
-	\bottomAlignProof
-	\DisplayProof
-	\quad
-	\AxiomC{$j \in \{1, 2\}$}
-	\AxiomC{$x : F \> T \Vdash r_j : G_j$}
-	\BinaryInfC{$x : F \> T \Vdash (r_1, r_2) : G_1 \> T\times G_2 \> T$}
-	\bottomAlignProof
-	\DisplayProof
-	\\[7pt]
-	\AxiomC{$j \in \{1, 2\}$}
-	\AxiomC{$x : F \> T \Vdash r : G_j \> T$}
-	\BinaryInfC{$x : F \> T : \inn_j \> r : G_1 \> T + G_2 \> T$}
-	\bottomAlignProof
-	\DisplayProof
+        \AxiomC{$t : B$}
+        \AxiomC{$T$ does not occur in $B$}
+        \BinaryInfC{$x:F \> T \Vdash t : B$}
+        \bottomAlignProof
+        \DisplayProof 
+         \quad
+        \AxiomC{}
+        \UnaryInfC{$x : F \> T \Vdash x : F \> T$}
+        \bottomAlignProof
+        \DisplayProof
+        \quad
+        \AxiomC{$x : F \> T \Vdash r : A \> T$}
+        \UnaryInfC{$x : F \> T \Vdash c \> r : T$}
+        \bottomAlignProof
+        \DisplayProof
+        \\[7pt]
+        \AxiomC{$j \in \{1, 2\}$}
+        \AxiomC{$x : F \> T \Vdash r : G_1 \> T \times G_2 \> T$}
+        \BinaryInfC{$x : F \> T \Vdash\pi_j \> r : G_j \> T$}
+        \bottomAlignProof
+        \DisplayProof
+        \quad
+        \AxiomC{$j \in \{1, 2\}$}
+        \AxiomC{$x : F \> T \Vdash r_j : G_j$}
+        \BinaryInfC{$x : F \> T \Vdash (r_1, r_2) : G_1 \> T\times G_2 \> T$}
+        \bottomAlignProof
+        \DisplayProof
+        \\[7pt]
+        \AxiomC{$j \in \{1, 2\}$}
+        \AxiomC{$x : F \> T \Vdash r : G_j \> T$}
+        \BinaryInfC{$x : F \> T : \inn_j \> r : G_1 \> T + G_2 \> T$}
+        \bottomAlignProof
+        \DisplayProof
 \end{gather*}
 \end{definition}
 
@@ -228,14 +228,14 @@ $
 x : F \> H, h_x : \bar{F} \> Y \> x \vdash \dak{r} : \bar{G} \> Y \> r
 $
 by induction in $r$ as follows.
-	\begin{align*}
-		\dak{t} & := t
-		& \dak{x} & := h_x &
-		\dak{c_i \> r} & := f_i \> r \> \dak{r}\\
-		\dak{\pi_j \> r} & := \pi_j \> \dak{r} &
-		\dak{(r_1, r_2)} & := (\dak{r_1}, \dak{r_2})
-		& \dak{\inn_j \> r} & := \dak{r}
-	\end{align*}
+        \begin{align*}
+                \dak{t} & := t
+                & \dak{x} & := h_x &
+                \dak{c_i \> r} & := f_i \> r \> \dak{r}\\
+                \dak{\pi_j \> r} & := \pi_j \> \dak{r} &
+                \dak{(r_1, r_2)} & := (\dak{r_1}, \dak{r_2})
+                & \dak{\inn_j \> r} & := \dak{r}
+        \end{align*}
 \end{definition}
 
 With all these notions we can give the introduction, elimination and computation rules of higher inductive types.
@@ -248,13 +248,13 @@ p_i : \prod (x : B_i \> H), t_i = r_i.
 \]
 We also have an elimination rule for which we use the lifting of constructor terms.
 \begin{equation*}
-	\AxiomC{$\vdash Y : H \rightarrow \Type$}
-	\noLine
-	\UnaryInfC{$\vdash f : \prod (x : A \> H), \bar{A} \> Y \> x \rightarrow Y \> (c \> x)$}
-%	\noLine
-	\AxiomC{$\vdash q_i : \prod (x : B_i \> H) (h_x : \bar{B}_i \> Y \> x), \hatt_i =_{p_j \, x} \hatr_j$}
-	\BinaryInfC{$\vdash H\frec(f, q_1, \ldots, q_n) : \prod (x : H), Y \> x$}
-	\DisplayProof
+        \AxiomC{$\vdash Y : H \rightarrow \Type$}
+        \noLine
+        \UnaryInfC{$\vdash f : \prod (x : A \> H), \bar{A} \> Y \> x \rightarrow Y \> (c \> x)$}
+%       \noLine
+        \AxiomC{$\vdash q_i : \prod (x : B_i \> H) (h_x : \bar{B}_i \> Y \> x), \hatt_i =_{p_j \, x} \hatr_j$}
+        \BinaryInfC{$\vdash H\frec(f, q_1, \ldots, q_n) : \prod (x : H), Y \> x$}
+        \DisplayProof
 \end{equation*}
 Let us abbreviate $H\frec(f, q_1, \ldots, q_n)$ by $H\frec$.
 The type $H$ also has computation rules for each point $t : A \> H$
@@ -277,13 +277,13 @@ Inductive $\coeq$ $(A, B : \Type)$ $(f, g : A \rightarrow B)$ :=
 \end{lstlisting}
 The elimination rule for this type is as follows
 \begin{equation*}
-	\AxiomC{$\vdash Y : \coeq \> A \> B \> f \> g \rightarrow \Type$}
-	\noLine
-	\UnaryInfC{$\vdash i_Y : \prod (b : B), Y \> (\inC \> b)$}
-	%	\noLine
-	\AxiomC{$\vdash g_Y : \prod (a : A), \glueC_*(i_Y \> (f \> a)) = i_Y \> (g \> a)$}
-	\BinaryInfC{$\vdash \coeq\frec(i_Y, g_Y) : \prod (x : \coeq \> A \> B \> f \> g), Y \> x$}
-	\DisplayProof
+        \AxiomC{$\vdash Y : \coeq \> A \> B \> f \> g \rightarrow \Type$}
+        \noLine
+        \UnaryInfC{$\vdash i_Y : \prod (b : B), Y \> (\inC \> b)$}
+        %       \noLine
+        \AxiomC{$\vdash g_Y : \prod (a : A), \glueC_*(i_Y \> (f \> a)) = i_Y \> (g \> a)$}
+        \BinaryInfC{$\vdash \coeq\frec(i_Y, g_Y) : \prod (x : \coeq \> A \> B \> f \> g), Y \> x$}
+        \DisplayProof
 \end{equation*}
 Note the similarities with the definition of the coequalizer in category theory \cite{mac2013categories}.
 
@@ -299,13 +299,13 @@ Note that this type has 2-paths, so it does not follow the given syntax.
 Furthermore, the identified paths used in the parameter are obliged to have the same endpoints.
 The introduction and computation rules are as expected, but we will give the elimination rule.
 \begin{equation*}
-	\AxiomC{$\vdash Y : \pcoeq \> A \> B \> f \> g \rightarrow \Type$}
-	\noLine
-	\UnaryInfC{$\vdash i_Y : \prod (b : B), Y \> (\inP \> b)$}
-	%	\noLine
-	\AxiomC{$\vdash g_Y : \prod (a : A), \apd \> i_Y \> (p_1 \> a) = \apd \> i_Y \> (p_2 \> a)$}
-	\BinaryInfC{$\vdash \pcoeq\frec(i_Y, g_Y) : \prod (x : \pcoeq \> A \> B \> f \> g), Y \> x$}
-	\DisplayProof
+        \AxiomC{$\vdash Y : \pcoeq \> A \> B \> f \> g \rightarrow \Type$}
+        \noLine
+        \UnaryInfC{$\vdash i_Y : \prod (b : B), Y \> (\inP \> b)$}
+        %       \noLine
+        \AxiomC{$\vdash g_Y : \prod (a : A), \apd \> i_Y \> (p_1 \> a) = \apd \> i_Y \> (p_2 \> a)$}
+        \BinaryInfC{$\vdash \pcoeq\frec(i_Y, g_Y) : \prod (x : \pcoeq \> A \> B \> f \> g), Y \> x$}
+        \DisplayProof
 \end{equation*}
 
 The last HIT we need is the homotopy colimit, and for that we again are inspired by the definition from category theory.
@@ -317,13 +317,13 @@ Inductive $\hocolim$ $(F : \mathbb{N} \rightarrow \Type)$ $(f : \prod (n : \math
 \end{lstlisting}
 Now the elimination rule is as follows.
 \begin{equation*}
-	\AxiomC{$\vdash Y : \hocolim \> F \> f \rightarrow \Type$}
-	\noLine
-	\UnaryInfC{$\vdash i_Y : \prod (n : \mathbb{N}) (x : F \> n), Y \> (\inc \> n \> x)$}
-	\noLine
-	\UnaryInfC{$\vdash c_Y : \prod (n : \mathbb{N}) (x : F \> n), \com_*(i_Y \> n \> x) = i_Y \> (n+1) \> (f \> n \> x)$}
-	\UnaryInfC{$\vdash \hocolim\frec(i_Y, c_Y) : \prod (x : \hocolim \> F \> f), Y \> x$}
-	\DisplayProof
+        \AxiomC{$\vdash Y : \hocolim \> F \> f \rightarrow \Type$}
+        \noLine
+        \UnaryInfC{$\vdash i_Y : \prod (n : \mathbb{N}) (x : F \> n), Y \> (\inc \> n \> x)$}
+        \noLine
+        \UnaryInfC{$\vdash c_Y : \prod (n : \mathbb{N}) (x : F \> n), \com_*(i_Y \> n \> x) = i_Y \> (n+1) \> (f \> n \> x)$}
+        \UnaryInfC{$\vdash \hocolim\frec(i_Y, c_Y) : \prod (x : \hocolim \> F \> f), Y \> x$}
+        \DisplayProof
 \end{equation*}
 
 \section{The Approximator}
@@ -337,7 +337,7 @@ Equivalently, we can define the type $T$ with a signature which is a polynomial 
 \[
 \xymatrix
 {
-	\zero \ar[r] & A \> \zero  \ar[r] & A(A \> \zero) \ar[r] & \ldots
+        \zero \ar[r] & A \> \zero  \ar[r] & A(A \> \zero) \ar[r] & \ldots
 }
 \]
 To understand what this does, let us assume that $A \> X = 1 + X$, so that $T = \mathbb{N}$.
@@ -367,8 +367,8 @@ Now we can make the first identification, and to do so, we take the following ho
 \[
 \xymatrix
 {
-	\one + \one \ar[d]_{0 + S(S \> 0)} \ar[r]^-{\delta} & I^1 \ar[d]\\
-	F' \> 3\ar[r] & F \> 3
+        \one + \one \ar[d]_{0 + S(S \> 0)} \ar[r]^-{\delta} & I^1 \ar[d]\\
+        F' \> 3\ar[r] & F \> 3
 }
 \]
 to obtain the actual third approximation $F \> 3$, and we continue our construction with that one.
@@ -431,11 +431,11 @@ From Lemma \ref{lem:constrTerm} we can conclude that we can interpret the constr
 Now we have sufficient to define the approximator.
 Given is the following data
 \begin{itemize}
-	\item Types $P, Q, R$;
-	\item A map $j_Q : H_{\Con} \> Q \rightarrow P$;
-	\item An inclusion $j_R : H_{\Con} \> R \rightarrow Q$;
-	\item Paths $p_Q : \prod (x : Q), j_Q(\overline{t_i} \> x) = j_Q(\overline{r_i} \> x)$;
-	\item Paths $p_R : \prod (x : R), j_R(\overline{t_i} \> x) = j_R(\overline{r_i} \> x)$.
+        \item Types $P, Q, R$;
+        \item A map $j_Q : H_{\Con} \> Q \rightarrow P$;
+        \item An inclusion $j_R : H_{\Con} \> R \rightarrow Q$;
+        \item Paths $p_Q : \prod (x : Q), j_Q(\overline{t_i} \> x) = j_Q(\overline{r_i} \> x)$;
+        \item Paths $p_R : \prod (x : R), j_R(\overline{t_i} \> x) = j_R(\overline{r_i} \> x)$.
 \end{itemize}
 The type $H_{\Approx}$ depends on the given data, but for clarity we will suppress it from the notation.
 We start with $H_{\Con} \> P$.
@@ -445,7 +445,7 @@ Note that we have two maps $\overline{t_i}, \overline{r_i} : B_i \> P \rightarro
 \[
 \xymatrix
 {
-	B_i \> P \ar@<-.5ex>[r]_-{\overline{r_i}} \ar@<.5ex>[r]^-{\overline{t_i}} & H_{\Con} \> P \ar[r]^-{\inC_1} & C_1
+        B_i \> P \ar@<-.5ex>[r]_-{\overline{r_i}} \ar@<.5ex>[r]^-{\overline{t_i}} & H_{\Con} \> P \ar[r]^-{\inC_1} & C_1
 }
 \]
 
@@ -457,7 +457,7 @@ Now we define the type $C_2$ which is the coequalizer of the following two arrow
 \[
 \xymatrix
 {
-	H_{\Con} \> Q \ar@<-.5ex>[rrr]_-{H_{\Con} \> (j_Q \circ \inn_1)} \ar@<.5ex>[rrr]^-{\inn_1 \circ j_Q} & & & H_{\Con} \> P \ar[rr]^-{\inC_1} & & C_1
+        H_{\Con} \> Q \ar@<-.5ex>[rrr]_-{H_{\Con} \> (j_Q \circ \inn_1)} \ar@<.5ex>[rrr]^-{\inn_1 \circ j_Q} & & & H_{\Con} \> P \ar[rr]^-{\inC_1} & & C_1
 }
 \]
 To explain what this does, let us assume for a moment that we have one construct $c$ with arity 1.
@@ -479,16 +479,16 @@ Now we can define the approximating sequence.
 \begin{definition}
 In the setting as described, we simultaneously define a sequence of approximations $F : \mathbb{N} \rightarrow \Type$ to $H$ and maps $f : \prod(n : \mathbb{N}), F \> n \rightarrow F(n+1)$ as follows.
 \begin{itemize}
-	\item We define $F \> 0 = H_{\nonrec}$.
-	\item We define $F \> 1 = H_{\Approx}$ taking $P = F \> 0$ and $Q, R = \zero$ and the maps are defined by $\zero\frec$.
-	\item We define $F \> 2 = H_{\Approx}$ with $P= F \> 1, Q = F \> 0$ and $R =\zero$. We have a map $Q \rightarrow P$ defined to be the composition of all $\inC$ with $\inn_1$.
-	\item We define $F(n+3) = H_{\Approx}$ with $P = (F(n+2)$, $Q = F(n+1)$, and $R = F \> n$. The maps $Q \rightarrow P$ and $R \rightarrow Q$ are defined to be the composition of $\inC$ with $\inn_1$ as in the construction. The paths $p_Q$ and $p_R$ are given by the path $\glueC$ from the first coequalizer.
+        \item We define $F \> 0 = H_{\nonrec}$.
+        \item We define $F \> 1 = H_{\Approx}$ taking $P = F \> 0$ and $Q, R = \zero$ and the maps are defined by $\zero\frec$.
+        \item We define $F \> 2 = H_{\Approx}$ with $P= F \> 1, Q = F \> 0$ and $R =\zero$. We have a map $Q \rightarrow P$ defined to be the composition of all $\inC$ with $\inn_1$.
+        \item We define $F(n+3) = H_{\Approx}$ with $P = (F(n+2)$, $Q = F(n+1)$, and $R = F \> n$. The maps $Q \rightarrow P$ and $R \rightarrow Q$ are defined to be the composition of $\inC$ with $\inn_1$ as in the construction. The paths $p_Q$ and $p_R$ are given by the path $\glueC$ from the first coequalizer.
 \end{itemize}
 For the maps $f \> n : F \> n \rightarrow F(n + 1)$, note that we always have the following sequence of maps
 \[
 \xymatrix@1
 {
-	F \> n \ar[r] & H_{\Con} \> (F \> n) \ar[r] & C_1 \ar[r] & \ldots \ar[r] & C_4 \ar[r] & H_{\Approx}.
+        F \> n \ar[r] & H_{\Con} \> (F \> n) \ar[r] & C_1 \ar[r] & \ldots \ar[r] & C_4 \ar[r] & H_{\Approx}.
 }
 \]
 Taking $P$ to be $F \> n$, then we have $F (n+1) = H_{\Approx} (F \> n)$, and thus the composition gives the map $F \> n \rightarrow F(n + 1)$.
@@ -510,9 +510,9 @@ Since $F \> 0$ is defined by $H_{\nonrec}$, which has a constructor $c'_{\nonrec
 \[
 \xymatrix
 {
-	A_{\nonrec} \ar[rr]^-{c'_{\nonrec}}
-		& & F \> 0 \ar[rr]^-{\inc \> 0}
-		& & \hocolim \> F \> f
+        A_{\nonrec} \ar[rr]^-{c'_{\nonrec}}
+                & & F \> 0 \ar[rr]^-{\inc \> 0}
+                & & \hocolim \> F \> f
 }
 \]
 
@@ -534,10 +534,10 @@ For this we use the recursion rule of $\hocolim$, and we start with the followin
 \[
 \xymatrix
 {
-		A_{\rec}(F \> n) \ar[r]^-{c_{\rec}'} 
-		& H_{\rec}(F \> n) \ar[rr]^-{\term \comp \inn_2} &
-		& H_{\Con}(F \> n) \ar[r]^-{\inC}
-		& H_{\Approx}(F \> n) = F(n + 1)
+                A_{\rec}(F \> n) \ar[r]^-{c_{\rec}'} 
+                & H_{\rec}(F \> n) \ar[rr]^-{\term \comp \inn_2} &
+                & H_{\Con}(F \> n) \ar[r]^-{\inC}
+                & H_{\Approx}(F \> n) = F(n + 1)
 }
 \]
 Composing this map with $\inc$, gives maps $A_{\rec}(F \> n) \rightarrow \hocolim \> F \> f$ for all $n : \mathbb{N}$.
@@ -546,8 +546,8 @@ Next we need to show the commutativity of the following triangle.
 \[
 \xymatrix
 {
-	A_{\rec}(F \> n) \ar[rr]^{A_{\rec}(f \> n)} \ar[dr] & & A_{\rec}(F(n+1)) \ar[dl] \\
-	& \hocolim \> F \> f &
+        A_{\rec}(F \> n) \ar[rr]^{A_{\rec}(f \> n)} \ar[dr] & & A_{\rec}(F(n+1)) \ar[dl] \\
+        & \hocolim \> F \> f &
 }
 \]
 Before we continue, let us recall that inductive types are functors.
@@ -556,12 +556,12 @@ Let us start with the following rectangle
 \[
 \xymatrix
 {
-	A_{\rec}(F \> n) \ar[r]^-{c_{\rec}'} \ar[d]_{A_{\rec}(f \> n)} 
-		& H_{\rec}(F \> n) \ar[rr]^{\term \comp \inn_2} \ar[d]_{H_{\rec}(f \> n)} &
-		& H_{\Con}(F \> n) \ar[d]_{H_{\Con}(f \> n)}\\
-	A_{\rec}(F(n+1)) \ar[r]_-{c_{\rec}'} 
-		& H_{\rec}(F(n+1)) \ar[rr]_{\term \comp \inn_2} &
-		& H_{\Con}(F(n+1))
+        A_{\rec}(F \> n) \ar[r]^-{c_{\rec}'} \ar[d]_{A_{\rec}(f \> n)} 
+                & H_{\rec}(F \> n) \ar[rr]^{\term \comp \inn_2} \ar[d]_{H_{\rec}(f \> n)} &
+                & H_{\Con}(F \> n) \ar[d]_{H_{\Con}(f \> n)}\\
+        A_{\rec}(F(n+1)) \ar[r]_-{c_{\rec}'} 
+                & H_{\rec}(F(n+1)) \ar[rr]_{\term \comp \inn_2} &
+                & H_{\Con}(F(n+1))
 }
 \]
 The left square commutes, because by definition of $H_{\rec} \> f$ we have
@@ -573,10 +573,10 @@ Hence, it suffices to show that the following diagram commutes.
 \[
 \xymatrix
 {
-	H_{\Con}(F \> n) \ar[d]_{H_{\Con} \> (f \> n)} \ar[r]^-{\inC}
-		& F(n+1) \ar[d]^{f(n+1)}\\
-	H_{\Con}(F(n+1)) \ar[r]_-{\inC}
-		& H_{\Approx} \> (F(n+1))
+        H_{\Con}(F \> n) \ar[d]_{H_{\Con} \> (f \> n)} \ar[r]^-{\inC}
+                & F(n+1) \ar[d]^{f(n+1)}\\
+        H_{\Con}(F(n+1)) \ar[r]_-{\inC}
+                & H_{\Approx} \> (F(n+1))
 }
 \]
 Note that $H_{\Approx}(F(n+1)) = F(n+2)$ and $H_{\Approx}(F \> n) = F(n+1)$.
@@ -591,29 +591,29 @@ Now we need to check the commutativity of the following diagram
 \[
 \xymatrix
 {
-	B_i(F \> n) 
-	\ar[r]^-{\overline{t_i}} 
-	\ar[d]_{B_i(f \> n)} 
-	& 
-	H_{\Con}(F \> n) 
-	\ar[r]^-{\inC}
-	\ar[d]^{H_{\Con}(f \> n)}  
-	& 
-	C_2(F \> n)
-	\ar[r]^{\inC}
-	& 
-	F(n+1) 
-	\ar[d]^{f \> n}\\
-	B_i(F(n+1)) 
-	\ar[r]_-{\overline{t_i}} 
-	& 
-	H_{\Con}(F(n+1)) 
-	\ar[r]_-{\inC} 
-	& 
-	C_2(F(n+1))
-	\ar[r]_{\inC} 
-	& 
-	F(n+2)
+        B_i(F \> n) 
+        \ar[r]^-{\overline{t_i}} 
+        \ar[d]_{B_i(f \> n)} 
+        & 
+        H_{\Con}(F \> n) 
+        \ar[r]^-{\inC}
+        \ar[d]^{H_{\Con}(f \> n)}  
+        & 
+        C_2(F \> n)
+        \ar[r]^{\inC}
+        & 
+        F(n+1) 
+        \ar[d]^{f \> n}\\
+        B_i(F(n+1)) 
+        \ar[r]_-{\overline{t_i}} 
+        & 
+        H_{\Con}(F(n+1)) 
+        \ar[r]_-{\inC} 
+        & 
+        C_2(F(n+1))
+        \ar[r]_{\inC} 
+        & 
+        F(n+2)
 }
 \]
 The right rectangle commutes, because the maps $\inC$ are built by composing constructors of the coequalizer, and thus it commutes by definition.
@@ -774,7 +774,7 @@ The map $f : F \> n \rightarrow F(n + 1)$ is defined by the elimination rule of 
 \[
 \xymatrix
 {
-	F \> n \ar[r]^-{\inn_1} & H_{\Con} \> (F \> n) \ar[r]^-{\inC} & \ldots \ar[r]^-{\inC} & F(n+1)
+        F \> n \ar[r]^-{\inn_1} & H_{\Con} \> (F \> n) \ar[r]^-{\inC} & \ldots \ar[r]^-{\inC} & F(n+1)
 }
 \]
 Since the map to $Y$ was defined via the universal property of the coequalizer, it will commute automatically.
@@ -830,13 +830,13 @@ Then $t$ induces a map $\overline{t} : F \> P \rightarrow H_{\Con}^n \> (G \> P)
 \begin{proof}
 We use induction on the form of the constructor term.
 \begin{itemize}
-	\item $t = a$ with $a : B$ and $B$ does not use $T$. Then we define $\overline{t} \> y = \inn_1 \> a$.
-	\item $t = x$ with $x : F \> T$. Then we define $\overline{t} \> y = \inn_1 \> y$.
-	\item $t = c_{\nonrec} \> a$ with $a : A_{\nonrec}$. Then we define $\overline{t} \> y = \inn_1 \> (c_{\nonrec}' \> a)$.
-	\item $t = c_{\rec} \> r$ with $r : A_{\rec} \> T$ where $r$ uses at most $n-1$ constructors. 
-	By induction we have a map $\overline{r} : F \> P \rightarrow A_{\rec} \> H_{\Con}^{n-1}$.
-	Then we define $\overline{t} \> y = c_{\rec}' (\overline{r} \> x)$.
-	\item For the rules for the projection, pairing and injection it is trivial. \qedhere
+        \item $t = a$ with $a : B$ and $B$ does not use $T$. Then we define $\overline{t} \> y = \inn_1 \> a$.
+        \item $t = x$ with $x : F \> T$. Then we define $\overline{t} \> y = \inn_1 \> y$.
+        \item $t = c_{\nonrec} \> a$ with $a : A_{\nonrec}$. Then we define $\overline{t} \> y = \inn_1 \> (c_{\nonrec}' \> a)$.
+        \item $t = c_{\rec} \> r$ with $r : A_{\rec} \> T$ where $r$ uses at most $n-1$ constructors. 
+        By induction we have a map $\overline{r} : F \> P \rightarrow A_{\rec} \> H_{\Con}^{n-1}$.
+        Then we define $\overline{t} \> y = c_{\rec}' (\overline{r} \> x)$.
+        \item For the rules for the projection, pairing and injection it is trivial. \qedhere
 \end{itemize}
 \end{proof}
 
@@ -850,44 +850,44 @@ Then for all $x : F \> P$ the terms $\overline{t}(F \> f \> x)$ and $(H_{\Con} \
 \begin{proof}
 Again we use induction on the constructor term.
 \begin{itemize}
-	\item $t = a$ with $a : B$ and $B$ does not use $T$. 
-	Then we have $G \> P = B$, and thus 
-	$
-	\overline{t}(F \> f \> x) = a.
-	$
-	On the other hand, we have, 
-	\[
-	(H_{\Con} \circ G) \> f \> (\overline{t} \> x) = G \> f \> a = a.
-	\]
-	\item $t = x$ with $x : F \> T$. 
-	Then $G \> P = F \> P$, and thus
-	$
-	\overline{t}(F \> f \> x) = \inn_1(F \> f \> x).
-	$
-	Also,
-	\[
-	(H_{\Con} \circ G) \> f \> (\overline{t} \> x) = (H_{\Con} \circ G) \> f \> (\inn_1 \> x) = \inn_1(G \> f \> x) = \inn_1(F \> f \> x).
-	\]
-	\item $t = c_{\nonrec} \> a$ with $a : A_{\nonrec}$. 
-	Then $G \> P = P$, and thus
-	$
-	\overline{t}(F \> f \> x) = \inn_1(f(c'_{\nonrec} \> a))
-	$.
-	Also,
-	\[
-	(H_{\Con} \circ G) \> f \> (\overline{t} \> x) = H_{\Con} \> f \> (\inn_1(c'_{\nonrec} \> a)) = \inn_1(f(c'_{\nonrec} \> a))
-	\]
-	\item $t = c_{\rec} \> r$ with $r : A_{\rec} \> T$ where $r$ uses at most $n-1$ constructors. 
-	The induction hypothesis in this case is that $H_{\Con} \> f \> (\overline{r} \> x) = \overline{r}(F \> f \> x)$.
-	Then again $G \> P = P$, and thus
-	$
-	\overline{t}(F \> f \> x) = c'_{\rec} \> (\overline{r}(F \> f \> x))
-	$.
-	Furthermore,
-	\[
-	(H_{\Con} \circ G) \> f \> (\overline{t} \> x) = H_{\Con} \> f \> (c'_{\rec} \> (\overline{r} \> x)) = c'_{\rec} \> (H_{\Con} \> f \> (\overline{r} \> x)) = c'_{\rec} \> (\overline{r}(F \> f \> x))
-	\]
-	\item For the rules for the projection, pairing and injection it is trivial. \qedhere
+        \item $t = a$ with $a : B$ and $B$ does not use $T$. 
+        Then we have $G \> P = B$, and thus 
+        $
+        \overline{t}(F \> f \> x) = a.
+        $
+        On the other hand, we have, 
+        \[
+        (H_{\Con} \circ G) \> f \> (\overline{t} \> x) = G \> f \> a = a.
+        \]
+        \item $t = x$ with $x : F \> T$. 
+        Then $G \> P = F \> P$, and thus
+        $
+        \overline{t}(F \> f \> x) = \inn_1(F \> f \> x).
+        $
+        Also,
+        \[
+        (H_{\Con} \circ G) \> f \> (\overline{t} \> x) = (H_{\Con} \circ G) \> f \> (\inn_1 \> x) = \inn_1(G \> f \> x) = \inn_1(F \> f \> x).
+        \]
+        \item $t = c_{\nonrec} \> a$ with $a : A_{\nonrec}$. 
+        Then $G \> P = P$, and thus
+        $
+        \overline{t}(F \> f \> x) = \inn_1(f(c'_{\nonrec} \> a))
+        $.
+        Also,
+        \[
+        (H_{\Con} \circ G) \> f \> (\overline{t} \> x) = H_{\Con} \> f \> (\inn_1(c'_{\nonrec} \> a)) = \inn_1(f(c'_{\nonrec} \> a))
+        \]
+        \item $t = c_{\rec} \> r$ with $r : A_{\rec} \> T$ where $r$ uses at most $n-1$ constructors. 
+        The induction hypothesis in this case is that $H_{\Con} \> f \> (\overline{r} \> x) = \overline{r}(F \> f \> x)$.
+        Then again $G \> P = P$, and thus
+        $
+        \overline{t}(F \> f \> x) = c'_{\rec} \> (\overline{r}(F \> f \> x))
+        $.
+        Furthermore,
+        \[
+        (H_{\Con} \circ G) \> f \> (\overline{t} \> x) = H_{\Con} \> f \> (c'_{\rec} \> (\overline{r} \> x)) = c'_{\rec} \> (H_{\Con} \> f \> (\overline{r} \> x)) = c'_{\rec} \> (\overline{r}(F \> f \> x))
+        \]
+        \item For the rules for the projection, pairing and injection it is trivial. \qedhere
 \end{itemize}
 \end{proof}
 
@@ -980,7 +980,7 @@ If the proof can be extended somehow to also allows these constructors, then tha
 
 %% Either use bibtex (recommended), 
 
-\bibliography{lipics-v2016-sample-article}
+\bibliography{Paper}
 
 %% .. or use the thebibliography environment explicitely
 

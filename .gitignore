@@ -1,0 +1,13 @@
+Paper.pdf
+*.log
+*.blg
+*.aux
+*.aux.bak
+*.dvi
+*.bbl
+*.fls
+*.toc
+*.blg
+*.brf
+*.out
+*.synctex.gz
