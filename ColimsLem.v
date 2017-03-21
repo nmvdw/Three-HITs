@@ -12,13 +12,13 @@ Colimits as higher inductive type
 Module Export Colims.
 
 Private Inductive colim
-  (F : nat -> Type0)
-  (f : forall (n : nat), F n -> F(S n)) : Type0 :=
+  (F : nat -> Type)
+  (f : forall (n : nat), F n -> F(S n)) : Type :=
 | inc : forall (n : nat), F n -> colim F f.
 
 Axiom com : 
   forall 
-    (F : nat -> Type0) 
+    (F : nat -> Type) 
     (f : forall (n : nat), F n -> F(S n))
     (n : nat) 
     (x : F n), 
@@ -29,7 +29,7 @@ Recursion rule for colimit using Licata's trick
 *)
 Fixpoint colim_rec
   (P : Type)
-  (F : nat -> Type0)
+  (F : nat -> Type)
   (f : forall (n : nat), F n -> F(S n))
   (Pi : forall (n : nat), F n -> P)
   (Pc : forall (n : nat) (x : F n), Pi n x = Pi (S n) (f n x))
@@ -43,7 +43,7 @@ Fixpoint colim_rec
 
 Axiom colim_rec_beta_com : forall
   (P : Type)
-  (F : nat -> Type0)
+  (F : nat -> Type)
   (f : forall (n : nat), F n -> F(S n))
   (Pi : forall (n : nat), F n -> P)
   (Pc : forall (n : nat) (x : F n), Pi n x = Pi (S n) (f n x))
@@ -55,7 +55,7 @@ Axiom colim_rec_beta_com : forall
 Induction rule for colimit using Licata's trick
 *)
 Fixpoint colim_ind
-  (F : nat -> Type0)
+  (F : nat -> Type)
   (f : forall (n : nat), F n -> F(S n))
   (P : colim F f -> Type)
   (Pi : forall (n : nat), forall (x : F n), P (inc F f n x))
@@ -69,7 +69,7 @@ Fixpoint colim_ind
     end) Pc.
 
 Axiom colim_ind_beta_com : forall
-  (F : nat -> Type0)
+  (F : nat -> Type)
   (f : forall (n : nat), F n -> F(S n))
   (P : colim F f -> Type)
   (Pi : forall (n : nat), forall (x : F n), P (inc F f n x))
@@ -89,7 +89,7 @@ Section ColimConst.
 colim A id -> A
 Defined by F(n) -> A as id.
 *)
-Definition CC_A : forall (A : Type0),
+Definition CC_A : forall (A : Type),
   colim (fun (_ : nat) => A) (fun (_ : nat) => idmap) -> A.
 Proof.
 intro A.
@@ -107,13 +107,13 @@ Defined.
 A -> colim A id
 Defined by inc 0
 *)
-Definition A_CC (A : Type0) (a : A) : colim (fun (_ : nat) => A) (fun (_ : nat) => idmap) :=
+Definition A_CC (A : Type) (a : A) : colim (fun (_ : nat) => A) (fun (_ : nat) => idmap) :=
   inc (fun _ : nat => A) (fun n : nat => idmap) 1 a.
 
-Definition iso_CC_A (A : Type0) (x : A) :
+Definition iso_CC_A (A : Type) (x : A) :
   CC_A A (A_CC A x) = x := reflexivity x.
 
-Definition iso_A_CC : forall (A : Type0) (x : colim (fun (_ : nat) => A) (fun (_ : nat) => idmap)),
+Definition iso_A_CC : forall (A : Type) (x : colim (fun (_ : nat) => A) (fun (_ : nat) => idmap)),
   x = A_CC A (CC_A A x).
 Proof.
 intro A.
@@ -147,14 +147,14 @@ Section ColimSum.
 (*
 Sum of two functors.
 *)
-Definition Sum (G1 G2 : nat -> Type0) (n : nat) : Type0
+Definition Sum (G1 G2 : nat -> Type) (n : nat) : Type
   := sum (G1 n) (G2 n).
 
 (*
 The sum is a functor.
 *)
 Definition SMap 
-  (G1 G2 : nat -> Type0)
+  (G1 G2 : nat -> Type)
   (g1 : forall (n : nat), G1 n -> G1 (S n))
   (g2 : forall (n : nat), G2 n -> G2 (S n))
   (n : nat)
@@ -173,7 +173,7 @@ Defined by
   For y : G2 n it is inr(inc n y)
 *)
 Definition colim_S : 
-  forall  (G1 G2 : nat -> Type0)
+  forall  (G1 G2 : nat -> Type)
           (g1 : forall (n : nat), G1 n -> G1 (S n))
           (g2 : forall (n : nat), G2 n -> G2 (S n)),
   colim (Sum G1 G2) (SMap G1 G2 g1 g2)
@@ -211,7 +211,7 @@ Defined by
   For y : G2(F n) it is inc n (inr x)
 *)
 Definition S_colim : 
-  forall  (G1 G2 : nat -> Type0)
+  forall  (G1 G2 : nat -> Type)
           (g1 : forall (n : nat), G1 n -> G1 (S n))
           (g2 : forall (n : nat), G2 n -> G2 (S n)),
   sum
@@ -247,7 +247,7 @@ Unshelve.
 Defined.
 
 Theorem S_iso_1 :
-  forall  (G1 G2 : nat -> Type0)
+  forall  (G1 G2 : nat -> Type)
           (g1 : forall (n : nat), G1 n -> G1 (S n))
           (g2 : forall (n : nat), G2 n -> G2 (S n))
           (i : sum
@@ -296,7 +296,7 @@ destruct i as [x| y].
 Qed.
 
 Theorem S_iso_2 :
-  forall  (G1 G2 : nat -> Type0)
+  forall  (G1 G2 : nat -> Type)
           (g1 : forall (n : nat), G1 n -> G1 (S n))
           (g2 : forall (n : nat), G2 n -> G2 (S n))
           (i : colim (Sum G1 G2) (SMap G1 G2 g1 g2)),
