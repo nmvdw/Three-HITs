@@ -1,4 +1,5 @@
 Paper.pdf
+*.DS_Store
 *.log
 *.blg
 *.aux
