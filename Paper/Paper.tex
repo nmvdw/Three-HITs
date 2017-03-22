@@ -65,7 +65,7 @@
 \newcommand{\remove}[1]{}
 \newcommand{\inn}{\Boperator{in}}
 
-\newcommand{\fpath}[0]{\> @ \>}
+\newcommand{\fpath}[0]{\> \Box \>}
 \newcommand{\conc}[0]{\bullet}
 \newcommand{\comp}[0]{\circ \,}
 
@@ -88,6 +88,8 @@
 \newcommand{\idmap}[0]{\Boperator{Id}}
 \newcommand{\refl}[0]{\Boperator{refl}}
 
+\newcommand{\FE}[0]{\Boperator{FE}}
+\newcommand{\funext}[0]{\Boperator{FunExt}}
 \newcommand{\coeq}[0]{\Boperator{coeq}}
 \newcommand{\inC}[0]{\Boperator{inC}}
 \newcommand{\glueC}[0]{\Boperator{glueC}}
@@ -327,6 +329,28 @@ Now the elimination rule is as follows.
         \UnaryInfC{$\vdash \hocolim\frec(i_Y, c_Y) : \prod (x : \hocolim \> F \> f), Y \> x$}
         \DisplayProof
 \end{equation*}
+
+Lastly, we need function extensionality for the proof.
+Let us first introduce some notation.
+
+\begin{definition}
+Let $A, B$ be types, let $f, g : A \rightarrow B$ be maps, and let $x : A$ be a point of $A$.
+Then for all $e : f = g$ we define a path $e \fpath x : f \> x = g \> x$ using path induction which sends $\refl$ to $\refl$.
+\end{definition}
+
+\begin{definition}
+Given are types $A, B$ and two maps $f, g : A \rightarrow B$.
+Then we define the type $\funext$, of which the inhabitants represent proofs of function extensionality, as follows
+\[
+\funext = (\prod (x : A), f \> x = g \> x) \rightarrow f = g.
+\]
+\end{definition}
+
+We will assume that we have an inhabitant $\FE : \funext$ such that for $p : \prod (x : A), f \> x = g \> x$ and $x : A$ we have
+\[
+(\FE \> p) \fpath x = p \> x.
+\]
+In homotopy type theory function extensionality can be proved by assuming univalence \cite{UnivalenceFE} or by assuming the existence of an interval object \cite{IntervalFE}.
 
 \section{The Approximator}
 \label{sec:approximator}

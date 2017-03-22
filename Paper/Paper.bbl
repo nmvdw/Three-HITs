@@ -123,10 +123,25 @@ Nicolai Kraus.
 \newblock In {\em Proceedings of the 31st Annual ACM/IEEE Symposium on Logic in
   Computer Science}, pages 595--604. ACM, 2016.
 
+\bibitem{UnivalenceFE}
+Dan Licata.
+\newblock Another {P}roof {T}hat {U}nivalence {I}mplies {F}unction
+  {E}xtensionality.
+\newblock
+  \url{https://homotopytypetheory.org/2014/02/17/another-proof-that-univalence-implies-function-extensionality/},
+  2014.
+
 \bibitem{mac2013categories}
 Saunders Mac~Lane.
 \newblock {\em Categories for the {W}orking {M}athematician}, volume~5.
 \newblock Springer Science \& Business Media, 2013.
+
+\bibitem{IntervalFE}
+Mike Shulman.
+\newblock An {I}nterval {T}ype {I}mplies {F}unction {E}xtensionality.
+\newblock
+  \url{https://homotopytypetheory.org/2011/04/04/an-interval-type-implies-function-extensionality/},
+  2011.
 
 \bibitem{sojakova2015higher}
 Kristina Sojakova.

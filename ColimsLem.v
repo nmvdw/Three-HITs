@@ -11,6 +11,9 @@ induction e.
 reflexivity.
 Qed.
 
+(*
+Definition 6 in paper
+*)
 Definition fPath {A B : Type0} {f g : A -> B} (e : f = g) (x : A) : f x = g x.
 Proof.
 induction e.
