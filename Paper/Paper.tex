@@ -65,6 +65,7 @@
 \newcommand{\remove}[1]{}
 \newcommand{\inn}{\Boperator{in}}
 
+\newcommand{\fpath}[0]{\> @ \>}
 \newcommand{\conc}[0]{\bullet}
 \newcommand{\comp}[0]{\circ \,}
 
@@ -898,7 +899,8 @@ The type $\hocolim \> (\lambda n . A) \> (\lambda n . \operatorname{Id})$ is iso
 \end{lemma}
 
 \begin{proof}
-We define $f : A \rightarrow \hocolim \> (\lambda n . A) \> (\lambda n . \operatorname{Id})$ to be $\inc \> 0$.
+We define the map $f : A \rightarrow \hocolim \> (\lambda n . A) \> (\lambda n . \operatorname{Id})$
+to be $\inc \> 0$.
 Next we define $g : \hocolim \> (\lambda n . A) \> (\lambda n . \operatorname{Id}) \rightarrow A$ by $\hocolim$ recursion.
 We send $\inc \> n \> a$ to $a$, and then the required diagrams commute by reflexivity.
 The proof that these maps are mutual inverses is straightforward but tedious, so we refer the reader to the accompanying Coq code \cite{CoqImpl}.
@@ -937,18 +939,42 @@ This follows from a more general result which says that colimits commute with si
 
 \begin{lemma}
 \label{lem:pathext}
-Given are types $A, B$ and functions $f, g : A \rightarrow B$ such that we have an inhabitant $e : \prod (x : A), f \> x = g \> x$.
-Furthermore, assume that we have paths $q : \prod (x : A), l = r$ where $l$ and $r$ are terms using $x : A$ as free variable.
-Then for all $x : A$ we have a path
+Given are types $A, B$ and functions $f, g : A \rightarrow B$ such that we have an inhabitant $e : f = g$.
+Furthermore, assume that we have a path $p : x = y$ where $x$ and $y$ are terms of type $A$.
+Then for all we have a path
 \[
-(e \> x)_* \> (\ap \> f \> (q \> x)) = \ap \> g \> (q \> x).
+e_* \> (\ap \> f \> p) = \ap \> g \> p.
+\]
+All in all, we have an inhabitant of the type
+\[
+\prod (f, g : A \rightarrow B) (e : f = g) (x, y : A) (p : x = y), e_* \> (\ap \> f \> p) = \ap \> g \> p
+\]
+where $A, B : \Type$.
+\end{lemma}
+
+\begin{proof}
+Since this statement is universally quantified over $p$, we can apply path induction.
+Assuming $p$ to be $\refl$, the map $e_*$ is the identity, and in that case it holds.
+Hence, it follows by path induction.
+\end{proof}
+
+\begin{lemma}
+\label{lem:funTrans}
+Again we are given types $A, B$, functions $f, g : A \rightarrow B$, an inhabitant $e : f = g$, and a path $p : f \> x = f \> y$ with $x, y : A$.
+Then we have a path 
+\[
+e_* \> p = (e \fpath x)^{-1} \conc p \conc (e \fpath x)
+\]
+Formally, this means that for $A, B : \Type$ we have an inhabitant of the type
+\[
+\prod (f, g : A \rightarrow B) (e : f = g) (x, y : A) (p : f \> x = f \> y), e_* \> p = (e \fpath x)^{-1} \conc p \conc (e \fpath y).
 \]
 \end{lemma}
 
 \begin{proof}
-This follows from path induction on $e \> x$.
-In the case $e \> x$ happens to be $\refl$, then $(e \> x)_*$ is $\idmap$.
-Then the desired path is just $\refl$.
+Again we use path induction on $e$, so we assume that $e = \refl$.
+Then $e \fpath x = \refl$ and $e \fpath y = \refl$, so the right side is equal to $p$.
+Also, in this case $e_*$ is the identity map, so the left side also is $p$.
 \end{proof}
 
 \section{Conclusion and Further Work}

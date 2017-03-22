@@ -1,6 +1,35 @@
 Require Import HoTT.
-Require Import HoTT.HIT.Colimits.
 Require Export HoTT.
+
+(*
+Lemma 13 in paper
+*)
+Theorem apTransport (A B : Type0) (f g : A -> B) (e : f = g) (x y : A) (p : x = y) :
+  transport (fun h => h x = h y) e (ap f p) = ap g p.
+Proof.
+induction e.
+reflexivity.
+Qed.
+
+Definition fPath {A B : Type0} {f g : A -> B} (e : f = g) (x : A) : f x = g x.
+Proof.
+induction e.
+reflexivity.
+Defined.
+
+(*
+Lemma 14 in paper
+*)
+Theorem funTransport (A B : Type0) (f g : A -> B) (e : f = g) (x y : A) (p : f x = f y) :
+  transport (fun h => h x = h y) e p = (fPath e x)^ @ p @ (fPath e y).
+Proof.
+induction e.
+cbn.
+rewrite concat_1p.
+rewrite concat_p1.
+reflexivity.
+Qed.
+
 
 Ltac reduceTransport :=
   rewrite @HoTT.Types.Paths.transport_paths_FlFr ;
