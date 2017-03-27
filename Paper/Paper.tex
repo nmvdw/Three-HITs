@@ -61,6 +61,24 @@ The author acknowledges the financial support from the Slovenian Research Agency
 \input{coq.sty}
 \input{bussproofs.sty}
 
+% In order to avoid macro pollution, we should comment each macro
+% so that we know what it is about
+
+\newcommand{\tyFont}[1]{\textsf{#1}} % the font used to display types
+\newcommand{\termFont}[1]{\textsf{#1}} % the font used to term constants
+\newcommand{\nat}{\tyFont{N}} % the type of natural numbers
+\newcommand{\lift}[1]{\overline{#1}} % the lifting of a type family by a polynomial
+\newcommand{\defeq}{\mathrel{{:}{\equiv}}} % definitional equality
+\newcommand{\idmap}[1]{\termFont{id}_{#1}} % identity map
+\newcommand{\inl}[1]{\termFont{inl}\,#1} % left inclusion into a sum
+\newcommand{\inr}[1]{\termFont{inr}\,#1} % right inclusion into a sum
+
+\newcommand{\dprod}[1]{{\textstyle\prod_{#1}}\,} % dependent product
+\newcommand{\dsum}[1]{{\textstyle\sum_{#1}}\,} % dependent sum
+
+% Below are macros which have not been documented and are possibly
+% unused (probably not)
+
 \newcommand{\Boperator}[1]{\mathsf{#1}}
 \newcommand{\comment}[1]{-- #1 --}
 \newcommand{\remove}[1]{}
@@ -74,6 +92,7 @@ The author acknowledges the financial support from the Slovenian Research Agency
 \newcommand{\one}[0]{\textbf{1}}
 \newcommand{\two}[0]{\textbf{2}}
 
+
 \newcommand{\frec}[0]{\!\operatorname{rec}}
 \newcommand{\ind}[0]{\!\operatorname{ind}}
 \newcommand{\rec}[0]{\operatorname{rec}}
@@ -86,7 +105,6 @@ The author acknowledges the financial support from the Slovenian Research Agency
 \newcommand{\Con}[0]{\textbf{Con}}
 \newcommand{\Approx}[0]{\textbf{Approx}}
 
-\newcommand{\idmap}[0]{\Boperator{Id}}
 \newcommand{\refl}[0]{\Boperator{refl}}
 
 \newcommand{\FE}[0]{\Boperator{FE}}
@@ -102,8 +120,6 @@ The author acknowledges the financial support from the Slovenian Research Agency
 \newcommand{\hpushout}[0]{\Boperator{hpushout}}
 \newcommand{\hocolim}[0]{\Boperator{hocolim}}
 \newcommand{\seg}[0]{\Boperator{seg}}
-\newcommand{\inl}[0]{\Boperator{inl}}
-\newcommand{\inr}[0]{\Boperator{inr}}
 \newcommand{\glue}[0]{\Boperator{glue}}
 \newcommand{\inc}[0]{\Boperator{inc}}
 \newcommand{\com}[0]{\Boperator{com}}
@@ -153,24 +169,68 @@ Next we define the approximating sequence of a higher inductive type in Section 
 For this we need some lemmata which are proved in Section \ref{sec:Lemmata}.
 These are formalized in \textsc{Coq} \cite{CoqImpl} using the library from \cite{bauer2016hott}.
 
-\section{Preliminaries}
+\section{A definition of HITs}
 \label{sec:prelims}
-Let us briefly recall the scheme of higher inductive types which we shall use \cite{basoldhigher}.
-First of all, we need \emph{polynomial functors}.
+
+In this section we provide the definitions of higher inductive types that we shall
+consider. We recall the scheme for specifying higher inductive types
+from~\cite{basoldhigher}.
+
 \begin{definition}
-Let $X$ be a variable.
-Then a \emph{polynomial} is given by the following grammar.
-\[
-F, G ::= B \ | \ X \ | \ F \times G \ | \ F + G
-\]
-where $B : \Type$.
+  A \emph{polynomial (expression)} in a type variable $X$ is a built inductively from the
+  variable $X$, type constants~$C$, binary products $\times$, and binary sums $+$.
 \end{definition}
-A possible extension would be to use arbitrary containers as in \cite{abbott2005containers}, but we shall refrain to do so.
-With that extension the given proof requires the axiom of choice which generally does not hold in type theory.
-One can prove that polynomials are functors, and that given a type family $Y : T \rightarrow \Type$ and a polynomial $F$, we get a lift $\bar{F} : F \> T \rightarrow \Type$.
-We will write $F \> f$ to denote the application of a polynomial $F$ to a map $f$.
-Also, given a dependent function $f : \prod (x : T), Y \> x$, one can define $\bar{F} \> f : \prod (x : H \> T), \bar{H} \> Y \> x$.
-Precise definitions of these are given in \cite{basoldhigher}.
+
+For example, if $\nat$ is the type of natural numbers, the expression
+$(X + \nat) \times X$ is a polynomial expression in~$X$. We write $P[X]$ to indicate a
+polynomial in variable $X$. Given a type $A$, we may substutute $A$ for $X$ to obtain a
+type $P[A]$, as follows:
+%
+\begin{align*}
+  X[A] &\defeq A, &
+  (P_1 \times P_2)[A] &\defeq P_1[A] \times P_2[A], \\
+  C[A] &\defeq C, &
+  (P_1 + P_2)[A] &\defeq P_1[A] + P_2[A].
+\end{align*}
+%
+In a similar fashion a map $f \> A \to B$ is transformed to a map $P[f] : P[A] \to P[B]$:
+%
+\begin{align*}
+  X[f] &\defeq f, &
+  (P_1 \times P_2)[f] \, (x,y) &\defeq (P_1[f]\, x, P_2[f] \, y), \\
+  C[f] &\defeq \idmap{C}, &
+  (P_1 + P_2)[f](\inl{x}) &\defeq \inl{(P_1[f]\,x)}, \\
+  & &
+  (P_1 + P_2)[f](\inr{y}) &\defeq \inr{(P_2[f]\,y)}.
+\end{align*}
+%
+Somewhat less obviously, a polynomial acts on a type family $B : A \to \Type$ to
+give its lifting $\lift{P}[B] : P[A] \to \Type$,
+%
+\begin{align*}
+  \lift{X}[B] \, u &\defeq B\,u, &
+  \lift{P_1 \times P_2}[B] \, u \defeq (\lift{P_1}[B]\,u) \times (\lift{P_2}[B]\,u), \\
+  \lift{C}[B] \, u &\defeq C, &
+  \lift{P_1 + P_2}[B] \, (\inl{u})\defeq \lift{P_1}[B]\,u, \\
+  & &
+  \lift{P_1 + P_2}[B] \, (\inr{u})\defeq \lift{P_2}[B]\,u,
+\end{align*}
+%
+while a map $f \> \dprod{x \> A} B_1\,x \to B_2\,x$ lifts to
+$\lift{P}[f] \> \dprod{u : P[A]} \lift{P}[B_1]\,u \to \lift{P}[B_2]\,u$:
+%
+\begin{align*}
+  \lift{X}[f] \, u &\defeq f \, u &
+  \lift{P_1 \times P_2}[f] \, (u_1, u_2) &\defeq (\lift{P_1}[f]\,u_1, \lift{P_2}[f]\,u_2) \\
+  \lift{C}[f] \, u &\defeq u &
+  \lift{P_1 + P_2}[f] \, (\inl{u})\defeq \lift{P_1}[f]\,u, \\
+  & &
+  \lift{P_1 + P_2}[f] \, (\inr{u})\defeq \lift{P_2}[f]\,u.
+\end{align*}
+%
+There is of course a strong analogy between the action of $P[X]$ and a polynomial functor,
+but we hesitate to call $P[X]$ a functor as there is no category to speak of, and in any
+case the manipulations we have just described are syntactic.
 
 Next we define the notion of a constructor term.
 \begin{definition}
@@ -1005,6 +1065,11 @@ Also, in this case $e_*$ is the identity map, so the left side also is $p$.
 \end{proof}
 
 \section{Conclusion and Further Work}
+
+MOVED FROM BEGINNING: A possible extension would be to use arbitrary containers as in \cite{abbott2005containers}, but we shall refrain to do so.
+With that extension the given proof requires the axiom of choice which generally does not hold in type theory.
+
+
 Higher inductive types can thus be constructed if we have the interval, homotopy pushout and homotopy colimits.
 Since the construction is done in homotopy type theory without assuming extra axioms, the proof is constructive.
 Notice that the only inductive types we needed were the sum and product types rather than the general class of W-types or those described inductive schemes.
