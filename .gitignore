@@ -1,4 +1,5 @@
 Paper.pdf
+*.DS_Store
 *.log
 *.blg
 *.aux
@@ -11,3 +12,4 @@ Paper.pdf
 *.brf
 *.out
 *.synctex.gz
+*.vtc
