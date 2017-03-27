@@ -236,38 +236,38 @@ Next we define the notion of a constructor term.
 \begin{definition}
 \label{def:constructor-term}
 Given is a function $c : A : T \rightarrow T$ with $A$ polynomial and $T$ a type.
-Then we say $t$ is a \emph{constructor term} over $c$ if we can find polynomials $F$ and $G$ such that $x : F : T \Vdash t : G : T$ can be derived using the following rules.
+Then we say $t$ is a \emph{constructor term} over $c$ if we can find polynomials $F$ and $G$ such that $x : F : T \vdash t : G : T$ can be derived using the following rules.
 \begin{gather*}
         \AxiomC{$t : B$}
         \AxiomC{$T$ does not occur in $B$}
-        \BinaryInfC{$x:F : T \Vdash t : B$}
+        \BinaryInfC{$x:F : T \vdash t : B$}
         \bottomAlignProof
         \DisplayProof 
          \quad
         \AxiomC{}
-        \UnaryInfC{$x : F : T \Vdash x : F : T$}
+        \UnaryInfC{$x : F : T \vdash x : F : T$}
         \bottomAlignProof
         \DisplayProof
         \quad
-        \AxiomC{$x : F : T \Vdash r : A : T$}
-        \UnaryInfC{$x : F : T \Vdash c : r : T$}
+        \AxiomC{$x : F : T \vdash r : A : T$}
+        \UnaryInfC{$x : F : T \vdash c : r : T$}
         \bottomAlignProof
         \DisplayProof
         \\[7pt]
         \AxiomC{$j \in \{1, 2\}$}
-        \AxiomC{$x : F : T \Vdash r : G_1 : T \times G_2 : T$}
-        \BinaryInfC{$x : F : T \Vdash\pi_j : r : G_j : T$}
+        \AxiomC{$x : F : T \vdash r : G_1 : T \times G_2 : T$}
+        \BinaryInfC{$x : F : T \vdash\pi_j : r : G_j : T$}
         \bottomAlignProof
         \DisplayProof
         \quad
         \AxiomC{$j \in \{1, 2\}$}
-        \AxiomC{$x : F : T \Vdash r_j : G_j$}
-        \BinaryInfC{$x : F : T \Vdash (r_1, r_2) : G_1 : T\times G_2 : T$}
+        \AxiomC{$x : F : T \vdash r_j : G_j$}
+        \BinaryInfC{$x : F : T \vdash (r_1, r_2) : G_1 : T\times G_2 : T$}
         \bottomAlignProof
         \DisplayProof
         \\[7pt]
         \AxiomC{$j \in \{1, 2\}$}
-        \AxiomC{$x : F : T \Vdash r : G_j : T$}
+        \AxiomC{$x : F : T \vdash r : G_j : T$}
         \BinaryInfC{$x : F : T : \inn_j : r : G_1 : T + G_2 : T$}
         \bottomAlignProof
         \DisplayProof
@@ -290,7 +290,7 @@ where $A$ and each $B_i$ are polynomials, and each $t_i$ and $r_i$ are construct
 Before we can give the rules for higher inductive types, we need to define the lift of a constructor term.
 \begin{definition}
 Given is a constructor $c : A : H \rightarrow H$, a type family $Y : H \rightarrow \Type$, and a term $f : \prod (x: A : H), \bar{A} : Y : x \rightarrow  Y(c : x)$.
-For a constructor term $F : H \Vdash r : G : H$ we define the \emph{lift $\dak{r}$ of $r$} with type 
+For a constructor term $F : H \vdash r : G : H$ we define the \emph{lift $\dak{r}$ of $r$} with type 
 $
 x : F : H, h_x : \bar{F} : Y : x \vdash \dak{r} : \bar{G} : Y : r
 $
@@ -912,7 +912,7 @@ By using that polynomials commute with homotopy colimits, we can again assume th
 \label{sec:Lemmata}
 \begin{lemma}
 \label{lem:constrTerm}
-Suppose, we have a constructor term $t$ such that $x : F : T \Vdash t : G :T$ which uses at most $n$ constructors, and that we have a map $c_{\nonrec}' : A_{\nonrec} \rightarrow P$.
+Suppose, we have a constructor term $t$ such that $x : F : T \vdash t : G :T$ which uses at most $n$ constructors, and that we have a map $c_{\nonrec}' : A_{\nonrec} \rightarrow P$.
 Then $t$ induces a map $\overline{t} : F : P \rightarrow H_{\Con}^n : (G : P)$ by replacing the constructors $c_{\nonrec}$ and $c_{\rec}$ by $c_{\nonrec}'$ and $c_{\rec}'$ respectively.
 \end{lemma}
 
@@ -931,7 +931,7 @@ We use induction on the form of the constructor term.
 
 \begin{lemma}
 \label{lem:constrCoh}
-Suppose, we have a constructor term $t$ such that $x : F : T \Vdash t : G : T$ which uses at most $n$ constructors, and that we have a map $c_{\nonrec}' : A_{\nonrec} \rightarrow Q$.
+Suppose, we have a constructor term $t$ such that $x : F : T \vdash t : G : T$ which uses at most $n$ constructors, and that we have a map $c_{\nonrec}' : A_{\nonrec} \rightarrow Q$.
 Furthermore, we assume that we have a map $f : Q \rightarrow P$
 Then for all $x : F : P$ the terms $\overline{t}(F : f : x)$ and $(H_{\Con} \circ G) : f : (\overline{t} : x)$ are equal.
 \end{lemma}
