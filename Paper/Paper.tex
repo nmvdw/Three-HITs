@@ -84,7 +84,7 @@ The author acknowledges the financial support from the Slovenian Research Agency
 \newcommand{\remove}[1]{}
 \newcommand{\inn}{\Boperator{in}}
 
-\newcommand{\fpath}[0]{\> \Box \>}
+\newcommand{\fpath}[0]{: \Box :}
 \newcommand{\conc}[0]{\bullet}
 \newcommand{\comp}[0]{\circ \,}
 
@@ -193,7 +193,7 @@ type $P[A]$, as follows:
   (P_1 + P_2)[A] &\defeq P_1[A] + P_2[A].
 \end{align*}
 %
-In a similar fashion a map $f \> A \to B$ is transformed to a map $P[f] : P[A] \to P[B]$:
+In a similar fashion a map $f : A \to B$ is transformed to a map $P[f] : P[A] \to P[B]$:
 %
 \begin{align*}
   X[f] &\defeq f, &
@@ -216,8 +216,8 @@ give its lifting $\lift{P}[B] : P[A] \to \Type$,
   \lift{P_1 + P_2}[B] \, (\inr{u})\defeq \lift{P_2}[B]\,u,
 \end{align*}
 %
-while a map $f \> \dprod{x \> A} B_1\,x \to B_2\,x$ lifts to
-$\lift{P}[f] \> \dprod{u : P[A]} \lift{P}[B_1]\,u \to \lift{P}[B_2]\,u$:
+while a map $f : \dprod{x : A} B_1\,x \to B_2\,x$ lifts to
+$\lift{P}[f] : \dprod{u : P[A]} \lift{P}[B_1]\,u \to \lift{P}[B_2]\,u$:
 %
 \begin{align*}
   \lift{X}[f] \, u &\defeq f \, u &
@@ -235,40 +235,40 @@ case the manipulations we have just described are syntactic.
 Next we define the notion of a constructor term.
 \begin{definition}
 \label{def:constructor-term}
-Given is a function $c : A \> T \rightarrow T$ with $A$ polynomial and $T$ a type.
-Then we say $t$ is a \emph{constructor term} over $c$ if we can find polynomials $F$ and $G$ such that $x : F \> T \Vdash t : G \> T$ can be derived using the following rules.
+Given is a function $c : A : T \rightarrow T$ with $A$ polynomial and $T$ a type.
+Then we say $t$ is a \emph{constructor term} over $c$ if we can find polynomials $F$ and $G$ such that $x : F : T \Vdash t : G : T$ can be derived using the following rules.
 \begin{gather*}
         \AxiomC{$t : B$}
         \AxiomC{$T$ does not occur in $B$}
-        \BinaryInfC{$x:F \> T \Vdash t : B$}
+        \BinaryInfC{$x:F : T \Vdash t : B$}
         \bottomAlignProof
         \DisplayProof 
          \quad
         \AxiomC{}
-        \UnaryInfC{$x : F \> T \Vdash x : F \> T$}
+        \UnaryInfC{$x : F : T \Vdash x : F : T$}
         \bottomAlignProof
         \DisplayProof
         \quad
-        \AxiomC{$x : F \> T \Vdash r : A \> T$}
-        \UnaryInfC{$x : F \> T \Vdash c \> r : T$}
+        \AxiomC{$x : F : T \Vdash r : A : T$}
+        \UnaryInfC{$x : F : T \Vdash c : r : T$}
         \bottomAlignProof
         \DisplayProof
         \\[7pt]
         \AxiomC{$j \in \{1, 2\}$}
-        \AxiomC{$x : F \> T \Vdash r : G_1 \> T \times G_2 \> T$}
-        \BinaryInfC{$x : F \> T \Vdash\pi_j \> r : G_j \> T$}
+        \AxiomC{$x : F : T \Vdash r : G_1 : T \times G_2 : T$}
+        \BinaryInfC{$x : F : T \Vdash\pi_j : r : G_j : T$}
         \bottomAlignProof
         \DisplayProof
         \quad
         \AxiomC{$j \in \{1, 2\}$}
-        \AxiomC{$x : F \> T \Vdash r_j : G_j$}
-        \BinaryInfC{$x : F \> T \Vdash (r_1, r_2) : G_1 \> T\times G_2 \> T$}
+        \AxiomC{$x : F : T \Vdash r_j : G_j$}
+        \BinaryInfC{$x : F : T \Vdash (r_1, r_2) : G_1 : T\times G_2 : T$}
         \bottomAlignProof
         \DisplayProof
         \\[7pt]
         \AxiomC{$j \in \{1, 2\}$}
-        \AxiomC{$x : F \> T \Vdash r : G_j \> T$}
-        \BinaryInfC{$x : F \> T : \inn_j \> r : G_1 \> T + G_2 \> T$}
+        \AxiomC{$x : F : T \Vdash r : G_j : T$}
+        \BinaryInfC{$x : F : T : \inn_j : r : G_1 : T + G_2 : T$}
         \bottomAlignProof
         \DisplayProof
 \end{gather*}
@@ -281,56 +281,56 @@ A \emph{higher inductive type} is defined according to the following scheme
 \lstset{language=Coq}
 \begin{lstlisting}
 Inductive $H$ :=
-| $c$ : $A \> H \rightarrow H$
-| $p_i$ : $\prod (x : B_i \> H), t_i = r_i$ $\quad (i = 1, \ldots, m)$
+| $c$ : $A : H \rightarrow H$
+| $p_i$ : $\prod (x : B_i : H), t_i = r_i$ $\quad (i = 1, \ldots, m)$
 \end{lstlisting}
-where $A$ and each $B_i$ are polynomials, and each $t_i$ and $r_i$ are constructor terms over $c$ of type $H$ with $x : B_i \> H$ as variable.
+where $A$ and each $B_i$ are polynomials, and each $t_i$ and $r_i$ are constructor terms over $c$ of type $H$ with $x : B_i : H$ as variable.
 \end{definition}
 
 Before we can give the rules for higher inductive types, we need to define the lift of a constructor term.
 \begin{definition}
-Given is a constructor $c : A \> H \rightarrow H$, a type family $Y : H \rightarrow \Type$, and a term $f : \prod (x: A \> H), \bar{A} \> Y \> x \rightarrow  Y(c \> x)$.
-For a constructor term $F \> H \Vdash r : G \> H$ we define the \emph{lift $\dak{r}$ of $r$} with type 
+Given is a constructor $c : A : H \rightarrow H$, a type family $Y : H \rightarrow \Type$, and a term $f : \prod (x: A : H), \bar{A} : Y : x \rightarrow  Y(c : x)$.
+For a constructor term $F : H \Vdash r : G : H$ we define the \emph{lift $\dak{r}$ of $r$} with type 
 $
-x : F \> H, h_x : \bar{F} \> Y \> x \vdash \dak{r} : \bar{G} \> Y \> r
+x : F : H, h_x : \bar{F} : Y : x \vdash \dak{r} : \bar{G} : Y : r
 $
 by induction in $r$ as follows.
         \begin{align*}
                 \dak{t} & := t
                 & \dak{x} & := h_x &
-                \dak{c_i \> r} & := f_i \> r \> \dak{r}\\
-                \dak{\pi_j \> r} & := \pi_j \> \dak{r} &
+                \dak{c_i : r} & := f_i : r : \dak{r}\\
+                \dak{\pi_j : r} & := \pi_j : \dak{r} &
                 \dak{(r_1, r_2)} & := (\dak{r_1}, \dak{r_2})
-                & \dak{\inn_j \> r} & := \dak{r}
+                & \dak{\inn_j : r} & := \dak{r}
         \end{align*}
 \end{definition}
 
 With all these notions we can give the introduction, elimination and computation rules of higher inductive types.
 The introduction rules for $H$ as given in Definition \ref{def:hit} are
 \[
-c : A \> H \rightarrow H,
+c : A : H \rightarrow H,
 \]
 \[
-p_i : \prod (x : B_i \> H), t_i = r_i.
+p_i : \prod (x : B_i : H), t_i = r_i.
 \]
 We also have an elimination rule for which we use the lifting of constructor terms.
 \begin{equation*}
         \AxiomC{$\vdash Y : H \rightarrow \Type$}
         \noLine
-        \UnaryInfC{$\vdash f : \prod (x : A \> H), \bar{A} \> Y \> x \rightarrow Y \> (c \> x)$}
+        \UnaryInfC{$\vdash f : \prod (x : A : H), \bar{A} : Y : x \rightarrow Y : (c : x)$}
 %       \noLine
-        \AxiomC{$\vdash q_i : \prod (x : B_i \> H) (h_x : \bar{B}_i \> Y \> x), \hatt_i =_{p_j \, x} \hatr_j$}
-        \BinaryInfC{$\vdash H\frec(f, q_1, \ldots, q_n) : \prod (x : H), Y \> x$}
+        \AxiomC{$\vdash q_i : \prod (x : B_i : H) (h_x : \bar{B}_i : Y : x), \hatt_i =_{p_j \, x} \hatr_j$}
+        \BinaryInfC{$\vdash H\frec(f, q_1, \ldots, q_n) : \prod (x : H), Y : x$}
         \DisplayProof
 \end{equation*}
 Let us abbreviate $H\frec(f, q_1, \ldots, q_n)$ by $H\frec$.
-The type $H$ also has computation rules for each point $t : A \> H$
+The type $H$ also has computation rules for each point $t : A : H$
 \begin{equation*}
-H\frec \> (c \> t) \equiv f \> t \> (\bar{A} \> H\frec \> t),
+H\frec : (c : t) \equiv f : t : (\bar{A} : H\frec : t),
 \end{equation*}
-and for each $a : B_i \> H$
+and for each $a : B_i : H$
 \begin{equation*}
-\apd \> H\frec \> (p_i \> a) \equiv q_i \> a \> (\bar{B}_i \> H\frec \> a).
+\apd : H\frec : (p_i : a) \equiv q_i : a : (\bar{B}_i : H\frec : a).
 \end{equation*}
 Note that these equalities are definitional rather than propositional.
 
@@ -339,17 +339,17 @@ The first one identifies points in some type, and we call it the \emph{coequaliz
 \lstset{language=Coq}
 \begin{lstlisting}
 Inductive $\coeq$ $(A, B : \Type)$ $(f, g : A \rightarrow B)$ :=
-| $\inC$ : $B \rightarrow \coeq \> A \> B \> f \> g$
-| $\glueC$ : $\prod (a : A), \inC \> (f \> a) = \inC \> (g \> a)$
+| $\inC$ : $B \rightarrow \coeq : A : B : f : g$
+| $\glueC$ : $\prod (a : A), \inC : (f : a) = \inC : (g : a)$
 \end{lstlisting}
 The elimination rule for this type is as follows
 \begin{equation*}
-        \AxiomC{$\vdash Y : \coeq \> A \> B \> f \> g \rightarrow \Type$}
+        \AxiomC{$\vdash Y : \coeq : A : B : f : g \rightarrow \Type$}
         \noLine
-        \UnaryInfC{$\vdash i_Y : \prod (b : B), Y \> (\inC \> b)$}
+        \UnaryInfC{$\vdash i_Y : \prod (b : B), Y : (\inC : b)$}
         %       \noLine
-        \AxiomC{$\vdash g_Y : \prod (a : A), \glueC_*(i_Y \> (f \> a)) = i_Y \> (g \> a)$}
-        \BinaryInfC{$\vdash \coeq\frec(i_Y, g_Y) : \prod (x : \coeq \> A \> B \> f \> g), Y \> x$}
+        \AxiomC{$\vdash g_Y : \prod (a : A), \glueC_*(i_Y : (f : a)) = i_Y : (g : a)$}
+        \BinaryInfC{$\vdash \coeq\frec(i_Y, g_Y) : \prod (x : \coeq : A : B : f : g), Y : x$}
         \DisplayProof
 \end{equation*}
 Note the similarities with the definition of the coequalizer in category theory \cite{mac2013categories}.
@@ -358,38 +358,38 @@ Next we define a type which identifies two paths in some type which we shall cal
 \lstset{language=Coq}
 \begin{lstlisting}
 Inductive $\pcoeq$ $(A, B : \Type)$ $(p : A \rightarrow \sum (b_1, b_2 : B), (b_1 = b_2) \times (b_1 = b_2))$ :=
-| $\inP$ : $B \rightarrow \pcoeq \> A \> B \> f \> g$
-| $\glueP$ : $\prod (a : A), \ap \> \inC \> (\pi_1(\pi_3(p \> a))) = \ap \> \inC \> (\pi_2(\pi_3(p \> a)))$
+| $\inP$ : $B \rightarrow \pcoeq : A : B : f : g$
+| $\glueP$ : $\prod (a : A), \ap : \inC : (\pi_1(\pi_3(p : a))) = \ap : \inC : (\pi_2(\pi_3(p : a)))$
 \end{lstlisting}
-We will abbreviate $p_i \> a = \pi_i(\pi_3(p \> a))$ for $i = 1, 2$.
+We will abbreviate $p_i : a = \pi_i(\pi_3(p : a))$ for $i = 1, 2$.
 Note that this type has 2-paths, so it does not follow the given syntax.
 Furthermore, the identified paths used in the parameter are obliged to have the same endpoints.
 The introduction and computation rules are as expected, but we will give the elimination rule.
 \begin{equation*}
-        \AxiomC{$\vdash Y : \pcoeq \> A \> B \> f \> g \rightarrow \Type$}
+        \AxiomC{$\vdash Y : \pcoeq : A : B : f : g \rightarrow \Type$}
         \noLine
-        \UnaryInfC{$\vdash i_Y : \prod (b : B), Y \> (\inP \> b)$}
+        \UnaryInfC{$\vdash i_Y : \prod (b : B), Y : (\inP : b)$}
         %       \noLine
-        \AxiomC{$\vdash g_Y : \prod (a : A), \apd \> i_Y \> (p_1 \> a) = \apd \> i_Y \> (p_2 \> a)$}
-        \BinaryInfC{$\vdash \pcoeq\frec(i_Y, g_Y) : \prod (x : \pcoeq \> A \> B \> f \> g), Y \> x$}
+        \AxiomC{$\vdash g_Y : \prod (a : A), \apd : i_Y : (p_1 : a) = \apd : i_Y : (p_2 : a)$}
+        \BinaryInfC{$\vdash \pcoeq\frec(i_Y, g_Y) : \prod (x : \pcoeq : A : B : f : g), Y : x$}
         \DisplayProof
 \end{equation*}
 
 The last HIT we need is the homotopy colimit, and for that we again are inspired by the definition from category theory.
 \lstset{language=Coq}
 \begin{lstlisting}
-Inductive $\hocolim$ $(F : \mathbb{N} \rightarrow \Type)$ $(f : \prod (n : \mathbb{N}, F \> n \rightarrow F(n+1)))$ :=
-| $\inc$ : $\prod (n : \mathbb{N}), F \> n \rightarrow$ $\hocolim$ $F$ $f$
-| $\com$ : $\prod (n : \mathbb{N}) (x : F \> n), \inc \> n \> x = \inc \> (n+1) \> (f \> n \> x)$
+Inductive $\hocolim$ $(F : \mathbb{N} \rightarrow \Type)$ $(f : \prod (n : \mathbb{N}, F : n \rightarrow F(n+1)))$ :=
+| $\inc$ : $\prod (n : \mathbb{N}), F : n \rightarrow$ $\hocolim$ $F$ $f$
+| $\com$ : $\prod (n : \mathbb{N}) (x : F : n), \inc : n : x = \inc : (n+1) : (f : n : x)$
 \end{lstlisting}
 Now the elimination rule is as follows.
 \begin{equation*}
-        \AxiomC{$\vdash Y : \hocolim \> F \> f \rightarrow \Type$}
+        \AxiomC{$\vdash Y : \hocolim : F : f \rightarrow \Type$}
         \noLine
-        \UnaryInfC{$\vdash i_Y : \prod (n : \mathbb{N}) (x : F \> n), Y \> (\inc \> n \> x)$}
+        \UnaryInfC{$\vdash i_Y : \prod (n : \mathbb{N}) (x : F : n), Y : (\inc : n : x)$}
         \noLine
-        \UnaryInfC{$\vdash c_Y : \prod (n : \mathbb{N}) (x : F \> n), \com_*(i_Y \> n \> x) = i_Y \> (n+1) \> (f \> n \> x)$}
-        \UnaryInfC{$\vdash \hocolim\frec(i_Y, c_Y) : \prod (x : \hocolim \> F \> f), Y \> x$}
+        \UnaryInfC{$\vdash c_Y : \prod (n : \mathbb{N}) (x : F : n), \com_*(i_Y : n : x) = i_Y : (n+1) : (f : n : x)$}
+        \UnaryInfC{$\vdash \hocolim\frec(i_Y, c_Y) : \prod (x : \hocolim : F : f), Y : x$}
         \DisplayProof
 \end{equation*}
 
@@ -398,20 +398,20 @@ Let us first introduce some notation.
 
 \begin{definition}
 Let $A, B$ be types, let $f, g : A \rightarrow B$ be maps, and let $x : A$ be a point of $A$.
-Then for all $e : f = g$ we define a path $e \fpath x : f \> x = g \> x$ using path induction which sends $\refl$ to $\refl$.
+Then for all $e : f = g$ we define a path $e \fpath x : f : x = g : x$ using path induction which sends $\refl$ to $\refl$.
 \end{definition}
 
 \begin{definition}
 Given are types $A, B$ and two maps $f, g : A \rightarrow B$.
 Then we define the type $\funext$, of which the inhabitants represent proofs of function extensionality, as follows
 \[
-\funext = (\prod (x : A), f \> x = g \> x) \rightarrow f = g.
+\funext = (\prod (x : A), f : x = g : x) \rightarrow f = g.
 \]
 \end{definition}
 
-We will assume that we have an inhabitant $\FE : \funext$ such that for $p : \prod (x : A), f \> x = g \> x$ and $x : A$ we have
+We will assume that we have an inhabitant $\FE : \funext$ such that for $p : \prod (x : A), f : x = g : x$ and $x : A$ we have
 \[
-(\FE \> p) \fpath x = p \> x.
+(\FE : p) \fpath x = p : x.
 \]
 In homotopy type theory function extensionality can be proved by assuming univalence \cite{UnivalenceFE} or by assuming the existence of an interval object \cite{IntervalFE}.
 
@@ -421,17 +421,17 @@ Let us assume that some higher inductive type $H$ is given.
 In order to construct $H$ as a colimit, we first need to give the approximations in the colimit, and for that we define the \emph{approximator}.
 
 Before giving the definition, let us acquire inspiration by looking in more detail at how an inductive type is constructed.
-Such a type $T$ is defined by a constructor $c : A \> T \rightarrow T$ with $A$ polynomial.
+Such a type $T$ is defined by a constructor $c : A : T \rightarrow T$ with $A$ polynomial.
 Equivalently, we can define the type $T$ with a signature which is a polynomial functor $A$, and then by Ad\'amek's theorem $T$ is the following colimit.
 \[
 \xymatrix
 {
-        \zero \ar[r] & A \> \zero  \ar[r] & A(A \> \zero) \ar[r] & \ldots
+        \zero \ar[r] & A : \zero  \ar[r] & A(A : \zero) \ar[r] & \ldots
 }
 \]
-To understand what this does, let us assume that $A \> X = 1 + X$, so that $T = \mathbb{N}$.
+To understand what this does, let us assume that $A : X = 1 + X$, so that $T = \mathbb{N}$.
 This means we have two inclusions  $\xymatrix{1 \ar[r] & 1+X}$ and  $\xymatrix{X \ar[r] & 1+X}$, and we call them $0_C$ and $S_C$ respectively.
-At every step we formally add for each $x : X$ a successor $S_C \> x$, and we add $0_C$.
+At every step we formally add for each $x : X$ a successor $S_C : x$, and we add $0_C$.
 Repeatedly applying this construction to the empty type $\zero$ gives the natural numbers $\mathbb{N}$.
 
 One would like to construct higher inductive types in a similar fashion.
@@ -447,20 +447,20 @@ To understand more precisely what should be done, let us consider an example.
 Inductive $\mathbb{N}_2$ :=
 | $0$ : $\mathbb{N}_2$
 | $S$ : $\mathbb{N}_2 \rightarrow \mathbb{N}_2$
-| $p$ : $S(S \> 0) = 0$
+| $p$ : $S(S : 0) = 0$
 \end{lstlisting}
 We build a sequence $F$ of approximations.
-The first approximation just has a constructor $0$, and after that we add a constructor for $S \> 0$ to obtain the second approximation.
-Continuing this way, we ultimately arrive at the third approximation, which we call $F' \> 3$, where we found inhabitants $0$, $S \> 0$, and $S(S \> 0)$.
+The first approximation just has a constructor $0$, and after that we add a constructor for $S : 0$ to obtain the second approximation.
+Continuing this way, we ultimately arrive at the third approximation, which we call $F' : 3$, where we found inhabitants $0$, $S : 0$, and $S(S : 0)$.
 Now we can make the first identification, and to do so, we take the following homotopy pushout
 \[
 \xymatrix
 {
-        \one + \one \ar[d]_{0 + S(S \> 0)} \ar[r]^-{\delta} & I^1 \ar[d]\\
-        F' \> 3\ar[r] & F \> 3
+        \one + \one \ar[d]_{0 + S(S : 0)} \ar[r]^-{\delta} & I^1 \ar[d]\\
+        F' : 3\ar[r] & F : 3
 }
 \]
-to obtain the actual third approximation $F \> 3$, and we continue our construction with that one.
+to obtain the actual third approximation $F : 3$, and we continue our construction with that one.
 Note that to glue during the $n$th step, we need refer to elements from the $(n-2)$th step.
 So, in order to do the identification of the $n$th step, inhabitants from a previous approximation need to be used.
 
@@ -472,7 +472,7 @@ This happens in the following example.
 Inductive $H$ :=
 | $c$ : $H$
 | $f$ : $H \rightarrow H$
-| $p$ : $\prod (n : \mathbb{N}), f^n \> 0 = 0$
+| $p$ : $\prod (n : \mathbb{N}), f^n : 0 = 0$
 \end{lstlisting}
 This example might seem like it is permitted by the syntax, but actually it is not.
 The function $f^n$ is defined as a polymorphic map, and using it requires the type $H$ as an argument.
@@ -484,8 +484,8 @@ Let us make this idea formal, and for that we start with a higher inductive type
 \begin{lstlisting}[label={lst:HIT}]
 Inductive $H$ :=
 | $c$ : $A_{\nonrec} \rightarrow H$
-| $c_{\rec}$ : $A_{\rec} \> H \rightarrow H$
-| $p_i$ : $\prod (x : B_i \> H), t_i = r_i$ $\quad (i = 1, \ldots, m)$
+| $c_{\rec}$ : $A_{\rec} : H \rightarrow H$
+| $p_i$ : $\prod (x : B_i : H), t_i = r_i$ $\quad (i = 1, \ldots, m)$
 \end{lstlisting}
 Note that the nonrecursive and recursive point constructors are separated in this definition.
 The first approximation will be given using the nonrecursive constructors.
@@ -500,7 +500,7 @@ First, we note that types can be extended with a recursive constructor.
 \lstset{language=Coq}
 \begin{lstlisting}
 Inductive $H_{\rec}$ $(P : \Type)$:=
-| $c_{\rec}'$ : $A_{\rec} \> P \rightarrow H_{\rec} \> P$
+| $c_{\rec}'$ : $A_{\rec} : P \rightarrow H_{\rec} : P$
 \end{lstlisting}
 To do the identifications, we need to be able to interpret the constructor terms.
 For that we use that each constructor terms only uses each constructor  a finite amount of times, and thus there is a maximum number $n \geq 1$ of times a constructor is used.
@@ -508,84 +508,84 @@ In order to define the approximator, we start with a type $H_{\Con}^n$ in which 
 \lstset{language=Coq}
 \begin{lstlisting}
 Inductive $H_{\Con}^n$ $(P : \Type)$:=
-| $\term$ : $P + H_{\rec} \> P + \ldots + H_{\rec}^n \> P \rightarrow H_{\Con}^n \> P$
+| $\term$ : $P + H_{\rec} : P + \ldots + H_{\rec}^n : P \rightarrow H_{\Con}^n : P$
 \end{lstlisting}
 
 Note that this type is actually a labeled sum.
-This is because $H_{\rec} \> P$ is isomorphic to $A_{\rec} \> P$, and thus this $H_{\Con}^n \> P$ is actually $P + A_{\rec} \> P + \ldots + A_{\rec}^n \> P$.
+This is because $H_{\rec} : P$ is isomorphic to $A_{\rec} : P$, and thus this $H_{\Con}^n : P$ is actually $P + A_{\rec} : P + \ldots + A_{\rec}^n : P$.
 Hence, we do not need inductive types in general for the construction, but we just need to have sums and products.
 If $n$ is clear from the context, then we shall not write it down.
-From Lemma \ref{lem:constrTerm} we can conclude that we can interpret the constructor terms in $H_{\Con} \> P$
+From Lemma \ref{lem:constrTerm} we can conclude that we can interpret the constructor terms in $H_{\Con} : P$
 
 Now we have sufficient to define the approximator.
 Given is the following data
 \begin{itemize}
         \item Types $P, Q, R$;
-        \item A map $j_Q : H_{\Con} \> Q \rightarrow P$;
-        \item An inclusion $j_R : H_{\Con} \> R \rightarrow Q$;
-        \item Paths $p_Q : \prod (x : Q), j_Q(\overline{t_i} \> x) = j_Q(\overline{r_i} \> x)$;
-        \item Paths $p_R : \prod (x : R), j_R(\overline{t_i} \> x) = j_R(\overline{r_i} \> x)$.
+        \item A map $j_Q : H_{\Con} : Q \rightarrow P$;
+        \item An inclusion $j_R : H_{\Con} : R \rightarrow Q$;
+        \item Paths $p_Q : \prod (x : Q), j_Q(\overline{t_i} : x) = j_Q(\overline{r_i} : x)$;
+        \item Paths $p_R : \prod (x : R), j_R(\overline{t_i} : x) = j_R(\overline{r_i} : x)$.
 \end{itemize}
 The type $H_{\Approx}$ depends on the given data, but for clarity we will suppress it from the notation.
-We start with $H_{\Con} \> P$.
+We start with $H_{\Con} : P$.
 
 First, we need to guarantee that the added paths have the right endpoints.
-Note that we have two maps $\overline{t_i}, \overline{r_i} : B_i \> P \rightarrow H_{\Con} \> P$, and that gives the first coequalizer.
+Note that we have two maps $\overline{t_i}, \overline{r_i} : B_i : P \rightarrow H_{\Con} : P$, and that gives the first coequalizer.
 \[
 \xymatrix
 {
-        B_i \> P \ar@<-.5ex>[r]_-{\overline{r_i}} \ar@<.5ex>[r]^-{\overline{t_i}} & H_{\Con} \> P \ar[r]^-{\inC_1} & C_1
+        B_i : P \ar@<-.5ex>[r]_-{\overline{r_i}} \ar@<.5ex>[r]^-{\overline{t_i}} & H_{\Con} : P \ar[r]^-{\inC_1} & C_1
 }
 \]
 
 However, this is not exactly the type we want due to coherency issues.
-For example, in $P$ we have terms using $c_{\rec}$ at most $k$ times, so in $H_{\Approx} \> P$ we have duplicates of terms using $c_{\rec}$ less than $k$ times.
+For example, in $P$ we have terms using $c_{\rec}$ at most $k$ times, so in $H_{\Approx} : P$ we have duplicates of terms using $c_{\rec}$ less than $k$ times.
 
-Remember that we we have $j_Q : H_{\Con} \> Q \rightarrow P$.
+Remember that we we have $j_Q : H_{\Con} : Q \rightarrow P$.
 Now we define the type $C_2$ which is the coequalizer of the following two arrows.
 \[
 \xymatrix
 {
-        H_{\Con} \> Q \ar@<-.5ex>[rrr]_-{H_{\Con} \> (j_Q \circ \inn_1)} \ar@<.5ex>[rrr]^-{\inn_1 \circ j_Q} & & & H_{\Con} \> P \ar[rr]^-{\inC_1} & & C_1
+        H_{\Con} : Q \ar@<-.5ex>[rrr]_-{H_{\Con} : (j_Q \circ \inn_1)} \ar@<.5ex>[rrr]^-{\inn_1 \circ j_Q} & & & H_{\Con} : P \ar[rr]^-{\inC_1} & & C_1
 }
 \]
 To explain what this does, let us assume for a moment that we have one construct $c$ with arity 1.
-For $c' \> x$ with $x : Q$, the upper map is the inclusion of $H_{\Con} \> Q$ on the first coordinate of $H_{\Con} \> P$.
-The lower map sends $c' \> x$ to $c' \> (j_Q \> (\inn_1 \> x))$, so it replaces $x$ by its image in $P$.
+For $c' : x$ with $x : Q$, the upper map is the inclusion of $H_{\Con} : Q$ on the first coordinate of $H_{\Con} : P$.
+The lower map sends $c' : x$ to $c' : (j_Q : (\inn_1 : x))$, so it replaces $x$ by its image in $P$.
 
 Lastly, we define $H_\Approx$, and for this we make one more identification.
 Instead of identifying points, we will identify paths in this step.
 Since also paths are added during the construction, there might also be duplicated paths.
 The resulting type should be free, so these paths should be identified.
-We define a map $q : B_i \> R \rightarrow \sum (x, y : P), (x = y) \times (x = y)$ sending $x : B_i \> R$ to the pair
+We define a map $q : B_i : R \rightarrow \sum (x, y : P), (x = y) \times (x = y)$ sending $x : B_i : R$ to the pair
 \[
-(\overline{t_i} \> x, \overline{r_i} \> x, \ap \> (j_Q \circ \inn_1) \> (p_R \> x), p_Q \> (B_i \> j_R \> x))
+(\overline{t_i} : x, \overline{r_i} : x, \ap : (j_Q \circ \inn_1) : (p_R : x), p_Q : (B_i : j_R : x))
 \]
-Concluding the construction, we define $H_{\Approx}$ as $\pcoeq \> (B_i \> R) \> C_2 \> q$.
+Concluding the construction, we define $H_{\Approx}$ as $\pcoeq : (B_i : R) : C_2 : q$.
 
 Now we can define the approximating sequence.
 
 \begin{definition}
-In the setting as described, we simultaneously define a sequence of approximations $F : \mathbb{N} \rightarrow \Type$ to $H$ and maps $f : \prod(n : \mathbb{N}), F \> n \rightarrow F(n+1)$ as follows.
+In the setting as described, we simultaneously define a sequence of approximations $F : \mathbb{N} \rightarrow \Type$ to $H$ and maps $f : \prod(n : \mathbb{N}), F : n \rightarrow F(n+1)$ as follows.
 \begin{itemize}
-        \item We define $F \> 0 = H_{\nonrec}$.
-        \item We define $F \> 1 = H_{\Approx}$ taking $P = F \> 0$ and $Q, R = \zero$ and the maps are defined by $\zero\frec$.
-        \item We define $F \> 2 = H_{\Approx}$ with $P= F \> 1, Q = F \> 0$ and $R =\zero$. We have a map $Q \rightarrow P$ defined to be the composition of all $\inC$ with $\inn_1$.
-        \item We define $F(n+3) = H_{\Approx}$ with $P = (F(n+2)$, $Q = F(n+1)$, and $R = F \> n$. The maps $Q \rightarrow P$ and $R \rightarrow Q$ are defined to be the composition of $\inC$ with $\inn_1$ as in the construction. The paths $p_Q$ and $p_R$ are given by the path $\glueC$ from the first coequalizer.
+        \item We define $F : 0 = H_{\nonrec}$.
+        \item We define $F : 1 = H_{\Approx}$ taking $P = F : 0$ and $Q, R = \zero$ and the maps are defined by $\zero\frec$.
+        \item We define $F : 2 = H_{\Approx}$ with $P= F : 1, Q = F : 0$ and $R =\zero$. We have a map $Q \rightarrow P$ defined to be the composition of all $\inC$ with $\inn_1$.
+        \item We define $F(n+3) = H_{\Approx}$ with $P = (F(n+2)$, $Q = F(n+1)$, and $R = F : n$. The maps $Q \rightarrow P$ and $R \rightarrow Q$ are defined to be the composition of $\inC$ with $\inn_1$ as in the construction. The paths $p_Q$ and $p_R$ are given by the path $\glueC$ from the first coequalizer.
 \end{itemize}
-For the maps $f \> n : F \> n \rightarrow F(n + 1)$, note that we always have the following sequence of maps
+For the maps $f : n : F : n \rightarrow F(n + 1)$, note that we always have the following sequence of maps
 \[
 \xymatrix@1
 {
-        F \> n \ar[r] & H_{\Con} \> (F \> n) \ar[r] & C_1 \ar[r] & \ldots \ar[r] & C_4 \ar[r] & H_{\Approx}.
+        F : n \ar[r] & H_{\Con} : (F : n) \ar[r] & C_1 \ar[r] & \ldots \ar[r] & C_4 \ar[r] & H_{\Approx}.
 }
 \]
-Taking $P$ to be $F \> n$, then we have $F (n+1) = H_{\Approx} (F \> n)$, and thus the composition gives the map $F \> n \rightarrow F(n + 1)$.
+Taking $P$ to be $F : n$, then we have $F (n+1) = H_{\Approx} (F : n)$, and thus the composition gives the map $F : n \rightarrow F(n + 1)$.
 \end{definition}
 
 \section{The Rules}
 \label{sec:rules}
-Now we have defined an object $\hocolim \> F \> f$, which is supposed to interpret the higher inductive type.
+Now we have defined an object $\hocolim : F : f$, which is supposed to interpret the higher inductive type.
 In order to finish the proof of Theorem \ref{thm:three-hit}, we need to show that it satisfies the rules.
 This means that we have to make functions which interpret the introduction rules, and an eliminator such that the computation rules are satisfied.
 We will do this step by step, and refer to lemmata in Section \ref{sec:Lemmata} when needed.
@@ -594,23 +594,23 @@ We will do this step by step, and refer to lemmata in Section \ref{sec:Lemmata} 
 In order to show that this is the desired type, we first show that it has the correct introduction rules.
 These come in three flavors: the nonrecursive and the recursive points, and the paths.
 
-Let us start by defining a map $A_{\nonrec} \rightarrow \hocolim \> F \> f$ which gives the introduction rule for the nonrecursive point constructor.
-Since $F \> 0$ is defined by $H_{\nonrec}$, which has a constructor $c'_{\nonrec} : A_{\nonrec} \rightarrow H_{\nonrec}$, this can be defined by the following composition.
+Let us start by defining a map $A_{\nonrec} \rightarrow \hocolim : F : f$ which gives the introduction rule for the nonrecursive point constructor.
+Since $F : 0$ is defined by $H_{\nonrec}$, which has a constructor $c'_{\nonrec} : A_{\nonrec} \rightarrow H_{\nonrec}$, this can be defined by the following composition.
 \[
 \xymatrix
 {
         A_{\nonrec} \ar[rr]^-{c'_{\nonrec}}
-                & & F \> 0 \ar[rr]^-{\inc \> 0}
-                & & \hocolim \> F \> f
+                & & F : 0 \ar[rr]^-{\inc : 0}
+                & & \hocolim : F : f
 }
 \]
 
-Next we show that we also have the recursive point constructor meaning that we have a map $A_{\rec} \> (\hocolim \> F \> f) \rightarrow \hocolim \> F \> f$.
+Next we show that we also have the recursive point constructor meaning that we have a map $A_{\rec} : (\hocolim : F : f) \rightarrow \hocolim : F : f$.
 This is slightly more complicated, and for that we first need a lemma which says that colimits over $\mathbb{N}$ commute with polynomials.
 
 \begin{lemma}
 \label{lem:colim_commute_poly}
-The types $A \> (\hocolim \> F \> f)$ and $\hocolim \> (A \comp F) \> (A \> f)$ are isomorphic for all polynomials $A$.
+The types $A : (\hocolim : F : f)$ and $\hocolim : (A \comp F) : (A : f)$ are isomorphic for all polynomials $A$.
 \end{lemma}
 
 \begin{proof}
@@ -618,81 +618,81 @@ If $A$ is constant then it follows from Lemma \ref{lem:colimcon}.
 For the identity it is trivial, and for sums and products, it follows from Lemmata \ref{lem:colimsum} and \ref{lem:colimprod} respectively. 
 \end{proof}
 
-Now we will construct the map $A_{\rec} \> (\hocolim \> F \> f) \rightarrow \hocolim \> F \> f$, and by Lemma \ref{lem:colim_commute_poly} it suffices to make a map $\hocolim \> (A_{\rec} \comp F) \> (A_{\rec} \> f) \rightarrow \hocolim \> F \> f$.
+Now we will construct the map $A_{\rec} : (\hocolim : F : f) \rightarrow \hocolim : F : f$, and by Lemma \ref{lem:colim_commute_poly} it suffices to make a map $\hocolim : (A_{\rec} \comp F) : (A_{\rec} : f) \rightarrow \hocolim : F : f$.
 For this we use the recursion rule of $\hocolim$, and we start with the following string of maps
 \[
 \xymatrix
 {
-                A_{\rec}(F \> n) \ar[r]^-{c_{\rec}'} 
-                & H_{\rec}(F \> n) \ar[rr]^-{\term \comp \inn_2} &
-                & H_{\Con}(F \> n) \ar[r]^-{\inC}
-                & H_{\Approx}(F \> n) = F(n + 1)
+                A_{\rec}(F : n) \ar[r]^-{c_{\rec}'} 
+                & H_{\rec}(F : n) \ar[rr]^-{\term \comp \inn_2} &
+                & H_{\Con}(F : n) \ar[r]^-{\inC}
+                & H_{\Approx}(F : n) = F(n + 1)
 }
 \]
-Composing this map with $\inc$, gives maps $A_{\rec}(F \> n) \rightarrow \hocolim \> F \> f$ for all $n : \mathbb{N}$.
+Composing this map with $\inc$, gives maps $A_{\rec}(F : n) \rightarrow \hocolim : F : f$ for all $n : \mathbb{N}$.
 
 Next we need to show the commutativity of the following triangle.
 \[
 \xymatrix
 {
-        A_{\rec}(F \> n) \ar[rr]^{A_{\rec}(f \> n)} \ar[dr] & & A_{\rec}(F(n+1)) \ar[dl] \\
-        & \hocolim \> F \> f &
+        A_{\rec}(F : n) \ar[rr]^{A_{\rec}(f : n)} \ar[dr] & & A_{\rec}(F(n+1)) \ar[dl] \\
+        & \hocolim : F : f &
 }
 \]
 Before we continue, let us recall that inductive types are functors.
-Suppose, we have an inductive type $T$ with a parameter $P$, then a function $f : P \rightarrow Q$ gives a function $T \> f : T \> P \rightarrow T \> Q$.
+Suppose, we have an inductive type $T$ with a parameter $P$, then a function $f : P \rightarrow Q$ gives a function $T : f : T : P \rightarrow T : Q$.
 Let us start with the following rectangle
 \[
 \xymatrix
 {
-        A_{\rec}(F \> n) \ar[r]^-{c_{\rec}'} \ar[d]_{A_{\rec}(f \> n)} 
-                & H_{\rec}(F \> n) \ar[rr]^{\term \comp \inn_2} \ar[d]_{H_{\rec}(f \> n)} &
-                & H_{\Con}(F \> n) \ar[d]_{H_{\Con}(f \> n)}\\
+        A_{\rec}(F : n) \ar[r]^-{c_{\rec}'} \ar[d]_{A_{\rec}(f : n)} 
+                & H_{\rec}(F : n) \ar[rr]^{\term \comp \inn_2} \ar[d]_{H_{\rec}(f : n)} &
+                & H_{\Con}(F : n) \ar[d]_{H_{\Con}(f : n)}\\
         A_{\rec}(F(n+1)) \ar[r]_-{c_{\rec}'} 
                 & H_{\rec}(F(n+1)) \ar[rr]_{\term \comp \inn_2} &
                 & H_{\Con}(F(n+1))
 }
 \]
-The left square commutes, because by definition of $H_{\rec} \> f$ we have
+The left square commutes, because by definition of $H_{\rec} : f$ we have
 \[
-H_{\rec} \>(f \> n) \> (c_{\rec}' x) = c_{\rec}' (A_{\rec} \> (f \> n) \> x).
+H_{\rec} :(f : n) : (c_{\rec}' x) = c_{\rec}' (A_{\rec} : (f : n) : x).
 \]
 For a similar reason, the right square commutes as well.
 Hence, it suffices to show that the following diagram commutes.
 \[
 \xymatrix
 {
-        H_{\Con}(F \> n) \ar[d]_{H_{\Con} \> (f \> n)} \ar[r]^-{\inC}
+        H_{\Con}(F : n) \ar[d]_{H_{\Con} : (f : n)} \ar[r]^-{\inC}
                 & F(n+1) \ar[d]^{f(n+1)}\\
         H_{\Con}(F(n+1)) \ar[r]_-{\inC}
-                & H_{\Approx} \> (F(n+1))
+                & H_{\Approx} : (F(n+1))
 }
 \]
-Note that $H_{\Approx}(F(n+1)) = F(n+2)$ and $H_{\Approx}(F \> n) = F(n+1)$.
+Note that $H_{\Approx}(F(n+1)) = F(n+2)$ and $H_{\Approx}(F : n) = F(n+1)$.
 Hence, this diagram commutes, because of the coherency added in $C_2$.
 
 Next we need to define the introduction rules for the paths.
-Let us start by extending the maps $t_i, r_i : B_i \> (\hocolim \> F \> f) \rightarrow \hocolim \> F \> f$.
-Since homotopy colimits commute with polynomials, it suffices to make a map $\hocolim \> (B_i \> F) \> (B_i \> f)  \rightarrow \hocolim \> F \> f$, and for this we need to start by defining maps $B_i(F \> n) \rightarrow \hocolim \> F \> f$.
-Note that by construction we always have maps $\overline{t_i}, \overline{r_i} : B_i(F \> n) \rightarrow H_{\Con}(F \> n)$, and thus we obtain maps $B_i(F \> n) \rightarrow F(n+1)$ by composing these with $\inC$.
+Let us start by extending the maps $t_i, r_i : B_i : (\hocolim : F : f) \rightarrow \hocolim : F : f$.
+Since homotopy colimits commute with polynomials, it suffices to make a map $\hocolim : (B_i : F) : (B_i : f)  \rightarrow \hocolim : F : f$, and for this we need to start by defining maps $B_i(F : n) \rightarrow \hocolim : F : f$.
+Note that by construction we always have maps $\overline{t_i}, \overline{r_i} : B_i(F : n) \rightarrow H_{\Con}(F : n)$, and thus we obtain maps $B_i(F : n) \rightarrow F(n+1)$ by composing these with $\inC$.
 
 Now we need to check the commutativity of the following diagram
 \[
 \xymatrix
 {
-        B_i(F \> n) 
+        B_i(F : n) 
         \ar[r]^-{\overline{t_i}} 
-        \ar[d]_{B_i(f \> n)} 
+        \ar[d]_{B_i(f : n)} 
         & 
-        H_{\Con}(F \> n) 
+        H_{\Con}(F : n) 
         \ar[r]^-{\inC}
-        \ar[d]^{H_{\Con}(f \> n)}  
+        \ar[d]^{H_{\Con}(f : n)}  
         & 
-        C_2(F \> n)
+        C_2(F : n)
         \ar[r]^{\inC}
         & 
         F(n+1) 
-        \ar[d]^{f \> n}\\
+        \ar[d]^{f : n}\\
         B_i(F(n+1)) 
         \ar[r]_-{\overline{t_i}} 
         & 
@@ -706,204 +706,204 @@ Now we need to check the commutativity of the following diagram
 }
 \]
 The right rectangle commutes, because the maps $\inC$ are built by composing constructors of the coequalizer, and thus it commutes by definition.
-Now it computes overall due to Lemma \ref{lem:constrCoh} which says that $\inC(\overline{t_i}(B_i(f \> n) \> x))$ and $\inC(H_{\Con}(f \> n)(\overline{t_i} \> x))$ are equal for all $x : B_i(F \> n)$.
+Now it computes overall due to Lemma \ref{lem:constrCoh} which says that $\inC(\overline{t_i}(B_i(f : n) : x))$ and $\inC(H_{\Con}(f : n)(\overline{t_i} : x))$ are equal for all $x : B_i(F : n)$.
 
 In order to show that we indeed have paths $p_i$, we use the eliminator of the homotopy colimit.
-We need to show that for all $x : \hocolim \> F \> f$ we have $t_i \> x = r_i \> x$. 
-First, we need to give for all $x : F \> n$ an inhabitant of $t_i \> (\inc \> n \> x) = r_i \> (\inc \> n \> x)$.
-By the first identification we have a path $\glueC \> x$ between $\overline{t_i} \> x$ and $\overline{r_i} \> x$, and thus the right path is $\ap \> (\inc \> n) \> (\glueC \> x)$. 
+We need to show that for all $x : \hocolim : F : f$ we have $t_i : x = r_i : x$. 
+First, we need to give for all $x : F : n$ an inhabitant of $t_i : (\inc : n : x) = r_i : (\inc : n : x)$.
+By the first identification we have a path $\glueC : x$ between $\overline{t_i} : x$ and $\overline{r_i} : x$, and thus the right path is $\ap : (\inc : n) : (\glueC : x)$. 
 
 To finish the proof, we need to show that 
 \[
-(\com \> n \> x)_*(\ap \> (\inc \> n) \> (\glueC \> x)) = \ap \> (\inc \> (n+1)) \> (\glueC \> ((B_i \>(f \>n)) \> x)).
+(\com : n : x)_*(\ap : (\inc : n) : (\glueC : x)) = \ap : (\inc : (n+1)) : (\glueC : ((B_i :(f :n)) : x)).
 \]
 This follows from the following computation.
 \begin{equation*}
 \begin{split}
-\ap &\> (\inc \> (n+1)) \> (\glueC \> ((B_i \>(f \> n)) \> x))\\
-&= \ap \> (\inc \> (n+1)) \> (\ap \> (f \> n) \>\glueC \> x))\\
-&= \ap \> (\inc \> (n+1) \circ (f \> n)) \>\glueC \> x))\\
-&=\com_* \> (\ap \> (\inc \> n) \> (\glueC \> x))
+\ap &: (\inc : (n+1)) : (\glueC : ((B_i :(f : n)) : x))\\
+&= \ap : (\inc : (n+1)) : (\ap : (f : n) :\glueC : x))\\
+&= \ap : (\inc : (n+1) \circ (f : n)) :\glueC : x))\\
+&=\com_* : (\ap : (\inc : n) : (\glueC : x))
 \end{split}
 \end{equation*}
 The first step follows from the third added coherency, the second from Lemma 2.2.2 in \cite{hottbook}, and the last step from Lemma \ref{lem:pathext}.
 
 
 \subsection{Elimination Rule}
-For the next step we define the right eliminator for $\hocolim \> F \> f$, so suppose that we are given the following data
+For the next step we define the right eliminator for $\hocolim : F : f$, so suppose that we are given the following data
 \[
-Y : \hocolim \> F \> f \rightarrow \Type,
+Y : \hocolim : F : f \rightarrow \Type,
 \]
 \[
-c_{Y, \nonrec} : \prod (a : A_{\nonrec}), Y(c_{\nonrec} \> a),
+c_{Y, \nonrec} : \prod (a : A_{\nonrec}), Y(c_{\nonrec} : a),
 \]
 \[
-c_{Y, \rec} : \prod (x : A_{\rec} \> \hocolim \> F \> f), \overline{A_{\rec}} \> Y \> x \rightarrow Y(c_{\rec} \> x),
+c_{Y, \rec} : \prod (x : A_{\rec} : \hocolim : F : f), \overline{A_{\rec}} : Y : x \rightarrow Y(c_{\rec} : x),
 \]
 \[
-q_{Y, i} : \prod (x : B_i \> H)(h_x : \overline{B_i} \> Y \> x), \hatt_i =_{p_j \, x} \hatr_j.
+q_{Y, i} : \prod (x : B_i : H)(h_x : \overline{B_i} : Y : x), \hatt_i =_{p_j \, x} \hatr_j.
 \]
-In order to make a map $h : \prod (x : \hocolim \> F \> f), Y \> x$, we use the induction principle of $\hocolim \> F \> f$, and for that we first need to make maps $h \> n : \prod (x : F \> n), Y(\inc \> n \> x)$ for $n : \mathbb{N}$.
+In order to make a map $h : \prod (x : \hocolim : F : f), Y : x$, we use the induction principle of $\hocolim : F : f$, and for that we first need to make maps $h : n : \prod (x : F : n), Y(\inc : n : x)$ for $n : \mathbb{N}$.
 
-We start by making a map $h \> 0 : \prod (x : F \> 0), Y(\inc \> 0 \> x)$.
-Recall that $F \> 0$ was defined to be $H_{\nonrec}$ which only has a constructor $c'_{\nonrec} : A_{\nonrec} \rightarrow H_{\nonrec}$.
+We start by making a map $h : 0 : \prod (x : F : 0), Y(\inc : 0 : x)$.
+Recall that $F : 0$ was defined to be $H_{\nonrec}$ which only has a constructor $c'_{\nonrec} : A_{\nonrec} \rightarrow H_{\nonrec}$.
 So, let us assume that we have $a : A_{\nonrec}$.
-Since $c_{\nonrec} \> a = \inc \> 0 \> (c_{\nonrec}' \> a)$, it suffices to find an inhabitant of $Y(c_{\nonrec} \> a)$, and for that we take $c_{Y, \nonrec} \> a$.
-Hence, we get a map $h \> 0$.
+Since $c_{\nonrec} : a = \inc : 0 : (c_{\nonrec}' : a)$, it suffices to find an inhabitant of $Y(c_{\nonrec} : a)$, and for that we take $c_{Y, \nonrec} : a$.
+Hence, we get a map $h : 0$.
 
-Now suppose that we have a map $h \> n : \prod (x : F \> n), Y(\inc \> n \> x)$, and our goal is to make a map $h(n+1) : \prod  (x : F(n+1)), Y(\inc \> (n+1) \> x)$.
-In order to do so, we will first look at how to extend $h \> n$ to a map $\prod (x : H_{\Con} (F \> n)), Y(\inc \> (n+1) \> (\inC \> x))$.
+Now suppose that we have a map $h : n : \prod (x : F : n), Y(\inc : n : x)$, and our goal is to make a map $h(n+1) : \prod  (x : F(n+1)), Y(\inc : (n+1) : x)$.
+In order to do so, we will first look at how to extend $h : n$ to a map $\prod (x : H_{\Con} (F : n)), Y(\inc : (n+1) : (\inC : x))$.
 
 Let us do this in the general case.
-Suppose, we have a map $g : P \rightarrow \hocolim \> F \> f$, and that we already constructed $\varphi : \prod (x : P), Y(g \> x)$.
-Our goal is to extend the map into $\varphi' : \prod (x : H_{\rec} P), Y(c_{Y, \rec} \> x)$, and for that we use $H_{\rec}$-induction.
-Note that for each $c'_{\rec} \> x$ with $x : A_{\rec} \> P$ we have the type $Y(c_{\rec} \> (A_{\rec} \> g \> x))$, and thus we have a type family on $H_{\rec}$.
-Now let $x : A_{\rec} \> P$ and $y : \overline{A_{\rec}} \> Y \> x$ be given.
-Then we need to give an element of the type $Y(c_{\rec} \> (A_{\rec} \> g \> x))$ for which we take $c_{Y,\rec} \> (A_{\rec} \> g \> x) \> y$.
-We will often leave the argument $A_{\rec} \> g \> x$ implicit.
+Suppose, we have a map $g : P \rightarrow \hocolim : F : f$, and that we already constructed $\varphi : \prod (x : P), Y(g : x)$.
+Our goal is to extend the map into $\varphi' : \prod (x : H_{\rec} P), Y(c_{Y, \rec} : x)$, and for that we use $H_{\rec}$-induction.
+Note that for each $c'_{\rec} : x$ with $x : A_{\rec} : P$ we have the type $Y(c_{\rec} : (A_{\rec} : g : x))$, and thus we have a type family on $H_{\rec}$.
+Now let $x : A_{\rec} : P$ and $y : \overline{A_{\rec}} : Y : x$ be given.
+Then we need to give an element of the type $Y(c_{\rec} : (A_{\rec} : g : x))$ for which we take $c_{Y,\rec} : (A_{\rec} : g : x) : y$.
+We will often leave the argument $A_{\rec} : g : x$ implicit.
 
-Now we can also extend the map to $H_{\Con}^n \> P$, because we can define this map on each component.
+Now we can also extend the map to $H_{\Con}^n : P$, because we can define this map on each component.
 On the component $P$ it is just $\varphi$, and on the other components we define it via extension.
 We call this map $h_1$.
 
 Next we need to extend the map to $H_{\Approx}$.
 This is done by the universal mapping property of the coequalizer, and that requires some steps.
-First, to give an paths between the images of $t_i \> x$ and $r_i \> x$.
-Note that the images of these are $\hatt_i \> x$ and $\hatr_i \> x$ respectively, and then $q_{Y, i}$ gives the desired paths.
+First, to give an paths between the images of $t_i : x$ and $r_i : x$.
+Note that the images of these are $\hatt_i : x$ and $\hatr_i : x$ respectively, and then $q_{Y, i}$ gives the desired paths.
 This gives an extension $h_2$ to $C_1$.
 
 Next we check the coherency conditions, and we start with the first.
-We need to check that $\inn_1(\inC \> x)$ and $H_{\Con} \> \inC \> x$ get mapped to the same element for $x : H_{\Con}(F \> n)$ by $h_2$.
-To do so, we use a case distinction on $H_{\Con}(F \> n)$, and for the case $x \equiv \inn_1 \> y$ with $y : F \> n$, we have the following equations 
+We need to check that $\inn_1(\inC : x)$ and $H_{\Con} : \inC : x$ get mapped to the same element for $x : H_{\Con}(F : n)$ by $h_2$.
+To do so, we use a case distinction on $H_{\Con}(F : n)$, and for the case $x \equiv \inn_1 : y$ with $y : F : n$, we have the following equations 
 \begin{equation*}
 \begin{split}
-h_2 \> (\inC(\inn_1(\inC \> (\inn_1 \> y))))
+h_2 : (\inC(\inn_1(\inC : (\inn_1 : y))))
 &\equiv 
-h_1 \> (\inn_1(\inC(\inn_1 \> y))),
+h_1 : (\inn_1(\inC(\inn_1 : y))),
 \end{split}
 \end{equation*}
 \begin{equation*}
 \begin{split}
-h_2 \> (\inC(H_{\Con} \> (\inC \circ \inn_1) \> (\inn_1 \> y)))
+h_2 : (\inC(H_{\Con} : (\inC \circ \inn_1) : (\inn_1 : y)))
 &\equiv
-h_1 \> (H_{\Con} \> (\inC \circ \inn_1) \> (\inn_1 \> y))\\
+h_1 : (H_{\Con} : (\inC \circ \inn_1) : (\inn_1 : y))\\
 &\equiv 
-h_1 \> (\inn_1(\inC(\inn_1 \> y)))
+h_1 : (\inn_1(\inC(\inn_1 : y)))
 \end{split}
 \end{equation*}
 Since they are definitionally equal, we can just use the path $\refl$.
 
-For the other cases, we take a look at $c_{\rec}' \> y$, and for $y$ we assume that $h_1(\inn_1(\inC \> y)) = h_1(H_{\Con} \> (\inC \circ \inn_1) \> y)$.
+For the other cases, we take a look at $c_{\rec}' : y$, and for $y$ we assume that $h_1(\inn_1(\inC : y)) = h_1(H_{\Con} : (\inC \circ \inn_1) : y)$.
 Note that at each level $h$ is defined using the eliminator of the coequalizer.
-This means that $h \> n \> (\inC \> (c_{\rec}' \> y))$ and $c_{Y, \rec}(h \> n \> (\inC \> y))$ are equal by definition, and thus we can make the following computations.
+This means that $h : n : (\inC : (c_{\rec}' : y))$ and $c_{Y, \rec}(h : n : (\inC : y))$ are equal by definition, and thus we can make the following computations.
 \begin{equation*}
 \begin{split}
-h_1 \> (\inn_1(\inC \> (c_{\rec}' \> y))) 
+h_1 : (\inn_1(\inC : (c_{\rec}' : y))) 
 &\equiv 
-h \> n \> (\inC \> (c_{\rec}' \> y))\\
+h : n : (\inC : (c_{\rec}' : y))\\
 &
-= c_{Y, \rec} (h \> n \> (\inC \> y))
+= c_{Y, \rec} (h : n : (\inC : y))
 \end{split}
 \end{equation*}
 \begin{equation*}
 \begin{split}
-h_1 \> (H_{\Con} \> (\inC \circ \inn_1) \> (c_{\rec}' \> y)) 
+h_1 : (H_{\Con} : (\inC \circ \inn_1) : (c_{\rec}' : y)) 
 &\equiv 
-h_1 \> (c_{\rec}' \> (H_{\Con} \> (\inC \circ \inn_1) \> y))
+h_1 : (c_{\rec}' : (H_{\Con} : (\inC \circ \inn_1) : y))
 \\
 &\equiv
-c_{Y, \rec} \> (h_1 \> (H_{\Con} \> (\inC \circ \inn_1) \> y))\\
+c_{Y, \rec} : (h_1 : (H_{\Con} : (\inC \circ \inn_1) : y))\\
 &=
-c_{Y, \rec} \> (h_1(\inn_1(\inC \> y)))\\
+c_{Y, \rec} : (h_1(\inn_1(\inC : y)))\\
 &\equiv
-c_{Y, \rec} \> (h \> n \> (\inC \> y)).
+c_{Y, \rec} : (h : n : (\inC : y)).
 \end{split}
 \end{equation*}
 
 
-For the second coherency we need to check that the paths $\ap \> h_2 \> (\ap \> (f \> n) \> (p_i \> x))$ and $\ap \> h_2 \> (p_i \> (f \> n \> x))$ are equal.
+For the second coherency we need to check that the paths $\ap : h_2 : (\ap : (f : n) : (p_i : x))$ and $\ap : h_2 : (p_i : (f : n : x))$ are equal.
 Here we use several Lemmata, namely Lemma 2.2.2 from \cite{hottbook} and Lemma \ref{lem:pathext}.
-For the first path we can show that it is equal to $q_{Y, i} \> (h \> n \> x)$.
+For the first path we can show that it is equal to $q_{Y, i} : (h : n : x)$.
 \begin{equation*}
 \begin{split}
-\ap \> h_2 \> (\ap \> (f \> n) \> (p_i \> x))
+\ap : h_2 : (\ap : (f : n) : (p_i : x))
 &\equiv
-\ap \> h_2 \> (\ap \> (\inC \circ \inn_1) \> (p_i \> x))\\
+\ap : h_2 : (\ap : (\inC \circ \inn_1) : (p_i : x))\\
 &=
-\ap \> (h_2 \circ \inC) \> (\ap \> \inn_1 \> (p_i \> x))\\
+\ap : (h_2 \circ \inC) : (\ap : \inn_1 : (p_i : x))\\
 &=
-\ap \> h_1 \> (\ap \> \inn_1 \> (p_i \> x))\\
+\ap : h_1 : (\ap : \inn_1 : (p_i : x))\\
 &=
-\ap \> (h_1 \circ \inn_1) \> \> (p_i \> x)\\
+\ap : (h_1 \circ \inn_1) : : (p_i : x)\\
 &=
-\ap \> (h \> n) \> \> (p_i \> x)\\
+\ap : (h : n) : : (p_i : x)\\
 &\equiv
-q_{Y, i} \> (h \> n \> x)
+q_{Y, i} : (h : n : x)
 \end{split}
 \end{equation*}
-Since $(h_2 \circ \inC) \> x \equiv h_1 \> x$ and $(h_1 \circ \inn_1) \> x \equiv h \> n \> x$, we can use the path $\refl$, and thus the transport is the identity.
+Since $(h_2 \circ \inC) : x \equiv h_1 : x$ and $(h_1 \circ \inn_1) : x \equiv h : n : x$, we can use the path $\refl$, and thus the transport is the identity.
 For the other path we can do the same.
 \begin{equation*}
 \begin{split}
-\ap \> h_2 \> (p_i \> (f \> n \> x))
+\ap : h_2 : (p_i : (f : n : x))
 &\equiv
-q_{Y, i} \> (h_2 \> (f \> n \> x))\\
+q_{Y, i} : (h_2 : (f : n : x))\\
 &\equiv
-q_{Y, i} \> (h_2 \> (\inC \> \inn_1 \> x))\\
+q_{Y, i} : (h_2 : (\inC : \inn_1 : x))\\
 &\equiv
-q_{Y, i} \> (h_1 \> (\inn_1 \> x))\\
+q_{Y, i} : (h_1 : (\inn_1 : x))\\
 &\equiv
-q_{Y, i} \> (h \> n \> x)
+q_{Y, i} : (h : n : x)
 \end{split}
 \end{equation*}
 
 To finish the proof, we need to give the image for the path $\com$.
-More concretely, we need to show that $\inc \> n \> x$ and $\inc \> (n+1) \> (f \> x)$ are mapped to the same element.
-The map $f : F \> n \rightarrow F(n + 1)$ is defined by the elimination rule of the coequalizer as follows
+More concretely, we need to show that $\inc : n : x$ and $\inc : (n+1) : (f : x)$ are mapped to the same element.
+The map $f : F : n \rightarrow F(n + 1)$ is defined by the elimination rule of the coequalizer as follows
 \[
 \xymatrix
 {
-        F \> n \ar[r]^-{\inn_1} & H_{\Con} \> (F \> n) \ar[r]^-{\inC} & \ldots \ar[r]^-{\inC} & F(n+1)
+        F : n \ar[r]^-{\inn_1} & H_{\Con} : (F : n) \ar[r]^-{\inC} & \ldots \ar[r]^-{\inC} & F(n+1)
 }
 \]
 Since the map to $Y$ was defined via the universal property of the coequalizer, it will commute automatically.
 The commutativity is given by the computation rule of the coequalizer.
 
-All in all, we have acquired a map $\prod (x : \hocolim \> F \> f), Y \> x$, and this way we defined the right eliminator for $\hocolim \> F \> f$.
+All in all, we have acquired a map $\prod (x : \hocolim : F : f), Y : x$, and this way we defined the right eliminator for $\hocolim : F : f$.
 We shall call the eliminator $H\ind$.
 
 \subsection{Computation Rules}
 Lastly, we show that this eliminator also satisfies the computation rules.
-First, we prove that for each $t : A_{\rec}(\hocolim \> F \> f)$ that $H\ind(c_{\rec} \> t) \equiv f_i \> t \> (\overline{A_{\rec}} \> H\ind \> t)$.
+First, we prove that for each $t : A_{\rec}(\hocolim : F : f)$ that $H\ind(c_{\rec} : t) \equiv f_i : t : (\overline{A_{\rec}} : H\ind : t)$.
 Again we use that colimits commute with polynomials.
 
-Let $n : \mathbb{N}$ and $x : A_{\rec}(F \> n)$.
+Let $n : \mathbb{N}$ and $x : A_{\rec}(F : n)$.
 Now we can perform the computations in an intermediate stage of the construction, and using the computation rules we get
 \begin{equation*}
 \begin{split}
-H\ind(c_{\rec} \> (\inc \> n \> x)) 
-&\equiv H\ind(\inc \> (n+1) \> (c_{\rec}' x)) \\
-&\equiv c_{Y,\rec} \> (A_{\rec} \> (\inc \> n) \> x) \> (\overline{A} \> H\ind \> x)
+H\ind(c_{\rec} : (\inc : n : x)) 
+&\equiv H\ind(\inc : (n+1) : (c_{\rec}' x)) \\
+&\equiv c_{Y,\rec} : (A_{\rec} : (\inc : n) : x) : (\overline{A} : H\ind : x)
 \end{split}
 \end{equation*}
 Hence, we can always take $\refl$ to be the path.
 This will also give an image for $\com$, and thus the computation rules for the points are satisfied.
 
 Note that the this computation rule is a propositional equality.
-This is logical, because it is proven all $x : A_{\rec}(F \> n)$.
+This is logical, because it is proven all $x : A_{\rec}(F : n)$.
 However, for terms built from $c_{\nonrec}$ and $c_{\rec}$, we have a definitional equality.
-This is because $c_{\nonrec} \> a$ for $a : A_{\nonrec}$ is defined to be $\inc \> 0 \> (c_{\nonrec}' \> a)$.
-All the closed terms are thus inhabitants of some $F \> n$, and since at every step the equalities are definitional, we can conclude that for closed terms the equality is definitional.
+This is because $c_{\nonrec} : a$ for $a : A_{\nonrec}$ is defined to be $\inc : 0 : (c_{\nonrec}' : a)$.
+All the closed terms are thus inhabitants of some $F : n$, and since at every step the equalities are definitional, we can conclude that for closed terms the equality is definitional.
 
-Now we show the computation rules for the paths, and in that case we have a parameter $a : B_i \> (\hocolim \> F \> f)$.
-By using that polynomials commute with homotopy colimits, we can again assume that we have $n : \mathbb{N}$ and $x : B_i(F \> n)$.
+Now we show the computation rules for the paths, and in that case we have a parameter $a : B_i : (\hocolim : F : f)$.
+By using that polynomials commute with homotopy colimits, we can again assume that we have $n : \mathbb{N}$ and $x : B_i(F : n)$.
 \begin{equation*}
 \begin{split}
-\apd \> H\ind \> (p_i \> (\inc \> n \> x))
-&\equiv \apd \> H\ind \> (\ap \> (\inc \> (n+1)) \> \glueC \> x)\\
-&= \apd \> (H\ind \comp  \> \inc (n+1)) \> (\glueC \> x)\\
-&= \apd \> (h \> n) \> (\glueC \> x)\\
-&\equiv q_i \> (B_i \> H\frec \> x)
+\apd : H\ind : (p_i : (\inc : n : x))
+&\equiv \apd : H\ind : (\ap : (\inc : (n+1)) : \glueC : x)\\
+&= \apd : (H\ind \comp  : \inc (n+1)) : (\glueC : x)\\
+&= \apd : (h : n) : (\glueC : x)\\
+&\equiv q_i : (B_i : H\frec : x)
 \end{split}
 \end{equation*}
 
@@ -912,69 +912,69 @@ By using that polynomials commute with homotopy colimits, we can again assume th
 \label{sec:Lemmata}
 \begin{lemma}
 \label{lem:constrTerm}
-Suppose, we have a constructor term $t$ such that $x : F \> T \Vdash t : G \>T$ which uses at most $n$ constructors, and that we have a map $c_{\nonrec}' : A_{\nonrec} \rightarrow P$.
-Then $t$ induces a map $\overline{t} : F \> P \rightarrow H_{\Con}^n \> (G \> P)$ by replacing the constructors $c_{\nonrec}$ and $c_{\rec}$ by $c_{\nonrec}'$ and $c_{\rec}'$ respectively.
+Suppose, we have a constructor term $t$ such that $x : F : T \Vdash t : G :T$ which uses at most $n$ constructors, and that we have a map $c_{\nonrec}' : A_{\nonrec} \rightarrow P$.
+Then $t$ induces a map $\overline{t} : F : P \rightarrow H_{\Con}^n : (G : P)$ by replacing the constructors $c_{\nonrec}$ and $c_{\rec}$ by $c_{\nonrec}'$ and $c_{\rec}'$ respectively.
 \end{lemma}
 
 \begin{proof}
 We use induction on the form of the constructor term.
 \begin{itemize}
-        \item $t = a$ with $a : B$ and $B$ does not use $T$. Then we define $\overline{t} \> y = \inn_1 \> a$.
-        \item $t = x$ with $x : F \> T$. Then we define $\overline{t} \> y = \inn_1 \> y$.
-        \item $t = c_{\nonrec} \> a$ with $a : A_{\nonrec}$. Then we define $\overline{t} \> y = \inn_1 \> (c_{\nonrec}' \> a)$.
-        \item $t = c_{\rec} \> r$ with $r : A_{\rec} \> T$ where $r$ uses at most $n-1$ constructors. 
-        By induction we have a map $\overline{r} : F \> P \rightarrow A_{\rec} \> H_{\Con}^{n-1}$.
-        Then we define $\overline{t} \> y = c_{\rec}' (\overline{r} \> x)$.
+        \item $t = a$ with $a : B$ and $B$ does not use $T$. Then we define $\overline{t} : y = \inn_1 : a$.
+        \item $t = x$ with $x : F : T$. Then we define $\overline{t} : y = \inn_1 : y$.
+        \item $t = c_{\nonrec} : a$ with $a : A_{\nonrec}$. Then we define $\overline{t} : y = \inn_1 : (c_{\nonrec}' : a)$.
+        \item $t = c_{\rec} : r$ with $r : A_{\rec} : T$ where $r$ uses at most $n-1$ constructors. 
+        By induction we have a map $\overline{r} : F : P \rightarrow A_{\rec} : H_{\Con}^{n-1}$.
+        Then we define $\overline{t} : y = c_{\rec}' (\overline{r} : x)$.
         \item For the rules for the projection, pairing and injection it is trivial. \qedhere
 \end{itemize}
 \end{proof}
 
 \begin{lemma}
 \label{lem:constrCoh}
-Suppose, we have a constructor term $t$ such that $x : F \> T \Vdash t : G \> T$ which uses at most $n$ constructors, and that we have a map $c_{\nonrec}' : A_{\nonrec} \rightarrow Q$.
+Suppose, we have a constructor term $t$ such that $x : F : T \Vdash t : G : T$ which uses at most $n$ constructors, and that we have a map $c_{\nonrec}' : A_{\nonrec} \rightarrow Q$.
 Furthermore, we assume that we have a map $f : Q \rightarrow P$
-Then for all $x : F \> P$ the terms $\overline{t}(F \> f \> x)$ and $(H_{\Con} \circ G) \> f \> (\overline{t} \> x)$ are equal.
+Then for all $x : F : P$ the terms $\overline{t}(F : f : x)$ and $(H_{\Con} \circ G) : f : (\overline{t} : x)$ are equal.
 \end{lemma}
 
 \begin{proof}
 Again we use induction on the constructor term.
 \begin{itemize}
         \item $t = a$ with $a : B$ and $B$ does not use $T$. 
-        Then we have $G \> P = B$, and thus 
+        Then we have $G : P = B$, and thus 
         $
-        \overline{t}(F \> f \> x) = a.
+        \overline{t}(F : f : x) = a.
         $
         On the other hand, we have, 
         \[
-        (H_{\Con} \circ G) \> f \> (\overline{t} \> x) = G \> f \> a = a.
+        (H_{\Con} \circ G) : f : (\overline{t} : x) = G : f : a = a.
         \]
-        \item $t = x$ with $x : F \> T$. 
-        Then $G \> P = F \> P$, and thus
+        \item $t = x$ with $x : F : T$. 
+        Then $G : P = F : P$, and thus
         $
-        \overline{t}(F \> f \> x) = \inn_1(F \> f \> x).
+        \overline{t}(F : f : x) = \inn_1(F : f : x).
         $
         Also,
         \[
-        (H_{\Con} \circ G) \> f \> (\overline{t} \> x) = (H_{\Con} \circ G) \> f \> (\inn_1 \> x) = \inn_1(G \> f \> x) = \inn_1(F \> f \> x).
+        (H_{\Con} \circ G) : f : (\overline{t} : x) = (H_{\Con} \circ G) : f : (\inn_1 : x) = \inn_1(G : f : x) = \inn_1(F : f : x).
         \]
-        \item $t = c_{\nonrec} \> a$ with $a : A_{\nonrec}$. 
-        Then $G \> P = P$, and thus
+        \item $t = c_{\nonrec} : a$ with $a : A_{\nonrec}$. 
+        Then $G : P = P$, and thus
         $
-        \overline{t}(F \> f \> x) = \inn_1(f(c'_{\nonrec} \> a))
+        \overline{t}(F : f : x) = \inn_1(f(c'_{\nonrec} : a))
         $.
         Also,
         \[
-        (H_{\Con} \circ G) \> f \> (\overline{t} \> x) = H_{\Con} \> f \> (\inn_1(c'_{\nonrec} \> a)) = \inn_1(f(c'_{\nonrec} \> a))
+        (H_{\Con} \circ G) : f : (\overline{t} : x) = H_{\Con} : f : (\inn_1(c'_{\nonrec} : a)) = \inn_1(f(c'_{\nonrec} : a))
         \]
-        \item $t = c_{\rec} \> r$ with $r : A_{\rec} \> T$ where $r$ uses at most $n-1$ constructors. 
-        The induction hypothesis in this case is that $H_{\Con} \> f \> (\overline{r} \> x) = \overline{r}(F \> f \> x)$.
-        Then again $G \> P = P$, and thus
+        \item $t = c_{\rec} : r$ with $r : A_{\rec} : T$ where $r$ uses at most $n-1$ constructors. 
+        The induction hypothesis in this case is that $H_{\Con} : f : (\overline{r} : x) = \overline{r}(F : f : x)$.
+        Then again $G : P = P$, and thus
         $
-        \overline{t}(F \> f \> x) = c'_{\rec} \> (\overline{r}(F \> f \> x))
+        \overline{t}(F : f : x) = c'_{\rec} : (\overline{r}(F : f : x))
         $.
         Furthermore,
         \[
-        (H_{\Con} \circ G) \> f \> (\overline{t} \> x) = H_{\Con} \> f \> (c'_{\rec} \> (\overline{r} \> x)) = c'_{\rec} \> (H_{\Con} \> f \> (\overline{r} \> x)) = c'_{\rec} \> (\overline{r}(F \> f \> x))
+        (H_{\Con} \circ G) : f : (\overline{t} : x) = H_{\Con} : f : (c'_{\rec} : (\overline{r} : x)) = c'_{\rec} : (H_{\Con} : f : (\overline{r} : x)) = c'_{\rec} : (\overline{r}(F : f : x))
         \]
         \item For the rules for the projection, pairing and injection it is trivial. \qedhere
 \end{itemize}
@@ -982,37 +982,37 @@ Again we use induction on the constructor term.
 
 \begin{lemma}
 \label{lem:colimcon}
-The type $\hocolim \> (\lambda n . A) \> (\lambda n . \operatorname{Id})$ is isomorphic to $A$.
+The type $\hocolim : (\lambda n . A) : (\lambda n . \operatorname{Id})$ is isomorphic to $A$.
 \end{lemma}
 
 \begin{proof}
-We define the map $f : A \rightarrow \hocolim \> (\lambda n . A) \> (\lambda n . \operatorname{Id})$
-to be $\inc \> 0$.
-Next we define $g : \hocolim \> (\lambda n . A) \> (\lambda n . \operatorname{Id}) \rightarrow A$ by $\hocolim$ recursion.
-We send $\inc \> n \> a$ to $a$, and then the required diagrams commute by reflexivity.
+We define the map $f : A \rightarrow \hocolim : (\lambda n . A) : (\lambda n . \operatorname{Id})$
+to be $\inc : 0$.
+Next we define $g : \hocolim : (\lambda n . A) : (\lambda n . \operatorname{Id}) \rightarrow A$ by $\hocolim$ recursion.
+We send $\inc : n : a$ to $a$, and then the required diagrams commute by reflexivity.
 The proof that these maps are mutual inverses is straightforward but tedious, so we refer the reader to the accompanying Coq code \cite{CoqImpl}.
 \end{proof}
 
 \begin{lemma}
 \label{lem:colimsum}
-Colimits commute with coproducts, so $\hocolim \> (G_1 + G_2) \> (g_1 + g_2)$ and $\hocolim \> G_1 \> g_1 + \hocolim \> G_2 \> g_2$ are isomorphic.
+Colimits commute with coproducts, so $\hocolim : (G_1 + G_2) : (g_1 + g_2)$ and $\hocolim : G_1 : g_1 + \hocolim : G_2 : g_2$ are isomorphic.
 \end{lemma}
 
 \begin{proof}
 This one is not difficult either, so we will be brief and refer the reader to \cite{CoqImpl} for details.
 We start by making a map 
 \[
-\hocolim \> (G_1+G_2) \> (g_1 + g_2) \rightarrow \hocolim \> G_1 \> g_1 + \hocolim \> G_2 \> g_2.
+\hocolim : (G_1+G_2) : (g_1 + g_2) \rightarrow \hocolim : G_1 : g_1 + \hocolim : G_2 : g_2.
 \]
-This map is defined by recursion over the colimit, so take any $n : \mathbb{N}$ and $x : G_i \> n$.
-Then the image of $\inc \> n \> (\inn_i \> x)$ is defined to be $\inn_i (\inc \> n \> x)$, and the image of $\com \> n \> (\inn_i \> x)$ is defined by
-$\ap \> \inn_i \> (\com \> G_i \> g_i \> n \> x)$.
+This map is defined by recursion over the colimit, so take any $n : \mathbb{N}$ and $x : G_i : n$.
+Then the image of $\inc : n : (\inn_i : x)$ is defined to be $\inn_i (\inc : n : x)$, and the image of $\com : n : (\inn_i : x)$ is defined by
+$\ap : \inn_i : (\com : G_i : g_i : n : x)$.
 
 For the map in the other direction, we need to make 
 \[
-\hocolim \> G_i \> g_i \rightarrow \hocolim \> (G_1 + G_2) \> (g_1 + g_2).
+\hocolim : G_i : g_i \rightarrow \hocolim : (G_1 + G_2) : (g_1 + g_2).
 \]
-We send $\inc \> n \> x$ to $\inc \> n \> (\inn_i \> x)$ and $\com \> n \> x$ to $\com \> n \> (\inn_i \> x)$.
+We send $\inc : n : x$ to $\inc : n : (\inn_i : x)$ and $\com : n : x$ to $\com : n : (\inn_i : x)$.
 \end{proof}
 
 \begin{lemma}
@@ -1030,11 +1030,11 @@ Given are types $A, B$ and functions $f, g : A \rightarrow B$ such that we have 
 Furthermore, assume that we have a path $p : x = y$ where $x$ and $y$ are terms of type $A$.
 Then for all we have a path
 \[
-e_* \> (\ap \> f \> p) = \ap \> g \> p.
+e_* : (\ap : f : p) = \ap : g : p.
 \]
 All in all, we have an inhabitant of the type
 \[
-\prod (f, g : A \rightarrow B) (e : f = g) (x, y : A) (p : x = y), e_* \> (\ap \> f \> p) = \ap \> g \> p
+\prod (f, g : A \rightarrow B) (e : f = g) (x, y : A) (p : x = y), e_* : (\ap : f : p) = \ap : g : p
 \]
 where $A, B : \Type$.
 \end{lemma}
@@ -1047,14 +1047,14 @@ Hence, it follows by path induction.
 
 \begin{lemma}
 \label{lem:funTrans}
-Again we are given types $A, B$, functions $f, g : A \rightarrow B$, an inhabitant $e : f = g$, and a path $p : f \> x = f \> y$ with $x, y : A$.
+Again we are given types $A, B$, functions $f, g : A \rightarrow B$, an inhabitant $e : f = g$, and a path $p : f : x = f : y$ with $x, y : A$.
 Then we have a path 
 \[
-e_* \> p = (e \fpath x)^{-1} \conc p \conc (e \fpath x)
+e_* : p = (e \fpath x)^{-1} \conc p \conc (e \fpath x)
 \]
 Formally, this means that for $A, B : \Type$ we have an inhabitant of the type
 \[
-\prod (f, g : A \rightarrow B) (e : f = g) (x, y : A) (p : f \> x = f \> y), e_* \> p = (e \fpath x)^{-1} \conc p \conc (e \fpath y).
+\prod (f, g : A \rightarrow B) (e : f = g) (x, y : A) (p : f : x = f : y), e_* : p = (e \fpath x)^{-1} \conc p \conc (e \fpath y).
 \]
 \end{lemma}
 
