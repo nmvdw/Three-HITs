@@ -216,8 +216,8 @@ give its lifting $\lift{P}[B] : P[A] \to \Type$,
   \lift{P_1 + P_2}[B] \, (\inr{u})\defeq \lift{P_2}[B]\,u,
 \end{align*}
 %
-while a map $f \> \dprod{x \> A} B_1\,x \to B_2\,x$ lifts to
-$\lift{P}[f] \> \dprod{u : P[A]} \lift{P}[B_1]\,u \to \lift{P}[B_2]\,u$:
+while a map $f : \dprod{x \> A} B_1\,x \to B_2\,x$ lifts to
+$\lift{P}[f] : \dprod{u : P[A]} \lift{P}[B_1]\,u \to \lift{P}[B_2]\,u$:
 %
 \begin{align*}
   \lift{X}[f] \, u &\defeq f \, u &
@@ -235,8 +235,8 @@ case the manipulations we have just described are syntactic.
 Next we define the notion of a constructor term.
 \begin{definition}
 \label{def:constructor-term}
-Given is a function $c : A \> T \rightarrow T$ with $A$ polynomial and $T$ a type.
-Then we say $t$ is a \emph{constructor term} over $c$ if we can find polynomials $F$ and $G$ such that $x : F \> T \vdash t : G \> T$ can be derived using the following rules.
+Given a function $c : A \> T \rightarrow T$ with $A$ a polynomial and $T$ a type,
+we say $t$ is a \emph{constructor term} over $c$ if we can find polynomials $F$ and $G$ such that $x : F \> T \vdash t : G \> T$ can be derived using the following rules.
 \begin{gather*}
         \AxiomC{$t : B$}
         \AxiomC{$T$ does not occur in $B$}
@@ -268,7 +268,8 @@ Then we say $t$ is a \emph{constructor term} over $c$ if we can find polynomials
         \\[7pt]
         \AxiomC{$j \in \{1, 2\}$}
         \AxiomC{$x : F \> T \vdash r : G_j \> T$}
-        \BinaryInfC{$x : F \> T : \inn_j \> r : G_1 \> T + G_2 \> T$}
+        \BinaryInfC{$x : F \> T \vdash \inn_j \> r : G_1 \> T + G_2 \> T$}
+        % shouldn't this be inl/inj instead of in_1/in_2?
         \bottomAlignProof
         \DisplayProof
 \end{gather*}
@@ -290,7 +291,7 @@ where $A$ and each $B_i$ are polynomials, and each $t_i$ and $r_i$ are construct
 Before we can give the rules for higher inductive types, we need to define the lift of a constructor term.
 \begin{definition}
 Given is a constructor $c : A \> H \rightarrow H$, a type family $Y : H \rightarrow \Type$, and a term $f : \prod (x: A \> H), \bar{A} \> Y \> x \rightarrow  Y(c \> x)$.
-For a constructor term $F \> H \vdash r : G \> H$ we define the \emph{lift $\dak{r}$ of $r$} with type 
+For a constructor term $x : F \> H \vdash r : G \> H$ we define the \emph{lift $\dak{r}$ of $r$} with type 
 $
 x : F \> H, h_x : \bar{F} \> Y \> x \vdash \dak{r} : \bar{G} \> Y \> r
 $
