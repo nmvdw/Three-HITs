@@ -1,38 +1,32 @@
 Require Import HoTT.
 Require Export HoTT.
+Require Import FunextAxiom.
 
 (*
 Lemma 13 in paper
 *)
-Theorem apTransport (A B : Type0) (f g : A -> B) (e : f = g) (x y : A) (p : x = y) :
-  transport (fun h => h x = h y) e (ap f p) = ap g p.
-Proof.
-induction e.
-reflexivity.
-Qed.
+Definition apTransport (A B : Type0) (f g : A -> B) (e : f = g) (x y : A) (p : x = y) :
+  transport (fun h => h x = h y) e (ap f p) = ap g p :=
+match e with
+  idpath => 1
+end.
 
 (*
 Definition 6 in paper
 *)
-Definition fPath {A B : Type0} {f g : A -> B} (e : f = g) (x : A) : f x = g x.
-Proof.
-induction e.
-reflexivity.
-Defined.
+Definition fPath {A B : Type0} {f g : A -> B} (e : f = g) (x : A) : f x = g x :=
+match e with
+  idpath => 1
+end.
 
 (*
 Lemma 14 in paper
 *)
-Theorem funTransport (A B : Type0) (f g : A -> B) (e : f = g) (x y : A) (p : f x = f y) :
-  transport (fun h => h x = h y) e p = (fPath e x)^ @ p @ (fPath e y).
-Proof.
-induction e.
-cbn.
-rewrite concat_1p.
-rewrite concat_p1.
-reflexivity.
-Qed.
-
+Definition funTransport (A B : Type0) (f g : A -> B) (e : f = g) (x y : A) (p : f x = f y) :
+  transport (fun h => h x = h y) e p = (fPath e x)^ @ p @ (fPath e y) :=
+match e with
+  idpath => (concat_p1 p)^ @ (ap (fun q => q @ 1) (concat_1p p))^
+end.
 
 Ltac reduceTransport :=
   rewrite @HoTT.Types.Paths.transport_paths_FlFr ;
@@ -359,3 +353,158 @@ refine (colim_ind _ _ _ _ _ i).
 Qed.
 
 End ColimSum.
+
+(*
+Coequalizers as a higher inductive type
+*)
+Module Export Coeq.
+
+Private Inductive coeq
+  (A B : Type)
+  (f g : A -> B) : Type :=
+| inC : B -> coeq A B f g.
+
+Axiom glue : 
+  forall 
+    (A B : Type) 
+    (f g : A -> B)
+    (x : A),
+  inC A B f g (f x) = inC A B f g (g x).
+
+(*
+Recursion rule for coequalizer using Licata's trick
+*)
+Fixpoint coeq_rec
+  (P : Type)
+  (A B : Type) 
+  (f g : A -> B)
+  (Pi : B -> P)
+  (Pg : forall (x : A), Pi (f x) = Pi (g x))
+  (x : coeq A B f g)
+  {struct x}
+  : P
+  := 
+    (match x return _ -> P with
+      | inC x => fun _ => Pi x
+    end) Pg.
+
+Axiom coeq_rec_beta_glue : forall
+  (P : Type)
+  (A B : Type) 
+  (f g : A -> B)
+  (Pi : B -> P)
+  (Pg : forall (x : A), Pi (f x) = Pi (g x))
+  (x : A)
+  , ap (coeq_rec P A B f g Pi Pg) (glue A B f g x) = Pg x.
+
+(*
+Induction rule for colimit using Licata's trick
+*)
+Fixpoint coeq_ind
+  (A B : Type) 
+  (f g : A -> B)
+  (P : coeq A B f g -> Type)
+  (Pi : forall (x : B), P (inC A B f g x))
+  (Pg : forall (x : A), (glue A B f g x) # Pi (f x) = Pi (g x))
+  (x : coeq A B f g)
+  {struct x}
+  : P x
+  := 
+    (match x return _ -> P x with
+      | inC x => fun _ => Pi x
+    end) Pg.
+
+Axiom coeq_ind_beta_glue : forall
+  (A B : Type) 
+  (f g : A -> B)
+  (P : coeq A B f g -> Type)
+  (Pi : forall (x : B), P (inC A B f g x))
+  (Pg : forall (x : A), (glue A B f g x) # Pi (f x) = Pi (g x))
+  (x : A)
+  , apD (coeq_ind A B f g P Pi Pg) (glue A B f g x) = Pg x.
+End Coeq.
+
+(*
+Colimits as coequalizers of sums
+*)
+Module Export ColimAsCoeq.
+
+Parameter F : nat -> Type0.
+Parameter f : forall (n : nat), F n -> F(n.+1).
+
+Definition C1 : Type0 := sigT F.
+
+Definition g1 : C1 -> C1 := idmap.
+
+Definition g2 (x : C1) : C1 :=
+match x with
+  existT n y => existT F (n.+1) (f n y)
+end.
+
+Definition C : Type0 := coeq C1 C1 g1 g2.
+Definition H : Type0 := colim F f.
+
+Definition CToH : C -> H.
+Proof.
+refine (coeq_rec _ _ _ _ _ _ _).
+ Unshelve.
+ Focus 2.
+ induction 1.
+ apply (inc F f proj1_sig proj2_sig).
+
+ intro x.
+ induction x.
+ apply com.
+Defined.
+
+Definition HToC : H -> C.
+Proof.
+refine (colim_rec _ _ _ _ _).
+ Unshelve.
+ Focus 2.
+ intros.
+ apply (inC C1 C1 g1 g2 (n;H0)).
+
+ intros.
+ cbn.
+ apply (glue C1 C1 g1 g2).
+Defined.
+
+Theorem CToHEq :
+  forall (x : C), HToC(CToH x) = x.
+Proof.
+refine (coeq_ind _ _ _ _ _ _ _).
+ Unshelve.
+ Focus 2.
+ intros.
+ reflexivity.
+
+ intros.
+ induction x.
+ reduceTransport.
+ rewrite ap_idmap.
+ rewrite concat_p1.
+ rewrite coeq_rec_beta_glue.
+ rewrite colim_rec_beta_com.
+ apply concat_Vp.
+Defined.
+
+Theorem HToCEq :
+  forall (x : H), CToH(HToC x) = x.
+Proof.
+refine (colim_ind _ _ _ _ _).
+ Unshelve.
+ Focus 2.
+ intros.
+ reflexivity.
+
+ intros.
+ reduceTransport.
+ rewrite ap_idmap.
+ rewrite concat_p1.
+ rewrite colim_rec_beta_com.
+ rewrite (coeq_rec_beta_glue H C1 C1 g1 g2).
+ apply concat_Vp.
+Defined.
+
+End ColimAsCoeq.
