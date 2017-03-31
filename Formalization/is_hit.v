@@ -16,7 +16,7 @@ Section Endpoints.
    Endpoints are parameterized by a family of polynomials which will
    be specialized to the point constructors in the definition of HITS.
 *)
-Variable I: Type.
+Variable I : Type.
 Variable C : I -> polynomial.
 
 Inductive endpoint :
@@ -31,11 +31,14 @@ Inductive endpoint :
   | endpoint_inr : forall {P Q R}, endpoint P R -> endpoint P (poly_plus Q R)
 .
 
+Variable A : Type.
+Variable F : A -> Type.
+Variable c : forall i, poly_act (C i) A -> A.
+Variable f : forall (i : I) (u : poly_act (C i) A), poly_fam (C i) F u -> F (c i u).
+
 (* Endpoint acting on data for point constructors. *)
 Fixpoint endpoint_act
   {P Q : polynomial}
-  {A : Type} (* carrier *)
-  (c : forall i, poly_act (C i) A -> A) (* point constructors *)
   (e : endpoint P Q) (* the endpoint *)
   {struct e}
   : poly_act P A -> poly_act Q A.
@@ -49,39 +52,35 @@ Proof.
   - exact (fun _ => t).
 
   (* endpoint_constr *)
-  - exact (fun u => c i (endpoint_act _ _ _ c e u)).
+  - exact (fun u => c i (endpoint_act _ _ e u)).
 
   (* endpoint_fst *)
-  - exact (fun u => fst (endpoint_act _ _ _ c e u)).
+  - exact (fun u => fst (endpoint_act _ _ e u)).
 
   (* endpoint_snd *)
-  -  exact (fun u => snd (endpoint_act _ _ _ c e u)).
+  -  exact (fun u => snd (endpoint_act _ _ e u)).
 
   (* endpoint_pair *)
-  - exact  (fun u => (endpoint_act _ _ _ c e1 u, endpoint_act _ _ _ c e2 u)).
+  - exact  (fun u => (endpoint_act _ _ e1 u, endpoint_act _ _ e2 u)).
 
   (* endpoint_inl *)
-  -  exact (fun u => inl (endpoint_act _ _ _ c e u)).
+  -  exact (fun u => inl (endpoint_act _ _ e u)).
 
   (* endpoint_inr *)
-  -  exact (fun u => inr (endpoint_act _ _ _ c e u)).
+  -  exact (fun u => inr (endpoint_act _ _ e u)).
 Defined.
 
 (* The dependent action of an endpoint, this is used for
    "lifting" the path constructors in the elimnation principle. *)
 Fixpoint endpoint_dact
-         {Q R : polynomial}
-         {A : Type}
-         (c : forall i, poly_act (C i) A -> A)
-         (F : A -> Type)
-         (f : forall (i : I) (u : poly_act (C i) A), poly_fam (C i) F u -> F (c i u))
-         (e : @endpoint Q R)
+         {P Q : polynomial}
+         (e : @endpoint P Q)
          {struct e} :
-  forall (x : poly_act Q A) (h : poly_fam Q F x), poly_fam R F (endpoint_act c e x).
+  forall (x : poly_act P A) (h : poly_fam P F x), poly_fam Q F (endpoint_act e x).
 Proof.
   simple refine (
-           match e as z in @endpoint Q R
-                 return (forall (x : poly_act Q A) (h : poly_fam Q F x), poly_fam R F (endpoint_act c z x))
+           match e as z in endpoint P Q
+                 return (forall (x : poly_act P A) (h : poly_fam P F x), poly_fam Q F (endpoint_act z x))
            with
            | endpoint_var _ => _
            | endpoint_const _ _ t => _
@@ -103,23 +102,20 @@ Proof.
   - { intros x h.
       apply f.
       apply endpoint_dact.
-      - exact f.
       - exact h.
     }
 
   (* endpoint_fst *)
   - { intros x h.
-      apply (@fst _ (poly_fam p1 F (endpoint_act c (endpoint_snd u) x))).
-      apply @endpoint_dact with (R := poly_times p0 p1).
-      + exact f.
+      apply (@fst _ (poly_fam p1 F (endpoint_act (endpoint_snd u) x))).
+      apply @endpoint_dact with (Q := poly_times p0 p1).
       + exact h.
     }
 
   (* endpoint_snd *)
   - { intros x h.
-      apply (@snd (poly_fam p0 F (endpoint_act c (endpoint_fst u) x))).
-      apply @endpoint_dact with (R := poly_times p0 p1).
-      + exact f.
+      apply (@snd (poly_fam p0 F (endpoint_act (endpoint_fst u) x))).
+      apply @endpoint_dact with (Q := poly_times p0 p1).
       + exact h.
     }
 
@@ -127,26 +123,73 @@ Proof.
   - { intros x h.
       split.
       - apply endpoint_dact.
-        + exact f.
         + exact h.
       - apply endpoint_dact.
-        + exact f.
         + exact h.
     }
 
   (* endpoint_inl *)
   - { intros x h.
       apply endpoint_dact with (e := e).
-      + exact f.
       + exact h.
     }
 
   (* endpoint_inr *)
   - { intros x h.
       apply endpoint_dact with (e := e).
-      + exact f.
       + exact h.
     }
+Defined.
+
+(* If [h] commutes with constructors, then it commutes with all endpoints. *)
+Fixpoint endpoint_dact_compute
+  (P Q : polynomial)
+  (x : poly_act P A)
+  (e : endpoint P Q)
+  (h : forall x, F x)
+  {struct e}
+:
+  (forall i u, h (c i u) = f i u (poly_dmap (C i) h u)) ->
+  endpoint_dact e x (poly_dmap P h x) = poly_dmap Q h (endpoint_act e x).
+Proof.
+  intro H.
+  destruct e.
+
+  (* endpoint_var *)
+  - { reflexivity. }
+
+  (* endpoint_const *)
+  - { reflexivity. }
+
+  (* endpoint_constr *)
+  - { simpl.
+      transitivity (f i (endpoint_act e x) (poly_dmap (C i) h (endpoint_act e x))).
+      - apply ap, endpoint_dact_compute, H.
+      - symmetry ; apply H.
+    }
+
+  (* endpoint_fst *)
+  - { simpl.
+      rewrite (endpoint_dact_compute _ _ _ e).
+      reflexivity.
+      apply H.
+    }
+
+  (* endpoint_snd *)
+  - { simpl.
+      rewrite (endpoint_dact_compute _ _ _ e).
+      reflexivity.
+      apply H.
+    }
+
+  (* endpoint_pair *)
+  - { apply path_prod ; apply endpoint_dact_compute, H. }
+
+  (* endpoint_inl *)
+  - { apply endpoint_dact_compute with (e := e), H. }
+
+  (* endpoint_inr *)
+  - { apply endpoint_dact_compute with (e := e), H. }
 Defined.
 
 End Endpoints.
@@ -161,8 +204,9 @@ Arguments endpoint_pair {_ _} {_ _ _} _ _.
 Arguments endpoint_inl {_ _} {_ _ _} _.
 Arguments endpoint_inr {_ _} {_ _ _} _.
 
-Arguments endpoint_act {_ _} {_ _ _} _ _ _.
-Arguments endpoint_dact {_ _} {_ _ _} _ _ _ _ _ _.
+Arguments endpoint_act {_ _ _} _ {P Q} _ _.
+Arguments endpoint_dact {I C A F} c _ {P Q} _ _ _.
+Arguments endpoint_dact_compute {_ _ _} _ _ _ {P Q} _ _ _ _.
 
 (* A HIT signature is specified by point constructors and path constructors.
 
@@ -261,8 +305,8 @@ Structure HIT (Σ : hit_signature) :=
              (x : poly_act (sig_path_param Σ i) hit_carrier)
              (h : poly_fam (sig_path_param Σ i) F x),
                transport _ (hit_path i x)
-               (endpoint_dact hit_point F c (sig_path_lhs Σ i) x h) =
-               endpoint_dact hit_point F c (sig_path_rhs Σ i) x h)
+               (endpoint_dact hit_point c (sig_path_lhs Σ i) x h) =
+               endpoint_dact hit_point c (sig_path_rhs Σ i) x h)
       (x : hit_carrier),
       F x ;
 
@@ -275,14 +319,19 @@ Structure HIT (Σ : hit_signature) :=
              (x : poly_act (sig_path_param Σ i) hit_carrier)
              (h : poly_fam (sig_path_param Σ i) F x),
                transport _ (hit_path i x)
-               (endpoint_dact hit_point F c (sig_path_lhs Σ i) x h) =
-               endpoint_dact hit_point F c (sig_path_rhs Σ i) x h)
+               (endpoint_dact hit_point c (sig_path_lhs Σ i) x h) =
+               endpoint_dact hit_point c (sig_path_rhs Σ i) x h)
       j (t : poly_act (sig_point Σ j) hit_carrier),
       hit_ind F c p (hit_point j t) =
       c j t (poly_dmap (sig_point Σ j) (hit_ind F c p) t) ;
 
-(*
-  (* computation rule for paths *)
+  (* computation rule for paths; since we do not have judgmental
+     equality for point constructors, we need to inserrt an
+     explicit transport, like in the days before the private
+     inductive type.  *)
+
+(* Commented out because the transport isn't done yet:
+
   hit_path_beta :
     forall (F : hit_carrier -> Type)
       (c : forall i (u : poly_act (sig_point Σ i) hit_carrier),
@@ -291,15 +340,13 @@ Structure HIT (Σ : hit_signature) :=
              (x : poly_act (sig_path_param Σ i) hit_carrier)
              (h : poly_fam (sig_path_param Σ i) F x),
                transport _ (hit_path i x)
-               (endpoint_dact hit_point F c (sig_path_lhs Σ i) x h) =
-               endpoint_dact hit_point F c (sig_path_rhs Σ i) x h)
+               (endpoint_dact hit_point c (sig_path_lhs Σ i) x h) =
+               endpoint_dact hit_point c (sig_path_rhs Σ i) x h)
       (k : sig_path_index Σ) (t : poly_act (sig_path_param Σ k) hit_carrier),
-      (* we get a mistmatch here, either something's wrong or we need
-         and explicit transport to be inserted. *)
       apD (hit_ind F c p) (hit_path k t) =
-      p k t (poly_dmap _ (hit_ind F c p) t)
+      transport _ (endpoint_dact_compute _ hit_point c _ _ (hit_ind F c p) (hit_point_beta _))
+      (p k t (poly_dmap _ (hit_ind F c p) t))
 *)
-
 }.
 
 Arguments hit_point {_ _} _ _.
