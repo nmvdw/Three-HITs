@@ -252,19 +252,34 @@ Structure HIT (Σ : hit_signature) :=
   hit_path : forall i u, endpoint_act hit_point (sig_path_lhs Σ i) u =
                     endpoint_act hit_point (sig_path_rhs Σ i) u ;
 
-  (* the elinator *)
+  (* the eliminator *)
   hit_ind :
     forall (F : hit_carrier -> Type)
-      (c : forall (i : sig_point_index Σ) (u : poly_act (sig_point Σ i) hit_carrier),
+      (c : forall i (u : poly_act (sig_point Σ i) hit_carrier),
           poly_fam (sig_point Σ i) F u -> F (hit_point i u))
-      (p : forall (i : sig_path_index Σ)
+      (p : forall i
              (x : poly_act (sig_path_param Σ i) hit_carrier)
              (h : poly_fam (sig_path_param Σ i) F x),
                transport _ (hit_path i x)
                (endpoint_dact hit_point F c (sig_path_lhs Σ i) x h) =
                endpoint_dact hit_point F c (sig_path_rhs Σ i) x h)
       (x : hit_carrier),
-      F x
+      F x ;
+
+  (* computation rule for points *)
+  hit_beta_point :
+    forall (F : hit_carrier -> Type)
+      (c : forall i (u : poly_act (sig_point Σ i) hit_carrier),
+          poly_fam (sig_point Σ i) F u -> F (hit_point i u))
+      (p : forall i
+             (x : poly_act (sig_path_param Σ i) hit_carrier)
+             (h : poly_fam (sig_path_param Σ i) F x),
+               transport _ (hit_path i x)
+               (endpoint_dact hit_point F c (sig_path_lhs Σ i) x h) =
+               endpoint_dact hit_point F c (sig_path_rhs Σ i) x h)
+      j (t : poly_act (sig_point Σ j) hit_carrier),
+      hit_ind F c p (hit_point j t) =
+      c j t (poly_dmap (sig_point Σ j) (hit_ind F c p) t)
 }.
 
 Arguments hit_point {_ _} _ _.
@@ -283,10 +298,10 @@ Proof.
     induction x as [| n y].
     + exact (c true tt tt).
     + apply (c false n y).
+  - intros F c p [ | ] [] ; reflexivity.
 Defined.
 
-
-(* Example: the HoTT library circle has an eliminator. *)
+(* Example: the HoTT library circle is a HIT *)
 Definition circle_hit : HIT circle_signature.
 Proof.
   simple refine {| hit_carrier := S1 ;
@@ -295,9 +310,10 @@ Proof.
   - exact loop.
   - intros F c f x.
     now apply (S1_ind F (c tt tt tt)), (f tt).
+  - intros F c p [] [] ; reflexivity.
 Defined.
 
-(* Example: the HoTT library suspension has an eliminator. *)
+(* Example: the HoTT library suspension is a HIT *)
 
 Definition suspension_hit (A : Type) : HIT (suspension_signature A).
 Proof.
@@ -308,4 +324,6 @@ Proof.
     apply (Susp_ind F (c false tt tt) (c true tt tt)).
     intro a.
     apply (f tt a a).
+  - intros F c p [|] [] ; reflexivity.
 Defined.
+
