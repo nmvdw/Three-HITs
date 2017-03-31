@@ -1,3 +1,4 @@
+# LaTeX files
 Paper.pdf
 *.DS_Store
 *.log
@@ -13,3 +14,9 @@ Paper.pdf
 *.out
 *.synctex.gz
 *.vtc
+# Coq files
+*.vo
+*.glob
+*.d
+*.bak
+Makefile

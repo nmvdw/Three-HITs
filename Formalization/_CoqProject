@@ -1,0 +1,4 @@
+-R . "" COQC = hoqc COQDEP = hoqdep
+
+polynomial.v
+is_hit.v
