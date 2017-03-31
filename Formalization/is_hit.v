@@ -267,7 +267,7 @@ Structure HIT (Σ : hit_signature) :=
       F x ;
 
   (* computation rule for points *)
-  hit_beta_point :
+  hit_point_beta :
     forall (F : hit_carrier -> Type)
       (c : forall i (u : poly_act (sig_point Σ i) hit_carrier),
           poly_fam (sig_point Σ i) F u -> F (hit_point i u))
@@ -279,7 +279,27 @@ Structure HIT (Σ : hit_signature) :=
                endpoint_dact hit_point F c (sig_path_rhs Σ i) x h)
       j (t : poly_act (sig_point Σ j) hit_carrier),
       hit_ind F c p (hit_point j t) =
-      c j t (poly_dmap (sig_point Σ j) (hit_ind F c p) t)
+      c j t (poly_dmap (sig_point Σ j) (hit_ind F c p) t) ;
+
+(*
+  (* computation rule for paths *)
+  hit_path_beta :
+    forall (F : hit_carrier -> Type)
+      (c : forall i (u : poly_act (sig_point Σ i) hit_carrier),
+          poly_fam (sig_point Σ i) F u -> F (hit_point i u))
+      (p : forall (i : sig_path_index Σ)
+             (x : poly_act (sig_path_param Σ i) hit_carrier)
+             (h : poly_fam (sig_path_param Σ i) F x),
+               transport _ (hit_path i x)
+               (endpoint_dact hit_point F c (sig_path_lhs Σ i) x h) =
+               endpoint_dact hit_point F c (sig_path_rhs Σ i) x h)
+      (k : sig_path_index Σ) (t : poly_act (sig_path_param Σ k) hit_carrier),
+      (* we get a mistmatch here, either something's wrong or we need
+         and explicit transport to be inserted. *)
+      apD (hit_ind F c p) (hit_path k t) =
+      p k t (poly_dmap _ (hit_ind F c p) t)
+*)
+
 }.
 
 Arguments hit_point {_ _} _ _.
