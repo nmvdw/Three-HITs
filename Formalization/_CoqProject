@@ -1,4 +1,7 @@
 -R . "" COQC = hoqc COQDEP = hoqdep
 
 polynomial.v
-is_hit.v
+hit_structure.v
+examples.v
+colim.v
+hit_existence.v
