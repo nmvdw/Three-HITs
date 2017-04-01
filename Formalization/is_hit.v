@@ -277,14 +277,90 @@ Definition nat_signature :=
     sig_path_rhs := Empty_rect _
   |}.
 
-(* Given a carrier type [A], we want to explain what the structure
-   of a HIT on [A] is. For this purpose we need to define the types
-   of the point constructors, the paths, and intro rules, and the
-   eliminator. *)
 
-(* We now define what a HIT is. *)
+Section HIT_Definition.
 
-Structure HIT (Σ : hit_signature) :=
+(* We define HIT for signature [Σ]. *)
+Variable Σ : hit_signature.
+
+(* The type of a lift of the point constructor [c] over a family [F]. *)
+Definition point_over
+  {H : Type} (* the carrier type *)
+  (F : H -> Type)
+  (c : forall i, poly_act (sig_point Σ i) H -> H) (* point constructors *)
+  (p : forall j u, endpoint_act c (sig_path_lhs Σ j) u =
+              endpoint_act c (sig_path_rhs Σ j) u) (* path constructors *)
+  :=
+  forall i (u : poly_act (sig_point Σ i) H), poly_fam (sig_point Σ i) F u -> F (c i u).
+
+
+(* The type of a lift of the path constructor [p] over a family [F]. *)
+Definition path_over
+  {H : Type}
+  {F : H -> Type}
+  {c : forall i, poly_act (sig_point Σ i) H -> H} (* point constructors *)
+  {p : forall j u, endpoint_act c (sig_path_lhs Σ j) u =
+              endpoint_act c (sig_path_rhs Σ j) u} (* path constructors *)
+  (c' : point_over F c p)
+  :=
+  forall j
+    (x : poly_act (sig_path_param Σ j) H)
+    (h : poly_fam (sig_path_param Σ j) F x),
+    transport _ (p j x) (endpoint_dact c c' (sig_path_lhs Σ j) x h) =
+    endpoint_dact c c' (sig_path_rhs Σ j) x h.
+
+
+(* It is tricky to phrase the computation rule for paths, so we phrase an auxiliary lemma
+   that lets us construct the type of the path computation rule interactively. *)
+Definition hit_path_beta_eq
+  (H : Type) (* the carrier type *)
+  (c : forall i, poly_act (sig_point Σ i) H -> H) (* point constructors *)
+  (p : forall j u, endpoint_act c (sig_path_lhs Σ j) u =
+              endpoint_act c (sig_path_rhs Σ j) u) (* path constructors *)
+  (E : (* the eliminator *)
+       forall (F : H -> Type)
+         (c' : point_over F c p)
+         (p' : path_over c'),
+         forall (x : H), F x)
+  (point_beta : (* the point computation rule *)
+    forall (F : H -> Type)
+      (c' : point_over F c p)
+      (p' : path_over c')
+      i (t : poly_act (sig_point Σ i) H),
+      E F c' p' (c i t) = c' i t (poly_dmap (sig_point Σ i) (E F c' p') t)) :
+  Type.
+Proof.
+  simple refine (forall (F : H -> Type) (j : sig_path_index Σ)
+                   (c' : point_over F c p)
+                   (p' : path_over c')
+                   (k : sig_path_index Σ)
+                   (t : poly_act (sig_path_param Σ k) H), _).
+  (* We want an equation between [α] and [β], but their types do not match, so a transport
+     is required on each side of the equation. *)
+  pose (α := apD (E F c' p') (p k t)).
+  pose (β := p' k t (poly_dmap _ (E F c' p') t)).
+  simpl in β.
+  (* the path along which we will transport lhs *)
+  assert (q_lhs : endpoint_dact c c' (sig_path_lhs Σ k) t (poly_dmap (sig_path_param Σ k) (E F c' p') t) =
+              E F c' p' (endpoint_act c (sig_path_lhs Σ k) t)).
+  { apply (endpoint_dact_compute F c c' t (sig_path_lhs Σ k)), point_beta. }
+  (* the path along which we will transport rhs *)
+  assert (q_rhs : endpoint_dact c c' (sig_path_rhs Σ k) t (poly_dmap (sig_path_param Σ k) (E F c' p') t) =
+              E F c' p' (endpoint_act c (sig_path_rhs Σ k) t)).
+  { apply (endpoint_dact_compute F c c' t (sig_path_rhs Σ k)), point_beta. }
+  pose (β' := transport
+              (fun z => transport F (p k t) z =
+                     endpoint_dact c c' (sig_path_rhs Σ k) t (poly_dmap (sig_path_param Σ k) (E F c' p') t))
+
+              q_lhs β).
+  simpl in β'.
+  pose (β'' := transport
+                (fun z => transport F (p k t) (E F c' p' (endpoint_act c (sig_path_lhs Σ k) t)) = z)
+                q_rhs β').
+  exact (α = β'').
+Defined.
+
+Structure HIT :=
 {
   (* the carrier of the HIT *)
   hit_carrier :> Type ;
@@ -293,65 +369,37 @@ Structure HIT (Σ : hit_signature) :=
   hit_point : forall i, poly_act (sig_point Σ i) hit_carrier -> hit_carrier ;
 
   (* path constructors *)
-  hit_path : forall i u, endpoint_act hit_point (sig_path_lhs Σ i) u =
-                    endpoint_act hit_point (sig_path_rhs Σ i) u ;
+  hit_path : forall j u, endpoint_act hit_point (sig_path_lhs Σ j) u =
+                    endpoint_act hit_point (sig_path_rhs Σ j) u ;
 
   (* the eliminator *)
   hit_ind :
     forall (F : hit_carrier -> Type)
-      (c : forall i (u : poly_act (sig_point Σ i) hit_carrier),
-          poly_fam (sig_point Σ i) F u -> F (hit_point i u))
-      (p : forall i
-             (x : poly_act (sig_path_param Σ i) hit_carrier)
-             (h : poly_fam (sig_path_param Σ i) F x),
-               transport _ (hit_path i x)
-               (endpoint_dact hit_point c (sig_path_lhs Σ i) x h) =
-               endpoint_dact hit_point c (sig_path_rhs Σ i) x h)
+      (c : point_over F hit_point hit_path)
+      (p : path_over c)
       (x : hit_carrier),
       F x ;
 
   (* computation rule for points *)
   hit_point_beta :
     forall (F : hit_carrier -> Type)
-      (c : forall i (u : poly_act (sig_point Σ i) hit_carrier),
-          poly_fam (sig_point Σ i) F u -> F (hit_point i u))
-      (p : forall i
-             (x : poly_act (sig_path_param Σ i) hit_carrier)
-             (h : poly_fam (sig_path_param Σ i) F x),
-               transport _ (hit_path i x)
-               (endpoint_dact hit_point c (sig_path_lhs Σ i) x h) =
-               endpoint_dact hit_point c (sig_path_rhs Σ i) x h)
-      j (t : poly_act (sig_point Σ j) hit_carrier),
-      hit_ind F c p (hit_point j t) =
-      c j t (poly_dmap (sig_point Σ j) (hit_ind F c p) t) ;
+      (c : point_over F hit_point hit_path)
+      (p : path_over c)
+      (i : sig_point_index Σ)
+      (t : poly_act (sig_point Σ i) hit_carrier),
+        hit_ind F c p (hit_point i t) =
+        c i t (poly_dmap (sig_point Σ i) (hit_ind F c p) t) ;
 
-  (* computation rule for paths; since we do not have judgmental
-     equality for point constructors, we need to inserrt an
-     explicit transport, like in the days before the private
-     inductive type.  *)
-
-(* Commented out because the transport isn't done yet:
-
+  (* computation rule for paths *)
   hit_path_beta :
-    forall (F : hit_carrier -> Type)
-      (c : forall i (u : poly_act (sig_point Σ i) hit_carrier),
-          poly_fam (sig_point Σ i) F u -> F (hit_point i u))
-      (p : forall (i : sig_path_index Σ)
-             (x : poly_act (sig_path_param Σ i) hit_carrier)
-             (h : poly_fam (sig_path_param Σ i) F x),
-               transport _ (hit_path i x)
-               (endpoint_dact hit_point c (sig_path_lhs Σ i) x h) =
-               endpoint_dact hit_point c (sig_path_rhs Σ i) x h)
-      (k : sig_path_index Σ) (t : poly_act (sig_path_param Σ k) hit_carrier),
-      apD (hit_ind F c p) (hit_path k t) =
-      transport _ (endpoint_dact_compute _ hit_point c _ _ (hit_ind F c p) (hit_point_beta _))
-      (p k t (poly_dmap _ (hit_ind F c p) t))
-*)
+    hit_path_beta_eq hit_carrier hit_point hit_path hit_ind hit_point_beta
 }.
 
 Arguments hit_point {_ _} _ _.
 Arguments hit_path {_ _} _ _.
 Arguments hit_ind {_ _} _ _ _ _.
+
+End HIT_Definition.
 
 (* Example: nat is a hit. *)
 Definition nat_hit : HIT nat_signature.
