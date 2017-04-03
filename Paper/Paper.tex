@@ -360,18 +360,56 @@ Next we define a type which identifies two paths in some type which we shall cal
 \begin{lstlisting}
 Inductive $\pcoeq$ $(A, B : \Type)$ $(p : A \rightarrow \sum (b_1, b_2 : B), (b_1 = b_2) \times (b_1 = b_2))$ :=
 | $\inP$ : $B \rightarrow \pcoeq \> A \> B \> f \> g$
-| $\glueP$ : $\prod (a : A), \ap \> \inC \> (\pi_1(\pi_3(p \> a))) = \ap \> \inC \> (\pi_2(\pi_3(p \> a)))$
+| $\glueP$ : $\prod (a : A), \ap \> \inP \> (\pi_1(\pi_3(p \> a))) = \ap \> \inP \> (\pi_2(\pi_3(p \> a)))$
 \end{lstlisting}
 We will abbreviate $p_i \> a = \pi_i(\pi_3(p \> a))$ for $i = 1, 2$.
 Note that this type has 2-paths, so it does not follow the given syntax.
 Furthermore, the identified paths used in the parameter are obliged to have the same endpoints.
 The introduction and computation rules are as expected, but we will give the elimination rule.
+
+For the elimination rule we first need a lemma.
+\begin{lemma}
+\label{lem:coherency_compose}
+Given is $Y : \pcoeq \rightarrow \Type$ and $i_Y : \prod (b : B), Y(\inP \> b)$.
+Then we have a term 
+\[
+\operatorname{coh} : 
+\prod (a : A), 
+(\pi_1 \> a)_*^{\lambda b, \, Y (\inP b)} (i_Y \> b_1) 
+= (\pi_2 \> a)_*^{\lambda b, \, Y (\inP b)} (i_Y \> b_1)
+\]
+\end{lemma}
+
+\begin{proof}
+For this we need to prove that for all type families $Y : A \rightarrow \Type$, maps $f : A \rightarrow B$, points $z : Y(f \> a)$, and paths $p : a = b$ we have
+\[
+\operatorname{tc} : p_*^{\lambda x, \, Y (f \> x)} \> z  =  (\ap \> f \> p)_*^Y \> z.
+\]	
+This can be proven with path induction. 
+Now we have the following equalities
+\begin{equation*}
+\begin{split}
+(\pi_1 \> a)_*^{\lambda b, \, Y (\inP b)} (i_Y \> b_1)
+&= 
+(\ap \> \inP \> p_1)_*^Y \> (i_Y \> b_1)
+\\
+&= 
+(\ap \> \inP \> p_2)_*^Y \> (i_Y \> b_1)
+\\
+&=
+(\pi_2 \> a)_*^{\lambda b, \, Y (\inP b)} (i_Y \> b_1)
+\end{split}
+\end{equation*}
+The first and the last follow from $\operatorname{tc}$, and the second from $\glueP$.
+\end{proof}
+
+Now we give the elimination rule of $\pcoeq$ for which we use $\operatorname{coh}$.
 \begin{equation*}
         \AxiomC{$\vdash Y : \pcoeq \> A \> B \> f \> g \rightarrow \Type$}
         \noLine
         \UnaryInfC{$\vdash i_Y : \prod (b : B), Y \> (\inP \> b)$}
         %       \noLine
-        \AxiomC{$\vdash g_Y : \prod (a : A), \apd \> i_Y \> (p_1 \> a) = \apd \> i_Y \> (p_2 \> a)$}
+        \AxiomC{$\vdash g_Y : \prod (a : A), \operatorname{coh}^{-1} \conc \apd \> i_Y \> (p_1 \> a) = \apd \> i_Y \> (p_2 \> a)$}
         \BinaryInfC{$\vdash \pcoeq\frec(i_Y, g_Y) : \prod (x : \pcoeq \> A \> B \> f \> g), Y \> x$}
         \DisplayProof
 \end{equation*}

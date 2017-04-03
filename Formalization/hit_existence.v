@@ -2,8 +2,8 @@
    kinds of HITs do. *)
 
 Require Import HoTT.
-Require Import hit_structure.
-Require Import colim.
+(*Require Import hit_structure.
+Require Import colim.*)
 
 Theorem HIT_existence (Σ : hit_signature) : HIT Σ.
   (* Well, we presumably need to state some additional assumptions about [Σ] so that the
