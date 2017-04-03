@@ -29,3 +29,10 @@ Definition funTransport (A B : Type0) (f g : A -> B) (e : f = g) (x y : A) (p : 
 match e with
   idpath => (concat_p1 p)^ @ (ap (fun q => q @ 1) (concat_1p p))^
 end.
+
+Definition apd2
+ (A : Type) (Y : A -> Type) (f : forall x : A, Y x) (a b : A) (p q : a = b) (s : p = q) :
+  transport (fun r : a = b => r # f a = f b) s (apD f p) = apD f q :=
+match p with
+| refl => apD (fun r => apD f r) s
+end.

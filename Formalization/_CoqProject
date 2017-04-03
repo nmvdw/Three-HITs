@@ -5,3 +5,5 @@ hit_structure.v
 examples.v
 colim.v
 hit_existence.v
+general.v
+pcoeq.v
