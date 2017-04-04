@@ -192,6 +192,23 @@ Proof.
   - { apply endpoint_dact_compute with (e := e), H. }
 Defined.
 
+(* A general HIT might have an arbitrary number of endpoints and therefore an arbitrarily
+   nested point constructors. Our construction of a HIT presumes that there is a bound to
+   the nesting. We define here what it means for an endpoint to have such a bound. *)
+Inductive endpoint_rank : forall {P Q}, endpoint P Q -> nat -> Type :=
+  | rank_var : forall {P} (n : nat), endpoint_rank (@endpoint_var P) n
+  | rank_const : forall {P} {T : Type} (t : T) (n : nat), endpoint_rank (@endpoint_const P _ t) n
+  | rank_constr : forall {P} (i : I) (n : nat) (e : endpoint P (C i)),
+      endpoint_rank e n -> endpoint_rank (endpoint_constr i e) (S n)
+  | rank_fst : forall {P Q R} (n : nat) (e : endpoint P (poly_times Q R)),
+      endpoint_rank e n -> endpoint_rank (endpoint_fst e) n
+  | rank_snd : forall {P Q R} (n : nat) (e : endpoint P (poly_times Q R)),
+      endpoint_rank e n -> endpoint_rank (endpoint_snd e) n
+  | rank_inl : forall {P Q R} (n : nat) (e : endpoint P Q),
+      endpoint_rank e n -> endpoint_rank (@endpoint_inl _ _ R e) n
+  | rank_inr : forall {P Q R} (n : nat) (e : endpoint P R),
+      endpoint_rank e n -> endpoint_rank (@endpoint_inr _ Q _ e) n.
+
 End Endpoints.
 
 Arguments endpoint {_} _ _ _.
@@ -207,6 +224,8 @@ Arguments endpoint_inr {_ _} {_ _ _} _.
 Arguments endpoint_act {_ _ _} _ {P Q} _ _.
 Arguments endpoint_dact {I C A F} c _ {P Q} _ _ _.
 Arguments endpoint_dact_compute {_ _ _} _ _ _ {P Q} _ _ _ _.
+
+Arguments endpoint_rank {_} _ {_ _} _ _.
 
 (* A HIT signature is specified by point constructors and path constructors.
 
@@ -230,6 +249,11 @@ Structure hit_signature := {
   sig_path_lhs : forall i, endpoint sig_point (sig_path_param i) poly_var ;
   sig_path_rhs : forall i, endpoint sig_point (sig_path_param i) poly_var
 }.
+
+(* A HIT signature has rank [n] if all of its endpoints do. *)
+Definition hit_rank Σ n :=
+  (forall j, endpoint_rank (sig_point Σ) (sig_path_lhs Σ j) n) *
+  (forall j, endpoint_rank (sig_point Σ) (sig_path_rhs Σ j) n).
 
 (* Example: propositional truncation *)
 Definition trunc_signature (A : Type) :=
