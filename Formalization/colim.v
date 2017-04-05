@@ -171,3 +171,108 @@ apply BiInv_CC_A.
 Qed.
 
 End ColimConst.
+
+
+(*
+Colimits as coequalizers of sums
+*)
+Module Export ColimAsCoeq.
+
+Parameter G : graph.
+Parameter D : diagram G.
+
+Definition C1 := sigT (diagram0 D).
+Definition B := sigT (fun i : G => D i * sigT (fun j : G => G i j)).
+
+Definition g1 (x : B) : C1.
+Proof.
+destruct x as (i, y).
+destruct y as (x, _).
+exists i.
+apply x.
+Defined.
+
+Definition g2 (x : B) : C1.
+Proof.
+destruct x as (i, y).
+destruct y as (x, z).
+destruct z as (j, g).
+exists j.
+apply (diagram1 D g x).
+Defined.
+
+Definition C : Type0 := Coeq g1 g2.
+Definition H : Type0 := colimit D.
+
+Definition CToH : C -> H.
+Proof.
+simple refine (Coeq_rec _ _ _).
+- unfold C1.
+  intro y.
+  destruct y as (x, z).
+  unfold H.
+  apply (colim x z).
+- intros.
+  destruct b as (i, x).
+  destruct x as (x, y).
+  destruct y as (j, g).
+  simpl.
+  apply (colimp i j g x)^.
+Defined.
+
+Definition HToC : H -> C.
+Proof.
+simple refine (colimit_rec _ _).
+simple refine (Build_cocone _ _).
+- intros i x.
+  apply coeq.
+  exists i.
+  apply x.
+- intros.
+  simpl.
+  pose (@cp B C1 g1 g2).
+  unfold B in p.
+  apply (p (existT _ i (x, existT _ j g)))^.
+Defined.
+
+Theorem CToHEq :
+  forall (x : C), HToC(CToH x) = x.
+Proof.
+simple refine (Coeq_ind _ _ _).
+- intros.
+  destruct a as [i x].
+  reflexivity.
+- intros.
+  destruct b as [i z].
+  destruct z as [x z].
+  destruct z as [j g].
+  rewrite @HoTT.Types.Paths.transport_paths_FlFr.
+  rewrite ap_idmap.
+  rewrite ap_compose.
+  rewrite concat_p1.
+  rewrite Coeq_rec_beta_cp.
+  rewrite ap_V.
+  rewrite inv_V.
+  rewrite colimit_rec_beta_colimp.
+  hott_simpl.
+Defined.
+
+Theorem HToCEq :
+  forall (x : H), CToH(HToC x) = x.
+Proof.
+simple refine (colimit_ind _ _ _).
+- intros.
+  reflexivity.
+- intros.
+  rewrite @HoTT.Types.Paths.transport_paths_FlFr.
+  rewrite ap_idmap.
+  rewrite ap_compose.
+  rewrite concat_p1.
+  rewrite colimit_rec_beta_colimp.
+  cbn.
+  rewrite ap_V.
+  rewrite Coeq_rec_beta_cp.
+  hott_simpl.
+Defined.
+
+End ColimAsCoeq.
