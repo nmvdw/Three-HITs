@@ -172,9 +172,167 @@ Qed.
 
 End ColimConst.
 
+(* The colimit of the sum of two diagrams is the sum of the colimit of the diagrams.
+   We show this for arbitrary diagrams.
+*)
+Section ColimSum.
 
-(*
-Colimits as coequalizers of sums
+Parameter G : graph.
+Parameter D1 : diagram G.
+Parameter D2 : diagram G.
+
+(* The sum diagram *)
+Definition DS : diagram G.
+Proof.
+simple refine (Build_diagram _ _ _).
+- intro x.
+  apply (diagram0 D1 x + diagram0 D2 x).
+- cbn.
+  intros i j g x.
+  destruct x as [y| z].
+  * left.
+    apply (diagram1 D1 g y).
+  * right.
+    apply (diagram1 D2 g z).
+Defined.
+
+Definition colim_S : colimit DS -> colimit D1 + colimit D2.
+Proof.
+simple refine (colimit_rec _ _).
+simple refine (Build_cocone _ _).
+- cbn.
+  intros i x.
+  destruct x as [y| z].
+  * left.
+    apply (colim i).
+    apply y.
+  * right.
+    apply (colim i).
+    apply z.
+- cbn.
+  intros.
+  destruct x.
+  * apply (ap inl (colimp i j g d)).
+  * apply (ap inr (colimp i j g d)).
+Defined.
+
+Definition S_colim : colimit D1 + colimit D2 -> colimit DS.
+Proof.
+intro x.
+destruct x as [y| z].
+- simple refine (colimit_rec _ _ y).
+  simple refine (Build_cocone _ _).
+  * intros.
+    apply (colim i).
+    cbn.
+    left.
+    apply X.
+  * cbn.
+    intros.
+    pose (inl x : DS i).
+    apply (colimp i j g d).
+- simple refine (colimit_rec _ _ z).
+  simple refine (Build_cocone _ _).
+  * intros.
+    apply (colim i).
+    right.
+    apply X.
+  * cbn.
+    intros.
+    pose (inr x : DS i).
+    apply (colimp i j g d).
+Defined.
+
+Theorem S_iso_1 : forall x : colimit D1 + colimit D2,
+  colim_S(S_colim x) = x.
+Proof.
+destruct x as [y | y].
+- simple refine (@colimit_ind G D1 (fun x : colimit D1 => colim_S (S_colim (inl x)) = inl x) _ _ _).
+  * intros.
+    cbn.
+    reflexivity.
+  * cbn.
+    intros.
+    rewrite @HoTT.Types.Paths.transport_paths_FlFr.
+    rewrite ap_compose.
+    rewrite colimit_rec_beta_colimp.
+    cbn.
+    rewrite concat_p1.
+    unfold colim_S.
+    pose (z := inl x : DS i).
+    assert (ap colim_S (colimp i j g z) = ap inl (colimp i j g x)).
+      apply colimit_rec_beta_colimp.
+
+      rewrite X.
+      apply concat_Vp.
+- simple refine (@colimit_ind G D2 (fun x : colimit D2 => colim_S (S_colim (inr x)) = inr x) _ _ _).
+  * reflexivity.
+  * cbn.
+    intros.
+    rewrite @HoTT.Types.Paths.transport_paths_FlFr.
+    rewrite ap_compose.
+    rewrite concat_p1.
+    rewrite colimit_rec_beta_colimp.
+    pose (z := inr x : DS i).
+    assert (ap colim_S (colimp i j g z) = ap inr (colimp i j g x)).
+      apply colimit_rec_beta_colimp.
+
+      rewrite X.
+      apply concat_Vp.
+Qed.
+
+Theorem S_iso_2 : forall x : colimit DS,
+  S_colim(colim_S x) = x.
+Proof.
+simple refine (colimit_ind _ _ _); cbn.
+- intros.
+  destruct x as [y| z]; reflexivity.
+- intros.
+  rewrite @HoTT.Types.Paths.transport_paths_FlFr.
+  rewrite ap_idmap.
+  rewrite ap_compose.
+  destruct x as [y | y]; rewrite concat_p1.
+  * pose (z := inl y : DS i).
+    assert (ap colim_S (colimp i j g z) = ap inl (colimp i j g y)).
+      apply colimit_rec_beta_colimp.
+
+      rewrite X.
+      rewrite <- (ap_compose inl).
+      cbn.
+      rewrite colimit_rec_beta_colimp.
+      cbn.
+      hott_simpl.
+  * pose (z := inr y : DS i).
+    assert (ap colim_S (colimp i j g z) = ap inr (colimp i j g y)).
+      apply colimit_rec_beta_colimp.
+
+      rewrite X.
+      rewrite <- (ap_compose inr).
+      cbn.
+      rewrite colimit_rec_beta_colimp.
+      hott_simpl.
+Qed.
+
+Theorem BiInv_colim_S : BiInv colim_S.
+Proof.
+split.
+- exists S_colim.
+  unfold Sect.
+  apply S_iso_2.
+- exists S_colim.
+  unfold Sect.
+  apply S_iso_1.
+Qed.
+
+Theorem Equiv_colim_S : IsEquiv colim_S.
+Proof.
+apply isequiv_biinv.
+apply BiInv_colim_S.
+Qed.
+End ColimSum.
+
+(* Colimits as coequalizers of sums.
+   Again we do it for arbitrary diagrams.
 *)
 Module Export ColimAsCoeq.
 
@@ -274,5 +432,22 @@ simple refine (colimit_ind _ _ _).
   rewrite Coeq_rec_beta_cp.
   hott_simpl.
 Defined.
+
+Theorem BiInv_CToH : BiInv CToH.
+Proof.
+split.
+- exists HToC.
+  unfold Sect.
+  apply CToHEq.
+- exists HToC.
+  unfold Sect.
+  apply HToCEq.
+Qed.
+
+Theorem Equiv_CToH : IsEquiv CToH.
+Proof.
+apply isequiv_biinv.
+apply BiInv_CToH.
+Qed.
 
 End ColimAsCoeq.
