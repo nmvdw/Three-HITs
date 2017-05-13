@@ -40,8 +40,8 @@ Variable Σ : hit_signature.
 Variable X : nat -> Type.
 Variable ι : forall n, X n -> X (S n).
 
-Fixpoint endpoint_stage_act {P Q} (e : endpoint (sig_point Σ) P Q) (k : nat) :
-  poly_act Q (X k).
+Fixpoint endpoint_stage_act {P Q} (e : endpoint (sig_point Σ) P Q) :
+  forall k, poly_act Q (X k).
 Proof.
   simple refine (
            match e in endpoint _ P Q return poly_act Q (X k) with
