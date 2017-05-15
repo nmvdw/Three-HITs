@@ -50,6 +50,19 @@ Fixpoint poly_fam (P : polynomial) {A : Type} (B : A -> Type) :
                            end)
   end.
 
+Lemma poly_fam_const (P : polynomial) (A : Type) (B : Type) (u : poly_act P A) :
+  poly_fam P (fun _ => B) u = poly_act P B.
+Proof.
+  induction P.
+  - reflexivity.
+  - reflexivity.
+  - destruct u as [u1 u2].
+    simpl.
+    rewrite IHP1, IHP2.
+    reflexivity.
+  - destruct u as [u1|u2].
+    + simpl.
+
 (* The action of a polynomial on a dependent map. *)
 Fixpoint poly_dmap (P : polynomial) {A : Type} {B : A -> Type} (f : forall x, B x) {struct P} :
   forall u : poly_act P A, poly_fam P B u :=
