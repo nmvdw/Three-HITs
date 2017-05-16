@@ -71,7 +71,7 @@ Proof.
 Defined.
 
 (* The dependent action of an endpoint, this is used for
-   "lifting" the path constructors in the elimnation principle. *)
+   "lifting" the path constructors in the elimination principle. *)
 Fixpoint endpoint_dact
          {P Q : polynomial}
          (e : @endpoint P Q)
@@ -333,7 +333,6 @@ Definition path_over
     transport _ (p j x) (endpoint_dact c c' (sig_path_lhs Σ j) x h) =
     endpoint_dact c c' (sig_path_rhs Σ j) x h.
 
-
 (* It is tricky to phrase the computation rule for paths, so we phrase an auxiliary lemma
    that lets us construct the type of the path computation rule interactively. *)
 Definition hit_path_beta_eq
@@ -418,36 +417,52 @@ Structure HIT :=
   hit_path_beta :
     hit_path_beta_eq hit_carrier hit_point hit_path hit_ind hit_point_beta
 }.
+End HIT_Definition.
 
-(* The non-dependent version of a lift of a point constructor. *)
-Definition point_over
-  {H : Type} (* the carrier type *)
-  (A : Type) (* the target type *)
-  (c : forall i, poly_act (sig_point Σ i) H -> H) (* point constructors *)
-  (p : forall j u, endpoint_act c (sig_path_lhs Σ j) u =
-              endpoint_act c (sig_path_rhs Σ j) u) (* path constructors *)
-  :=
-  forall i (u : poly_act (sig_point Σ i) H), poly_fam (sig_point Σ i) F u -> F (c i u).
+Arguments hit_point {_ _} _ _.
+Arguments hit_path {_ _} _ _.
+Arguments hit_ind {_ _} _ _ _ _.
 
+Section HIT_Recursion.
+  (** The non-dependent recursion principle follows from the induction principle. *)
 
-(* The type of a lift of the path constructor [p] over a family [F]. *)
-Definition path_over
-  {H : Type}
-  {F : H -> Type}
-  {c : forall i, poly_act (sig_point Σ i) H -> H} (* point constructors *)
-  {p : forall j u, endpoint_act c (sig_path_lhs Σ j) u =
-              endpoint_act c (sig_path_rhs Σ j) u} (* path constructors *)
-  (c' : point_over F c p)
-  :=
-  forall j
-    (x : poly_act (sig_path_param Σ j) H)
-    (h : poly_fam (sig_path_param Σ j) F x),
-    transport _ (p j x) (endpoint_dact c c' (sig_path_lhs Σ j) x h) =
-    endpoint_dact c c' (sig_path_rhs Σ j) x h.
+  Variable Σ : hit_signature. (* The HIT signature. *)
 
+  (** We give a special name to [endpoint_dact] appllied to a constant family.
+      To be used for the non-dependent recursion principle. *)
+  Definition endpoint_dact_nondep
+             {I : Type} {C : I -> polynomial} {A : Type} {B : Type}
+             (c : forall i : I, poly_act (C i) A -> A)
+             {f : forall i (u : poly_act (C i) A), poly_fam (C i) (fun _ => B) u -> B}
+             {P Q : polynomial} (e : endpoint C P Q) (x : poly_act P A) (h : poly_fam P (fun _ => B) x) :=
+    @endpoint_dact I C A (fun _ => B) c f P Q e x h.
 
-(* The non-dependent recursion principle follows from the induction principle. *)
+  (* The non-dependent version of a lift of a point constructor, to be used in the
+     non-dependent recursion principle. *)
+  Definition point_over_nondep
+             {H : Type} (* the carrier type *)
+             (A : Type) (* the target type *)
+             (c : forall i, poly_act (sig_point Σ i) H -> H) (* point constructors *)
+             (p : forall j u, endpoint_act c (sig_path_lhs Σ j) u =
+                         endpoint_act c (sig_path_rhs Σ j) u) (* path constructors *)
+    :=
+      forall i (u : poly_act (sig_point Σ i) H), poly_fam (sig_point Σ i) (fun _ => A) u -> A.
 
+  (* The non-dependet version of a lift of a path constructor, to be used in the
+     non-dependent recursion principle. *)
+  Definition path_over_nondep
+             {H : Type} (* the carrier type *)
+             (A : Type) (* the target type *)
+             {c : forall i, poly_act (sig_point Σ i) H -> H} (* point constructors *)
+             {p : forall j u, endpoint_act c (sig_path_lhs Σ j) u =
+                         endpoint_act c (sig_path_rhs Σ j) u} (* path constructors *)
+             (c' : point_over_nondep A c p)
+    :=
+      forall j
+        (x : poly_act (sig_path_param Σ j) H)
+        (h : poly_fam (sig_path_param Σ j) (fun _ => A) x),
+        transport _ (p j x) (endpoint_dact_nondep c c' (sig_path_lhs Σ j) x h) =
+        endpoint_dact_nondep c c' (sig_path_rhs Σ j) x h.
 
 Theorem hit_rec (H : HIT) :
   forall (A : Type)
@@ -456,9 +471,4 @@ Theorem hit_rec (H : HIT) :
                           endpoint_act (hit_point H) (sig_path_rhs Σ j) u)
          (
   True.
-End HIT_Definition.
-
-Arguments hit_point {_ _} _ _.
-Arguments hit_path {_ _} _ _.
-Arguments hit_ind {_ _} _ _ _ _.
-
+End HIT_Recursion.
