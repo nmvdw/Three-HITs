@@ -433,7 +433,7 @@ Section HIT_Recursion.
   Definition endpoint_dact_nondep
              {I : Type} {C : I -> polynomial} {A : Type} {B : Type}
              (c : forall i : I, poly_act (C i) A -> A)
-             {f : forall i (u : poly_act (C i) A), poly_fam (C i) (fun _ => B) u -> B}
+             (f : forall i (u : poly_act (C i) A), poly_fam (C i) (fun _ => B) u -> B)
              {P Q : polynomial} (e : endpoint C P Q) (x : poly_act P A) (h : poly_fam P (fun _ => B) x) :=
     @endpoint_dact I C A (fun _ => B) c f P Q e x h.
 
@@ -464,11 +464,14 @@ Section HIT_Recursion.
         transport _ (p j x) (endpoint_dact_nondep c c' (sig_path_lhs Σ j) x h) =
         endpoint_dact_nondep c c' (sig_path_rhs Σ j) x h.
 
-Theorem hit_rec (H : HIT) :
+Theorem hit_rec (H : HIT Σ) :
   forall (A : Type)
-         (c : forall i, poly_act (sig_point Σ i) A -> A)
-         (p : forall j u, endpoint_act (hit_point H) (sig_path_lhs Σ j) u =
-                          endpoint_act (hit_point H) (sig_path_rhs Σ j) u)
-         (
-  True.
+      (c : point_over_nondep A (@hit_point _ H) hit_path)
+      (p : path_over_nondep A c),
+      H -> A.
+Proof.
+  intros A c p x.
+  apply (hit_ind (fun _ => A) c p x).
+Defined.
+
 End HIT_Recursion.
