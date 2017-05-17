@@ -2,9 +2,9 @@
    kinds of HITs do. *)
 
 Require Import HoTT.
+Require Import HoTT.Pointed.
 Require Import polynomial.
 Require Import hit_structure.
-Require Import colim.
 
 (* An auxiliary definition of finite set. *)
 Definition fin (n : nat) := {i : nat & i <= n}.
@@ -14,6 +14,7 @@ Definition fin (n : nat) := {i : nat & i <= n}.
    [X 0 -> X 1 -> ... -> X m]
 
    with transitions [ι_k : X k -> X (k + 1)], approximating the hit for [Σ].
+   We call such a sequence a *finite telescope*.
 
    We may then extend the sequence by one more level of approximation
 
@@ -30,39 +31,39 @@ Definition fin (n : nat) := {i : nat & i <= n}.
      * paths from [Σ], with endpoints of paths interpreted suitably in the previous stages [X i].
      * 2D-paths expressing the fact that the path constructors commute with the inclusions [ι_m].
 
-  We formalize this idea here, as follows. First, we can extend the finite diagram above so that
-  it has infinitely many empty types on the left:
-
-  [... -> Empty -> Empty -> Empty -> X 0 -> X 1 -> ... -> X m]
-
-  This is convenient because then we do not have to worry about the depth of nesting of the point
-  constructors. It is not important which stages are the "artificially" added [Empty] types, so
-  consider the general form od the diagram:
-
-  [ ... -> Y 3 -> Y 2 -> Y 1 -> Y 0 ]
-
-  For one step of the construction we extend this with a new stage [Z 0] on the right
-
-  [ ... -> Y 3 -> Y 2 -> Y 1 -> Y 0 -> Z 0]
-
-  and reindex [Y n] as [Z (n+1)] to obtain
-
-  [ ... -> Z 4 -> Z 3 -> Z 2 -> Z 1 -> Z 0]
-
-  Then, to get the actual telescope, we start with the diagram
-
-  [ ... -> Empty -> Empty -> Empty ]
-
-  and iterate the above construction to obtain the stages of the telescope.
+  We formalize this idea here.
 *)
 
 Section TelescopeStage.
-(* Construction of the diagram [Z] from the diagram [Y], see above. *)
+(* Construction of [X (m+1)] from the diagram [X 0 -> ... -> X m], see above. *)
 
 Variable Σ : hit_signature.
 
-(* The diagram which we would like to extend on the right by one more stage. *)
-Variable Y : nat -> Type.
+(* The type of a finite telescope. We will actually always start a telescope with the [Empty] type. *)
+Record FiniteTelescope : Type := {
+  tele_tip : Type ;
+  tele_rec : option { t : FiniteTelescope & tele_tip t -> tele_tip }
+}.
+
+Inductive FiniteTelescope : Type := {
+}.
+  | ocular : Type -> FiniteTelescope
+  | tip : 
+
+with Stage : Type :=
+  | 
+
+  tele_length : nat ;
+  tele_type :> fin tele_length -> Type ;
+  tele_incl : forall i, tele_type i -> tele_type (S i)
+}.
+  match n with
+  | 0 => Empty
+  | S n => { T : FiniteTelescope n & { X : Type 
+  end.
+
+
+Variable X : nat -> Type.
 Variable ι : forall n, Y (S n) -> Y n.
 
 (* Let us explain the next construction via an example. Suppose we have a binary
