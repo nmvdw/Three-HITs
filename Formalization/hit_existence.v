@@ -6,7 +6,7 @@ Require Import polynomial.
 Require Import hit_structure.
 Require Import colim.
 
-(* An auxiliary definition. *)
+(* An auxiliary definition of finite set. *)
 Definition fin (n : nat) := {i : nat & i <= n}.
 
 (* Suppose we have a finite sequence
@@ -27,18 +27,64 @@ Definition fin (n : nat) := {i : nat & i <= n}.
        [X m] and giving values in [X (m+1)]
 
    - path constructors:
-     * paths from [Σ], with endpoints of paths interpreted
-       suitably in the previous stages [X i].
-     * 2D-paths expressing the fact that the path constructors
-       commute with the inclusions [ι_m].
+     * paths from [Σ], with endpoints of paths interpreted suitably in the previous stages [X i].
+     * 2D-paths expressing the fact that the path constructors commute with the inclusions [ι_m].
 
-  We formalize this idea in the section. *)
+  We formalize this idea here, as follows. First, we can extend the finite diagram above so that
+  it has infinitely many empty types on the left:
+
+  [... -> Empty -> Empty -> Empty -> X 0 -> X 1 -> ... -> X m]
+
+  This is convenient because then we do not have to worry about the depth of nesting of the point
+  constructors. It is not important which stages are the "artificially" added [Empty] types, so
+  consider the general form od the diagram:
+
+  [ ... -> Y 3 -> Y 2 -> Y 1 -> Y 0 ]
+
+  For one step of the construction we extend this with a new stage [Z 0] on the right
+
+  [ ... -> Y 3 -> Y 2 -> Y 1 -> Y 0 -> Z 0]
+
+  and reindex [Y n] as [Z (n+1)] to obtain
+
+  [ ... -> Z 4 -> Z 3 -> Z 2 -> Z 1 -> Z 0]
+
+  Then, to get the actual telescope, we start with the diagram
+
+  [ ... -> Empty -> Empty -> Empty ]
+
+  and iterate the above construction to obtain the stages of the telescope.
+*)
 
 Section TelescopeStage.
+(* Construction of the diagram [Z] from the diagram [Y], see above. *)
 
 Variable Σ : hit_signature.
-Variable X : nat -> Type.
-Variable ι : forall n, X n -> X (S n).
+
+(* The diagram which we would like to extend on the right by one more stage. *)
+Variable Y : nat -> Type.
+Variable ι : forall n, Y (S n) -> Y n.
+
+(* Let us explain the next construction via an example. Suppose we have a binary
+   point constructor [c] and a path constructor expressing associativity:
+
+   [ assoc x y z : c (c (x, y), z) = c (x, c (y, z)) ]
+
+   The new stage [Z 0] is constructed as a HIT as follows. There are two kinds of points:
+
+     * inclusion of previous stage: for every [a : Y 0] there is [ ι a : Z 0]
+
+     * new points: for all [a b : Y 0] there is a point [c (a, b) : Z 0].
+
+   The path constructors are:
+
+     * various coherence equations expressing commutativity of inclusions [ι] and [c]
+
+     * associativity equations (read this carefully): for all [a : Y 0
+
+
+
+
 
 Fixpoint endpoint_stage_act {P Q} (e : endpoint (sig_point Σ) P Q) :
   forall k, poly_act Q (X k).
