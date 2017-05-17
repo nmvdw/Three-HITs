@@ -2,10 +2,6 @@ Require Import HoTT.
 
 Require Import polynomial.
 
-Axiom cheating : forall A : Type, A.
-Ltac todo := apply cheating.
-Axiom magic : forall A B, A -> B.
-
 Section Endpoints.
 (* The definition of a HIT signature and a HIT for the signature. *)
 
