@@ -25,6 +25,20 @@ Proof.
   - intros _ [].
 Defined.
 
+(* The usual recursion principle for numbers is indeed just `hit_rec`. *)
+Lemma nat_rec (A : Type) : A -> (nat -> A -> A) -> nat -> A.
+Proof.
+  intros x f n.
+  (* we just have to collect [x] and [f] in suitable form as a [point_over_nondep]. *)
+  assert (c' : point_over_nondep _ A (@hit_point _ nat_hit) hit_path).
+  { intros [|].
+    - intros _ _ ; exact x.
+    - exact f. }
+  apply (@hit_rec _ nat_hit A c').
+  - intros [].
+  - exact n.
+Defined.
+
 (* Example: the HoTT library circle is a HIT *)
 Definition circle_hit : HIT circle_signature.
 Proof.
@@ -63,4 +77,3 @@ Proof.
     simpl in *.
     apply Susp_ind_beta_merid with (x := a).
 Defined.
-

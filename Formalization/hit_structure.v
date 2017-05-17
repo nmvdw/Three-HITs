@@ -471,3 +471,5 @@ Proof.
 Defined.
 
 End HIT_Recursion.
+
+Arguments hit_rec {_ _ _} _ _ _.
