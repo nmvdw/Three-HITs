@@ -104,9 +104,9 @@ Defined.
 The colimit of F(X) = A is A.
 Lemma 10 in paper.
 *)
-Section ColimConst.
+Module ColimConst.
 
-Variable A : Type.
+Parameter A : Type.
 Definition c_fam := fun (_ : nat) => A.
 Definition c_map := fun (_ : nat) => fun (x : A) => x.
 
@@ -175,7 +175,7 @@ End ColimConst.
 (* The colimit of the sum of two diagrams is the sum of the colimit of the diagrams.
    We show this for arbitrary diagrams.
 *)
-Section ColimSum.
+Module ColimSum.
 
 Parameter G : graph.
 Parameter D1 : diagram G.
@@ -330,6 +330,47 @@ apply isequiv_biinv.
 apply BiInv_colim_S.
 Qed.
 End ColimSum.
+
+Module ColimProd.
+
+Parameter F G : nat -> Type.
+Parameter f : forall n, F n -> F(S n).
+Parameter g : forall n, G n -> G(S n).
+
+Definition DiagProd (n : nat) : Type := prod (F n) (G n).
+Definition DiagMap (n : nat) (x : DiagProd n) : DiagProd (S n) :=
+  match x with
+  | pair fst snd => pair (f n fst) (g n snd)
+  end.
+Definition product := prod (colim_N F f) (colim_N G g).
+
+Definition colimTot : Type.
+Proof.
+simple refine (colim_N _ _).
+- intro i.
+  simple refine (colim_N _ _).
+  * intro j.
+    apply (prod (F i) (G j)).
+  * apply (fun n => fun p =>
+      match p with
+      | pair x y => pair x (g n y)
+      end).
+- intro n ; cbn.
+  simple refine (colim_N_rec _ _ _ _ _) ; cbn.  
+  * intros m p.
+    simple refine (inc _ _ _ _).
+    apply m.
+    destruct p as [x y] ; cbn.
+    apply (pair (f n x) y).
+  * intros m [x y].
+    symmetry.
+    rewrite <- com.
+    reflexivity.
+Defined.
+  
+End ColimProd.
+
+
 
 (* Colimits as coequalizers of sums.
    Again we do it for arbitrary diagrams.
