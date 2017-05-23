@@ -104,9 +104,9 @@ Defined.
 The colimit of F(X) = A is A.
 Lemma 10 in paper.
 *)
-Section ColimConst.
+Module ColimConst.
 
-Variable A : Type.
+Parameter A : Type.
 Definition c_fam := fun (_ : nat) => A.
 Definition c_map := fun (_ : nat) => fun (x : A) => x.
 
@@ -175,7 +175,7 @@ End ColimConst.
 (* The colimit of the sum of two diagrams is the sum of the colimit of the diagrams.
    We show this for arbitrary diagrams.
 *)
-Section ColimSum.
+Module ColimSum.
 
 Parameter G : graph.
 Parameter D1 : diagram G.
@@ -330,6 +330,104 @@ apply isequiv_biinv.
 apply BiInv_colim_S.
 Qed.
 End ColimSum.
+
+Module ColimProd.
+
+Parameter F G : nat -> Type.
+Parameter f : forall n, F n -> F(S n).
+Parameter g : forall n, G n -> G(S n).
+
+Definition DiagProd (n : nat) : Type := prod (F n) (G n).
+Definition DiagMap (n : nat) (x : DiagProd n) : DiagProd (S n) :=
+  match x with
+  | pair fst snd => pair (f n fst) (g n snd)
+  end.
+Definition product := prod (colim_N F f) (colim_N G g).
+
+Definition column (i : nat) : Type :=
+  colim_N
+    (fun j => prod (F i) (G j))
+    (fun j => fun x => match x with
+                       | pair x y => pair x (g j y)
+                       end).
+
+Definition colimTot : Type.
+Proof.
+simple refine (colim_N (fun i => column i) _).
+- intro n.
+  simple refine (colim_N_rec _ _ _ _ _).  
+  * intros m p.
+    simple refine (inc _ _ m (match p with
+                              | pair x y => pair (f n x) y
+                              end)).
+  * intros m [x y].
+    apply
+      (com
+         (fun j : nat => F n.+1 * G j)
+         (fun (n0 : nat) (p : F n.+1 * G n0) =>
+            (let (fst, _) := p in fst, g n0 (let (_, snd) := p in snd)))
+         m
+         (pair (f n x) y)).
+Defined.
+
+Definition colimDiag : Type :=
+  colim_N
+    (fun i => prod (F i) (G i))
+    (fun i => fun x => match x with
+                       | pair fst snd => pair (f i fst) (g i snd)
+                       end).
+
+Definition colimH : Type.
+Proof.
+apply (colim_N (fun i => prod (F i) (colim_N G g))).
+simple refine (fun i => fun x => match _ with | pair fst snd => pair (f i fst) snd end).
+apply x.
+Defined.
+
+(*
+Follows from is_colimit_prod
+colim_i colim_j (F i * G j) = colim_i (F i * (colim_j G j)) 
+*)
+Theorem TotToH : colimTot -> colimH.
+Proof.
+  admit.
+Admitted.
+
+(*
+Follows from is_colimit_prod
+colim_i (F i * colim_j G j) = colim_i (F i) * colim_j (G j)
+*)
+Theorem HToProd : colimH -> product.
+Proof.
+  admit.
+Admitted.
+
+Theorem DiagToTot : colimDiag -> colimTot.
+Proof.
+simple refine (colim_N_rec _ _ _ _ _).
+- intros i [x y].
+  simple refine (inc _ _ i _).
+  cbn.
+  simple refine (inc _ _ i (pair x y)).
+- intros n [x y].
+  compute.
+  admit.
+Admitted.
+
+Theorem TotToDiag : colimTot -> colimDiag.
+Proof.
+simple refine (colim_N_rec _ _ _ _ _) ; cbn.  
+- intro n.
+  simple refine (colim_N_rec _ _ _ _ _).
+  *  intros m [x y].
+     simple refine (inc _ _ (max n m) _).
+     cbn.
+     admit.
+     
+  
+End ColimProd.
+
+
 
 (* Colimits as coequalizers of sums.
    Again we do it for arbitrary diagrams.
