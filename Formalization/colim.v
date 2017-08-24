@@ -18,7 +18,299 @@ Require Import HoTT.HIT.Colimits.
 
 (* In order to nicely work with colimits over the natural numbers, we want to abbreviate some principles.
    These principles are closer to what was written in the paper, and follow from the more general rules.
+ *)
+
+(* Colimits as coequalizers of sums.
+   Again we do it for arbitrary diagrams.
 *)
+Section ColimAsCoeq.
+
+  Variable (G : graph) (D : diagram G).
+
+  Definition C1 := sigT (diagram0 D).
+  Definition B := sigT (fun i : G => D i * sigT (fun j : G => G i j)).
+
+  Definition g1 (x : B) : C1 :=
+    match x with
+    | (i;(x,_)) => (i;x)
+    end.
+
+  Definition g2 (x : B) : C1 :=
+    match x with
+    | (_;(x,(j;g))) => (j;diagram1 D g x)
+    end.
+
+  Definition C : Type := Coeq g1 g2.
+  Definition H : Type := colimit D.
+
+  Definition CToH : C -> H.
+  Proof.
+    simple refine (Coeq_rec _ _ _).
+    - intros [x z].
+      apply (colim x z).
+    - intros [i [x [j g]]].
+      apply (colimp i j g x)^.
+  Defined.
+
+  Definition HToC : H -> C.
+  Proof.
+    simple refine (colimit_rec _ _).
+    simple refine (Build_cocone _ _).
+    - intros i x.
+      apply (coeq(i;x)).
+    - intros i j g x.
+      apply (@cp B C1 g1 g2 (i;(x,(j;g))))^.
+  Defined.
+
+  Global Instance CToH_equiv : IsEquiv CToH.
+  Proof.
+    apply isequiv_biinv.
+    split ; refine (HToC;_).
+    - simple refine (Coeq_ind _ _ _).
+      * intros.
+        reflexivity.
+      * intros [i [x [j g]]].
+        rewrite transport_paths_FlFr.
+        rewrite ap_idmap.
+        rewrite ap_compose.
+        rewrite concat_p1.
+        rewrite Coeq_rec_beta_cp.
+        rewrite ap_V.
+        rewrite inv_V.
+        rewrite colimit_rec_beta_colimp.
+        hott_simpl.
+    - simple refine (colimit_ind _ _ _).
+      * intros.
+        reflexivity.
+      * intros.
+        rewrite transport_paths_FlFr.
+        rewrite ap_idmap.
+        rewrite ap_compose.
+        rewrite concat_p1.
+        rewrite colimit_rec_beta_colimp.
+        simpl.
+        rewrite ap_V.
+        rewrite Coeq_rec_beta_cp.
+        hott_simpl.
+  Defined.
+
+End ColimAsCoeq.
+
+(*
+The colimit of F(X) = A is A.
+Lemma 10 in paper.
+*)
+Section ColimConst.
+
+  Variable A : Type.
+  
+  Definition ConstantD : diagram mappingtelescope_graph :=
+    Build_sequence (fun _ => A) (fun _ => idmap).
+
+  Definition Constant := colimit ConstantD.
+
+  (* colim A id -> A
+     Defined by F(n) -> A as id.
+   *)
+  Definition ConstantToA :
+    Constant -> A.
+  Proof.
+    simple refine (colimit_rec A (Build_cocone _ _)).
+    - apply (fun _ => idmap).
+    - intros i j [ ] x.
+      reflexivity.
+  Defined.
+
+  Definition AToConstant (a : A) : Constant.
+  Proof.
+    simple refine (colim _ _).
+    - apply 0.
+    - apply a.
+  Defined.
+
+  Definition AToConstantToA (x : A) :
+    ConstantToA (AToConstant x) = x := idpath.
+
+  Definition ConstantToAToConstant :
+    forall (x : Constant), AToConstant (ConstantToA x) = x.
+  Proof.
+    simple refine (colimit_ind _ _ _).
+    - intros n x.
+      induction n.
+      * reflexivity.
+      * apply
+          (  IHn _
+               @
+               (@colimp mappingtelescope_graph ConstantD n (n.+1) idpath x)^
+          ).
+    - intros.
+      destruct g.
+      refine (transport_paths_FlFr (@colimp mappingtelescope_graph ConstantD i _ _ x) _ @ _).
+      refine (ap (fun p => _ @ p) (ap_idmap (colimp _ _ _ _)) @ _).
+      refine (ap (fun q => ((q^ @ _) @ _)) (ap_compose ConstantToA _ (colimp _ _ _ _)) @ _).
+      refine (ap (fun p => ((ap _ p)^ @ _) @ _) (colimit_rec_beta_colimp _ _ _ _ _ _) @ _).  
+      hott_simpl.
+  Defined.
+
+  Global Instance ConstantToA_equiv : IsEquiv ConstantToA.
+  Proof.
+    apply isequiv_biinv.
+    split ; exists AToConstant ; intro x.
+    - apply ConstantToAToConstant.
+    - apply AToConstantToA.
+  Defined.
+
+End ColimConst.
+
+(* The colimit of the sum of two diagrams is the sum of the colimit of the diagrams.
+   We show this for arbitrary diagrams.
+*)
+Section ColimSum.
+
+  Variable (G : graph)
+           (D1 D2 : diagram G).
+
+  (* The sum diagram *)
+
+  Definition SumD : diagram G :=
+    Build_diagram
+      G
+      (fun x => diagram0 D1 x + diagram0 D2 x)
+      (fun i j g x =>
+         match x with
+         | inl y => inl (diagram1 D1 g y)
+         | inr z => inr (diagram1 D2 g z)
+         end
+      ).
+  
+  Definition ColimitSum := colimit SumD.
+  Definition Sum := colimit D1 + colimit D2.
+
+  Definition ColimToSum : ColimitSum -> Sum.
+  Proof.
+    simple refine (colimit_rec _ _).
+    simple refine (Build_cocone _ _).
+    - intros i [y | z].
+      * apply (inl (colim i y)).
+      * apply (inr (colim i z)).
+    - intros i j g [d | d].
+      * apply (ap inl (colimp i j g d)).
+      * apply (ap inr (colimp i j g d)).
+  Defined.
+
+  Definition SumToColim (x : Sum) : ColimitSum.
+  Proof.
+    destruct x as [y | z].
+    - simple refine (colimit_rec _ _ y).
+      simple refine (Build_cocone _ _).
+      * intros.
+        apply (colim i).
+        simple refine (@inl _ _ X).
+      * intros.
+        apply (colimp i j g (inl x : SumD i)).
+    - simple refine (colimit_rec _ _ z).
+      simple refine (Build_cocone _ _).
+      * intros.
+        apply (colim i).
+        simple refine (@inr _ _ X).
+      * intros.
+        apply (colimp i j g (inr x : SumD i)).
+  Defined.
+
+  Lemma SumToColimToSum : forall x : Sum,
+      ColimToSum(SumToColim x) = x.
+  Proof.
+    destruct x as [y | y].
+    - simple refine
+             (@colimit_ind _ _
+               (fun x : colimit D1 => ColimToSum (SumToColim (inl x)) = inl x) _ _ _
+             ).
+      * apply (fun _ _ => idpath).
+      * intros.
+        rewrite transport_paths_FlFr.
+        rewrite ap_compose.
+        rewrite colimit_rec_beta_colimp.
+        rewrite concat_p1.
+        pose (z := inl x : SumD i).
+        assert (ap ColimToSum (colimp i j g z) = ap inl (colimp i j g x)).
+        apply colimit_rec_beta_colimp.
+
+        rewrite X.
+        apply concat_Vp.
+    - simple refine (@colimit_ind G D2 (fun x : colimit D2 => ColimToSum (SumToColim (inr x)) = inr x) _ _ _).
+      * reflexivity.
+      * cbn.
+        intros.
+        rewrite transport_paths_FlFr.
+        rewrite ap_compose.
+        rewrite concat_p1.
+        rewrite colimit_rec_beta_colimp.
+        pose (z := inr x : SumD i).
+        assert (ap ColimToSum (colimp i j g z) = ap inr (colimp i j g x)).
+        apply colimit_rec_beta_colimp.
+
+        rewrite X.
+        apply concat_Vp.
+  Qed.
+
+  Theorem ColimToSumToColim : forall x : ColimitSum,
+      SumToColim(ColimToSum x) = x.
+  Proof.
+    simple refine (colimit_ind _ _ _); cbn.
+    - intros.
+      destruct x as [y| z]; reflexivity.
+    - intros.
+      etransitivity.
+      {
+        simple refine (transport_paths_FlFr (colimp _ _ _ _) _).
+      }
+      etransitivity.
+      {
+        simple refine (ap (fun p => _ @ p) (ap_idmap _)).
+      }
+      etransitivity.
+      {
+        simple refine (ap (fun p => (p^ @ _) @ _) (ap_compose ColimToSum SumToColim (colimp _ _ _ _))).
+      }  
+      destruct x as [y | y]; rewrite concat_p1.
+      * pose (z := inl y : SumD i).
+        assert (ap ColimToSum (colimp i j g z) = ap inl (colimp i j g y)).
+        apply colimit_rec_beta_colimp.
+
+        rewrite X.
+        rewrite <- (ap_compose inl).
+        cbn.
+        rewrite colimit_rec_beta_colimp.
+        cbn.
+        hott_simpl.
+      * pose (z := inr y : SumD i).
+        assert (ap ColimToSum (colimp i j g z) = ap inr (colimp i j g y)).
+        apply colimit_rec_beta_colimp.
+
+        rewrite X.
+        rewrite <- (ap_compose inr).
+        cbn.
+        rewrite colimit_rec_beta_colimp.
+        hott_simpl.
+  Qed.
+
+  Theorem BiInv_ColimToSum : BiInv ColimToSum.
+  Proof.
+    split.
+    - exists SumToColim.
+      unfold Sect.
+      apply ColimToSumToColim.
+    - exists SumToColim.
+      unfold Sect.
+      apply SumToColimToSum.
+  Qed.
+
+  Theorem Equiv_ColimToSum : IsEquiv ColimToSum.
+  Proof.
+    apply isequiv_biinv.
+    apply BiInv_ColimToSum.
+  Qed.
+End ColimSum.
 
 Definition colim_N (F : nat -> Type) (f : forall n : nat, F n -> F(S n)) : Type :=
   colimit (Build_sequence F f).
@@ -100,289 +392,50 @@ simple refine (colimit_ind _ _ _) ; cbn.
   apply Pc.
 Defined.
 
-(*
-The colimit of F(X) = A is A.
-Lemma 10 in paper.
-*)
-Module ColimConst.
-
-Parameter A : Type.
-Definition c_fam := fun (_ : nat) => A.
-Definition c_map := fun (_ : nat) => fun (x : A) => x.
-
-(*
-colim A id -> A
-Defined by F(n) -> A as id.
-*)
-Definition CC_A :
-  colim_N c_fam c_map -> A.
-Proof.
-Proof.
-simple refine (colim_N_rec _ _ _ _ _).
-- intro n.
-  apply idmap.
-- cbn.
-  intros.
-  reflexivity.
-Defined.
-
-Definition A_CC (a : A) : colim_N c_fam c_map :=
-  inc c_fam c_map 0 a.
-
-Definition iso_CC_A (x : A) :
-  CC_A (A_CC x) = x := reflexivity x.
-
-Definition iso_A_CC :
-  forall (x : colim_N c_fam c_map), A_CC (CC_A x) = x.
-Proof.
-simple refine (colim_N_ind _ _ _ _ _).
-- cbn.
-  intros n x.
-  induction n.
-  * reflexivity.
-  * apply (IHn x @ (com c_fam c_map n x)^).
-- cbn.
-  intros.
-  rewrite @HoTT.Types.Paths.transport_paths_FlFr.
-  rewrite ap_compose.
-  rewrite ap_idmap.
-  hott_simpl.
-  rewrite ap_V.
-  unfold CC_A.
-  rewrite (colim_N_rec_beta_com A c_fam c_map).
-  hott_simpl.
-Defined.
-
-Theorem BiInv_CC_A : BiInv CC_A.
-Proof.
-split.
-- exists A_CC.
-  unfold Sect.
-  apply iso_A_CC.
-- exists A_CC.
-  unfold Sect.
-  apply iso_CC_A.
-Qed.
-
-Theorem Equiv_CC_A : IsEquiv CC_A.
-Proof.
-apply isequiv_biinv.
-apply BiInv_CC_A.
-Qed.
-
-End ColimConst.
-
-(* The colimit of the sum of two diagrams is the sum of the colimit of the diagrams.
-   We show this for arbitrary diagrams.
-*)
-Module ColimSum.
-
-Parameter G : graph.
-Parameter D1 : diagram G.
-Parameter D2 : diagram G.
-
-(* The sum diagram *)
-Definition DS : diagram G.
-Proof.
-simple refine (Build_diagram _ _ _).
-- intro x.
-  apply (diagram0 D1 x + diagram0 D2 x).
-- cbn.
-  intros i j g x.
-  destruct x as [y| z].
-  * left.
-    apply (diagram1 D1 g y).
-  * right.
-    apply (diagram1 D2 g z).
-Defined.
-
-Definition colim_S : colimit DS -> colimit D1 + colimit D2.
-Proof.
-simple refine (colimit_rec _ _).
-simple refine (Build_cocone _ _).
-- cbn.
-  intros i x.
-  destruct x as [y| z].
-  * left.
-    apply (colim i).
-    apply y.
-  * right.
-    apply (colim i).
-    apply z.
-- cbn.
-  intros.
-  destruct x.
-  * apply (ap inl (colimp i j g d)).
-  * apply (ap inr (colimp i j g d)).
-Defined.
-
-Definition S_colim : colimit D1 + colimit D2 -> colimit DS.
-Proof.
-intro x.
-destruct x as [y| z].
-- simple refine (colimit_rec _ _ y).
-  simple refine (Build_cocone _ _).
-  * intros.
-    apply (colim i).
-    cbn.
-    left.
-    apply X.
-  * cbn.
-    intros.
-    pose (inl x : DS i).
-    apply (colimp i j g d).
-- simple refine (colimit_rec _ _ z).
-  simple refine (Build_cocone _ _).
-  * intros.
-    apply (colim i).
-    right.
-    apply X.
-  * cbn.
-    intros.
-    pose (inr x : DS i).
-    apply (colimp i j g d).
-Defined.
-
-Theorem S_iso_1 : forall x : colimit D1 + colimit D2,
-  colim_S(S_colim x) = x.
-Proof.
-destruct x as [y | y].
-- simple refine (@colimit_ind G D1 (fun x : colimit D1 => colim_S (S_colim (inl x)) = inl x) _ _ _).
-  * intros.
-    cbn.
-    reflexivity.
-  * cbn.
-    intros.
-    rewrite @HoTT.Types.Paths.transport_paths_FlFr.
-    rewrite ap_compose.
-    rewrite colimit_rec_beta_colimp.
-    cbn.
-    rewrite concat_p1.
-    unfold colim_S.
-    pose (z := inl x : DS i).
-    assert (ap colim_S (colimp i j g z) = ap inl (colimp i j g x)).
-      apply colimit_rec_beta_colimp.
-
-      rewrite X.
-      apply concat_Vp.
-- simple refine (@colimit_ind G D2 (fun x : colimit D2 => colim_S (S_colim (inr x)) = inr x) _ _ _).
-  * reflexivity.
-  * cbn.
-    intros.
-    rewrite @HoTT.Types.Paths.transport_paths_FlFr.
-    rewrite ap_compose.
-    rewrite concat_p1.
-    rewrite colimit_rec_beta_colimp.
-    pose (z := inr x : DS i).
-    assert (ap colim_S (colimp i j g z) = ap inr (colimp i j g x)).
-      apply colimit_rec_beta_colimp.
-
-      rewrite X.
-      apply concat_Vp.
-Qed.
-
-Theorem S_iso_2 : forall x : colimit DS,
-  S_colim(colim_S x) = x.
-Proof.
-simple refine (colimit_ind _ _ _); cbn.
-- intros.
-  destruct x as [y| z]; reflexivity.
-- intros.
-  rewrite @HoTT.Types.Paths.transport_paths_FlFr.
-  rewrite ap_idmap.
-  rewrite ap_compose.
-  destruct x as [y | y]; rewrite concat_p1.
-  * pose (z := inl y : DS i).
-    assert (ap colim_S (colimp i j g z) = ap inl (colimp i j g y)).
-      apply colimit_rec_beta_colimp.
-
-      rewrite X.
-      rewrite <- (ap_compose inl).
-      cbn.
-      rewrite colimit_rec_beta_colimp.
-      cbn.
-      hott_simpl.
-  * pose (z := inr y : DS i).
-    assert (ap colim_S (colimp i j g z) = ap inr (colimp i j g y)).
-      apply colimit_rec_beta_colimp.
-
-      rewrite X.
-      rewrite <- (ap_compose inr).
-      cbn.
-      rewrite colimit_rec_beta_colimp.
-      hott_simpl.
-Qed.
-
-Theorem BiInv_colim_S : BiInv colim_S.
-Proof.
-split.
-- exists S_colim.
-  unfold Sect.
-  apply S_iso_2.
-- exists S_colim.
-  unfold Sect.
-  apply S_iso_1.
-Qed.
-
-Theorem Equiv_colim_S : IsEquiv colim_S.
-Proof.
-apply isequiv_biinv.
-apply BiInv_colim_S.
-Qed.
-End ColimSum.
-
 Module ColimProd.
 
 Parameter F G : nat -> Type.
 Parameter f : forall n, F n -> F(S n).
 Parameter g : forall n, G n -> G(S n).
+(*
+Definition colimProd := prod (colim_N F f) (colim_N G g).
 
-Definition DiagProd (n : nat) : Type := prod (F n) (G n).
-Definition DiagMap (n : nat) (x : DiagProd n) : DiagProd (S n) :=
+Definition DiagObj (i : nat) : Type := prod (F i) (G i).
+Definition DiagMap (i : nat) (x : DiagObj i) :=
   match x with
-  | pair fst snd => pair (f n fst) (g n snd)
+  | pair fst snd => pair (f i fst) (g i snd)
   end.
-Definition product := prod (colim_N F f) (colim_N G g).
+Definition colimDiag : Type := colim_N DiagObj DiagMap.
 
-Definition column (i : nat) : Type :=
-  colim_N
-    (fun j => prod (F i) (G j))
-    (fun j => fun x => match x with
-                       | pair x y => pair x (g j y)
-                       end).
-
-Definition colimTot : Type.
+Definition HObj (i : nat) : Type := prod (F i) (colim_N G g).
+Definition HMap (i : nat) (x : HObj i) : HObj (S i).
 Proof.
-simple refine (colim_N (fun i => column i) _).
-- intro n.
-  simple refine (colim_N_rec _ _ _ _ _).  
-  * intros m p.
-    simple refine (inc _ _ m (match p with
-                              | pair x y => pair (f n x) y
-                              end)).
-  * intros m [x y].
-    apply
-      (com
-         (fun j : nat => F n.+1 * G j)
-         (fun (n0 : nat) (p : F n.+1 * G n0) =>
-            (let (fst, _) := p in fst, g n0 (let (_, snd) := p in snd)))
-         m
-         (pair (f n x) y)).
+destruct x.
+apply (pair (f i fst) snd).
 Defined.
 
-Definition colimDiag : Type :=
-  colim_N
-    (fun i => prod (F i) (G i))
-    (fun i => fun x => match x with
-                       | pair fst snd => pair (f i fst) (g i snd)
-                       end).
-
-Definition colimH : Type.
+Definition TotObj (i j : nat) := prod (F i) (G j).
+Definition TotMap (i j : nat) (x : TotObj i j) : TotObj i (S j).
 Proof.
-apply (colim_N (fun i => prod (F i) (colim_N G g))).
-simple refine (fun i => fun x => match _ with | pair fst snd => pair (f i fst) snd end).
-apply x.
+destruct x.
+apply (pair fst (g j snd)). 
 Defined.
+Definition column (i : nat) := colim_N (TotObj i) (TotMap i).
+
+Definition columnMap (i : nat) : column i -> column (S i).
+Proof.
+simple refine (colim_N_rec (column (S i)) (TotObj i) (TotMap i) _ _).
+- intros j [x y].
+  simple refine (inc _ _ j (pair (f i x) y)).
+- intros j [x y]. 
+  apply (com (TotObj i.+1) (TotMap i.+1) j (pair (f i x) y)).
+Defined.  
+
+Definition colimTot := colim_N column columnMap.
+
+Lemma kek (i : nat) : column i -> HObj i.
+Proof.
+  
 
 (*
 Follows from is_colimit_prod
@@ -423,129 +476,6 @@ simple refine (colim_N_rec _ _ _ _ _) ; cbn.
      simple refine (inc _ _ (max n m) _).
      cbn.
      admit.
-     
-  
-End ColimProd.
-
-
-
-(* Colimits as coequalizers of sums.
-   Again we do it for arbitrary diagrams.
+Admitted.
 *)
-Module Export ColimAsCoeq.
-
-Parameter G : graph.
-Parameter D : diagram G.
-
-Definition C1 := sigT (diagram0 D).
-Definition B := sigT (fun i : G => D i * sigT (fun j : G => G i j)).
-
-Definition g1 (x : B) : C1.
-Proof.
-destruct x as (i, y).
-destruct y as (x, _).
-exists i.
-apply x.
-Defined.
-
-Definition g2 (x : B) : C1.
-Proof.
-destruct x as (i, y).
-destruct y as (x, z).
-destruct z as (j, g).
-exists j.
-apply (diagram1 D g x).
-Defined.
-
-Definition C : Type0 := Coeq g1 g2.
-Definition H : Type0 := colimit D.
-
-Definition CToH : C -> H.
-Proof.
-simple refine (Coeq_rec _ _ _).
-- unfold C1.
-  intro y.
-  destruct y as (x, z).
-  unfold H.
-  apply (colim x z).
-- intros.
-  destruct b as (i, x).
-  destruct x as (x, y).
-  destruct y as (j, g).
-  simpl.
-  apply (colimp i j g x)^.
-Defined.
-
-Definition HToC : H -> C.
-Proof.
-simple refine (colimit_rec _ _).
-simple refine (Build_cocone _ _).
-- intros i x.
-  apply coeq.
-  exists i.
-  apply x.
-- intros.
-  simpl.
-  pose (@cp B C1 g1 g2).
-  unfold B in p.
-  apply (p (existT _ i (x, existT _ j g)))^.
-Defined.
-
-Theorem CToHEq :
-  forall (x : C), HToC(CToH x) = x.
-Proof.
-simple refine (Coeq_ind _ _ _).
-- intros.
-  destruct a as [i x].
-  reflexivity.
-- intros.
-  destruct b as [i z].
-  destruct z as [x z].
-  destruct z as [j g].
-  rewrite @HoTT.Types.Paths.transport_paths_FlFr.
-  rewrite ap_idmap.
-  rewrite ap_compose.
-  rewrite concat_p1.
-  rewrite Coeq_rec_beta_cp.
-  rewrite ap_V.
-  rewrite inv_V.
-  rewrite colimit_rec_beta_colimp.
-  hott_simpl.
-Defined.
-
-Theorem HToCEq :
-  forall (x : H), CToH(HToC x) = x.
-Proof.
-simple refine (colimit_ind _ _ _).
-- intros.
-  reflexivity.
-- intros.
-  rewrite @HoTT.Types.Paths.transport_paths_FlFr.
-  rewrite ap_idmap.
-  rewrite ap_compose.
-  rewrite concat_p1.
-  rewrite colimit_rec_beta_colimp.
-  cbn.
-  rewrite ap_V.
-  rewrite Coeq_rec_beta_cp.
-  hott_simpl.
-Defined.
-
-Theorem BiInv_CToH : BiInv CToH.
-Proof.
-split.
-- exists HToC.
-  unfold Sect.
-  apply CToHEq.
-- exists HToC.
-  unfold Sect.
-  apply HToCEq.
-Qed.
-
-Theorem Equiv_CToH : IsEquiv CToH.
-Proof.
-apply isequiv_biinv.
-apply BiInv_CToH.
-Qed.
-
-End ColimAsCoeq.
+End ColimProd.

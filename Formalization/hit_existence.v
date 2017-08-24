@@ -39,10 +39,12 @@ Section TelescopeStage.
 
 Variable Σ : hit_signature.
 
-(* The type of a finite telescope. We will actually always start a telescope with the [Empty] type. *)
+(* The type of a finite telescope. We will actually always start a telescope with the [Empty] type. 
+ *)
+(*
 Record FiniteTelescope : Type := {
   tele_tip : Type ;
-  tele_rec : option { t : FiniteTelescope & tele_tip t -> tele_tip }
+  tele_rec : option { t : FiniteTelescope & tele_tip -> tele_tip }
 }.
 
 Inductive FiniteTelescope : Type := {
@@ -61,10 +63,12 @@ with Stage : Type :=
   | 0 => Empty
   | S n => { T : FiniteTelescope n & { X : Type 
   end.
+*)
 
-
+(*
 Variable X : nat -> Type.
 Variable ι : forall n, Y (S n) -> Y n.
+*)
 
 (* Let us explain the next construction via an example. Suppose we have a binary
    point constructor [c] and a path constructor expressing associativity:
@@ -278,3 +282,5 @@ Proof.
      be quite a bit more technically involved. *)
   admit.
 Admitted.
+ *)
+End TelescopeStage.

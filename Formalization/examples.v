@@ -9,11 +9,11 @@ Definition nat_hit : HIT nat_signature.
 Proof.
   simple refine {| hit_carrier := nat |}.
 
-  - intros [ | ].
+  - intros [ | ]; cbn.
     + intros _ ; exact 0.
     + exact S.
 
-  - intro i ; elim i.
+  - intros i ; elim i.
 
   - intros F c p x.
     induction x as [| n y].
@@ -26,17 +26,16 @@ Proof.
 Defined.
 
 (* The usual recursion principle for numbers is indeed just `hit_rec`. *)
-Lemma nat_rec (A : Type) : A -> (nat -> A -> A) -> nat -> A.
+Lemma nat_rec (A : Type) : A -> (A -> A) -> nat -> A.
 Proof.
-  intros x f n.
+  intros x f.
   (* we just have to collect [x] and [f] in suitable form as a [point_over_nondep]. *)
   assert (c' : point_over_nondep _ A (@hit_point _ nat_hit) hit_path).
   { intros [|].
     - intros _ _ ; exact x.
-    - exact f. }
+    - cbn. intros _. exact f. }
   apply (@hit_rec _ nat_hit A c').
   - intros [].
-  - exact n.
 Defined.
 
 (* Example: the HoTT library circle is a HIT *)
@@ -76,4 +75,39 @@ Proof.
   - intros F [] c p [] a.
     simpl in *.
     apply Susp_ind_beta_merid with (x := a).
+Defined.
+
+Lemma circle_po (A : Type) (a : A) : point_over_nondep _ A (@hit_point _ circle_hit) hit_path.
+Proof.
+unfold point_over_nondep.
+intros.
+apply a.
+Defined.
+
+Lemma circle_rec (A : Type) : forall (x : A), x = x -> S1 -> A.
+Proof.
+intros a p.
+assert (p' : path_over_nondep circle_signature A (circle_po A a)).
+{
+  intros l.
+  cbn in *.
+  intros.
+  etransitivity.
+  { apply transport_const. }
+  compute.
+  apply p.
+}
+apply (@hit_rec _ circle_hit A (circle_po A a)).
+- apply p'.
+Defined.
+
+Lemma circle_rec_beta_loop (A : Type) (x : A) (p : x = x) :
+  ap (circle_rec A x p) (@hit_path circle_signature circle_hit tt tt) = p.
+Proof.
+unfold circle_rec.
+unfold hit_rec.
+eapply (cancelL (transport_const (@hit_path circle_signature circle_hit tt tt) _)).
+simple refine ((apD_const _ _)^ @ _).
+apply hit_path_beta.
+apply tt.
 Defined.
