@@ -6,6 +6,7 @@ Require Import polynomial.
 Require Import hit_structure.
 Require Import HoTT.HIT.Colimits.
 Require Import colim.
+Require Import pcoeq.
 
 Section hit_existence.
   Variable (Σ : hit_signature).
@@ -270,29 +271,36 @@ Section hit_existence.
     (* We have `P`, `Q` and `R` such that we can interpret constructors in `P` and `Q` with arguments from `Q` and `R` respectively.
        Also, a coherency condition is required to relate the step data.
      *)
-    Structure coherent_step_data (P Q R : Type) :=
+    Structure coherent_step_data (S P Q R : Type) :=
       {
+        HSP : step_data S P ;
         HPQ : step_data P Q ;
         HQR : step_data Q R ;
-        coh_pt : forall (x : Hcon (n.+1) R),
+        coh_pt_PQ : forall (x : Hcon (n.+1) R),
             coh_pt_l HPQ HQR x = coh_pt_r HPQ HQR x ;
+        coh_pt_SP : forall (x : Hcon (n.+1) Q),
+            coh_pt_l HSP HPQ x = coh_pt_r HSP HPQ x ;
         coh_pth : forall (i : sig_path_index Σ) (x : poly_act (sig_path_param Σ i) R),
-            coh_pth_l HPQ HQR i coh_pt x = coh_pth_r HPQ HQR i x
+            ap (sd_i HSP) (coh_pth_l HPQ HQR i coh_pt_PQ x)
+            =
+            ap (sd_i HSP) (coh_pth_r HPQ HQR i x)
       }.
 
-    Arguments HPQ {_} {_} {_} _.
-    Arguments HQR {_} {_} {_} _.
-    Arguments coh_pt {_} {_} {_} _ _.
-    Arguments coh_pth {_} {_} {_} _ _ _.
+    Arguments HSP {_} {_} {_} {_} _.
+    Arguments HPQ {_} {_} {_} {_} _.
+    Arguments HQR {_} {_} {_} {_} _.
+    Arguments coh_pt_PQ {_} {_} {_} {_} _ _.
+    Arguments coh_pt_SP {_} {_} {_} {_} _ _.
+    Arguments coh_pth {_} {_} {_} {_} _ _ _.
 
     (* The coherency needed for the point introduction rule *)
-    Lemma point_coherency P Q R (C : coherent_step_data P Q R)
+    Lemma point_coherency S P Q R (C : coherent_step_data S P Q R)
           (i : sig_point_index Σ) (x : poly_act (sig_point Σ i) R)
       : (constrH (HPQ C)) (Hcon_constr i (poly_map (sig_point Σ i) ((constrH (HQR C)) o inl) x))
         =
         (constrH (HPQ C)) (inl ((constrH (HQR C)) (Hcon_constr i x))).
     Proof.
-      pose (coh_pt C) as coh_pt'.
+      pose (coh_pt_PQ C) as coh_pt'.
       unfold coh_pt_l, coh_pt_r in coh_pt'.
       rewrite <- coh_pt'.
       simpl.
@@ -316,8 +324,8 @@ Section hit_existence.
         := (constrH Hstep) (Hcon_constr i x).           
 
       Definition sd_p_cone
-                 {P Q R : Type}
-                 (Hstep : coherent_step_data P Q R)
+                 {P Q R S : Type}
+                 (Hstep : coherent_step_data S P Q R)
                  (x : poly_act (sig_point Σ i) R)
         : sd_p_c (HPQ Hstep) (poly_map (sig_point Σ i) (sd_i (HQR Hstep)) x)
           =
@@ -331,23 +339,26 @@ Section hit_existence.
       From `coherent_step_data` we can make a cone for the path introduction rule.
     *)
     Section path_cone.
-      Definition sd_pt_c (i : sig_path_index Σ) {P Q : Type} (Hstep : step_data P Q)
+      Variable (i : sig_path_index Σ).
+      
+      Definition sd_pt_c {P Q : Type} (Hstep : step_data P Q)
                  (x : poly_act (sig_path_param Σ i) Q)
       : interpret_endpoint_all (sig_path_lhs Σ i) ((fst H) i) (constrH Hstep) x
         =
         interpret_endpoint_all (sig_path_rhs Σ i) ((snd H) i) (constrH Hstep) x
         := path Hstep i x.
-
-      Variable (i : sig_path_index Σ) (P Q R : Type)
-                 (Hstep : coherent_step_data P Q R)
-                 (x : poly_act (sig_path_param Σ i) R). 
       
-      Definition sd_pth_cone
-        : q1 (HPQ Hstep) (HQR Hstep) i (coh_pt Hstep) x
-             @ ap (sd_i (HPQ Hstep)) (sd_pt_c i (HQR Hstep) x)
-             @ q2 (HPQ Hstep) (HQR Hstep) i (coh_pt Hstep) x
+      Definition sd_pth_cone {P Q R S : Type}
+                 (Hstep : coherent_step_data S P Q R)
+                 (x : poly_act (sig_path_param Σ i) R) 
+        : ap (sd_i (HSP Hstep))
+             (q1 (HPQ Hstep) (HQR Hstep) i (coh_pt_PQ Hstep) x
+             @ ap (sd_i (HPQ Hstep)) (sd_pt_c (HQR Hstep) x)
+             @ q2 (HPQ Hstep) (HQR Hstep) i (coh_pt_PQ Hstep) x)
           =
-          sd_pt_c i (HPQ Hstep) (poly_map (sig_path_param Σ i) (sd_i (HQR Hstep)) x).
+          ap
+            (sd_i (HSP Hstep))
+            (sd_pt_c (HPQ Hstep) (poly_map (sig_path_param Σ i) (sd_i (HQR Hstep)) x)).
       Proof.
         apply coh_pth.
       Defined.
@@ -358,9 +369,16 @@ Section hit_existence.
 
   Arguments constrH {_} {_} {_} {_} _ _.
   Arguments path {_} {_} {_} {_} _ _ _.
-  Arguments HPQ {_} {_} {_} {_} {_} _.
-  Arguments HQR {_} {_} {_} {_} {_} _.
-  Arguments coh_pt {_} {_} {_} {_} {_} _ _.
+  Arguments HPQ {_} {_} {_} {_} {_} {_} _.
+  Arguments HQR {_} {_} {_} {_} {_} {_} _.
+  Arguments coh_pt_PQ {_} {_} {_} {_} {_} _ _.
+  Arguments coh_pt_SP {_} {_} {_} {_} {_} _ _.
+  Arguments q1 {_} {_} {_} _ _ _ _ _.
+  Arguments q2 {_} {_} {_} _ _ _ _ _.
+  Arguments coh_pt_l _ _ {_} {_} {_}.
+  Arguments coh_pt_r _ _ {_} {_} {_}.
+  Arguments coh_pth_l _ _ {_} {_} {_} _ _ _ _ _.
+  Arguments coh_pth_r _ _ {_} {_} {_} _ _ _ _.
 
   (*
     In order to build the approximating sequence, we need to be able to build add coherent step data.
@@ -368,63 +386,94 @@ Section hit_existence.
     This is done with a coequalizer.
     Secondly, we show how to make coherent step data.
   *)
+  Section approximator.
+    Variable (n : nat) (H : hit_rank Σ (S n))
+             (P Q R : Type)
+             (HsPQ : step_data n H P Q)
+             (HsQR : step_data n H Q R)
+             (coh_pt_PQR : forall (x : Hcon (n.+1) R),
+            coh_pt_l n H HsPQ HsQR x = coh_pt_r n H HsPQ HsQR x).
+
+    (* First we add the path constructors to `Hcon (n.+1) Q` with a coequalizer. *)
+    Definition params : Type
+      := {i : sig_path_index Σ & poly_act (sig_path_param Σ i) P}.
+
+    Definition path_1 (y : params) : Hcon (n.+1) P
+      := interpret_endpoint (sig_path_lhs Σ y.1) (fst H y.1) y.2.
+
+    Definition path_2 (y : params) : Hcon (n.+1) P
+      := interpret_endpoint (sig_path_rhs Σ y.1) (snd H y.1) y.2.
+
+    Definition add_paths : Type :=
+      Coeq path_1 path_2.
+
+    (* This gives `step data` *)
+    Definition HsSP1 : step_data n H add_paths P
+      := {|constrH := coeq ; path := fun i x => cp (i;x)|}.
+    
+    (* Next we add the coherencies for the points *)
+    Definition add_pt_coherencies : Type
+      := Coeq (coh_pt_l n H HsSP1 HsPQ) (coh_pt_r n H HsSP1 HsPQ).
+
+    Definition HsSP2 : step_data n H add_pt_coherencies P.
+    Proof.      
+      simple refine {|constrH := coeq o (constrH HsSP1) ; path := _|}.
+      intros.
+      refine (ap coeq (@cp _ _ path_1 path_2 (i;x))).
+    Defined.    
+
+    (* Next we add coherencies for the paths *)
+
+    Definition path_coherencies : {i : sig_path_index Σ & poly_act (sig_path_param Σ i) R} ->
+      {b1 : add_pt_coherencies & {b2 : add_pt_coherencies & (b1 = b2) * (b1 = b2)}}.
+    Proof.
+      intros [i x].
+      refine (_;(_;(_,_))).
+      - refine (ap (sd_i n H HsSP2) (coh_pth_l n H HsPQ HsQR i _ x)).
+        intros.
+        apply coh_pt_PQR.
+      - refine (ap (sd_i n H HsSP2) (coh_pth_r n H HsPQ HsQR i x)).
+    Defined.
+
+    Definition add_pth_coherencies : Type
+      := pcoeq path_coherencies.
+
+    Definition HsSP : step_data n H add_pth_coherencies P.
+    Proof.
+      simple refine {|constrH := inP _ o (constrH HsSP2) ; path := _|}.
+      intros.
+      refine (ap (inP _) (path HsSP2 i x)).
+    Defined.
+    
+    Definition coherent_step_data_PSQR : coherent_step_data n H add_pth_coherencies P Q R.
+    Proof.
+      simple refine {|HSP := HsSP ; HPQ := HsPQ ; HQR := HsQR ; coh_pt_PQ := coh_pt_PQR ;
+                      coh_pt_SP := _ ; coh_pth := _|}.
+      - intros.
+        refine (ap (inP _) _).
+        simple refine (@cp _ _ _ _ _).
+      - intros.
+        unfold sd_i, constrH.
+        simpl.
+        refine (ap_compose _ _ _ @ _).
+        refine (glueP path_coherencies (i;x) @ _).
+        refine (_ @ (ap_compose _ _ _)^).
+        reflexivity.
+    Defined.
+
+  End approximator.
+
   Section approximating_sequence.
     Variable (n : nat) (H : hit_rank Σ (S n)).
 
-    Definition params (Q : Type) : Type
-      := {i : sig_path_index Σ & poly_act (sig_path_param Σ i) Q}.
-
-    Definition path_1 (Q : Type) (y : params Q) : Hcon (n.+1) Q
-      := interpret_endpoint (sig_path_lhs Σ y.1) (fst H y.1) y.2.
-
-    Definition path_2 (Q : Type) (y : params Q) : Hcon (n.+1) Q
-      := interpret_endpoint (sig_path_rhs Σ y.1) (snd H y.1) y.2.
-
-    (* Add paths to Hcon *)
-    Definition ap_Hcon (Q : Type) : Type :=
-      Coeq (path_1 Q) (path_2 Q).
-        
-    Definition add_step (Q : Type) : {P : Type & step_data n H P Q}
-      := (ap_Hcon Q;{|constrH := coeq ; path := fun i x => cp (i;x)|}).
-
-    Definition coh_param (R Q : Type) : Type
-      := Hcon (n.+1) R.
-    
-    Definition coh_l {R Q : Type} (jR : Hcon (n.+1) R -> Q) (z : coh_param R Q)
-      : Hcon (n.+1) Q
-      := Hcon_map (n.+1) (jR o inl) z.
-
-    Definition coh_r {R Q : Type} (jR : Hcon (n.+1) R -> Q) (z : coh_param R Q)
-      : Hcon (n.+1) Q
-      := inl (jR z).
-
-    (* Adds coherencies ass well *)
-    Definition apc_Hcon (Q R : Type) (Hstep : step_data n H Q R) : Type
-      :=
-        @Coeq (coh_param R Q) (ap_Hcon Q)
-              (coeq o (coh_l (constrH Hstep)))
-              (coeq o (coh_r (constrH Hstep))).
-
-    Definition add_cstep (R Q : Type) (Hstep : step_data n H Q R)
-      : {P : Type & @coherent_step_data n H P Q R}.
-    Proof.
-      exists (apc_Hcon Q R Hstep).
-      simple refine {|HPQ := _ ; HQR := Hstep ; coh_pt := _|}.
-      - refine {|constrH := coeq o coeq ; path := _|}.
-        intros.
-        refine (ap coeq _).
-        apply (@cp _ _ (path_1 Q) (path_2 Q) (i;x)).
-      - intros x.
-        simple refine (@cp _ _ _ _ _).
-    Admitted.
-
     Definition approximating_sequence :=
-      {seq : nat -> Type & forall m, @coherent_step_data n H (seq (S(S m))) (seq (S m)) (seq m)}.
+      {seq : nat -> Type & forall m,
+                 coherent_step_data n H (seq (m.+3)) (seq (m.+2)) (seq (m.+1)) (seq m)}.
 
-    Definition approx_map (seq : approximating_sequence) (k : nat) : seq.1 k -> seq.1 (S k) :=
-      match seq with
-      | (seq;Hseq) => (constrH (HQR (Hseq k))) o Hcon_inA
-      end.
+    Definition approx_map (seq : approximating_sequence) (k : nat) : seq.1 k -> seq.1 (k.+1)
+      := match seq with
+         | (seq;Hseq) => (constrH (HQR (Hseq k))) o Hcon_inA
+         end.
 
     Definition approx_colimit (seq : approximating_sequence) :=
       colim_N (seq.1) (approx_map seq).
