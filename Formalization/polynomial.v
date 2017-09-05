@@ -37,6 +37,31 @@ Fixpoint poly_map (P : polynomial) {A B : Type} (f : A -> B) :
                            end)
   end.
 
+(* The action of a polynomial on a map is functorial. *)
+Definition poly_map_id (P : polynomial) {A : Type} (x : poly_act P A) :
+  poly_map P idmap x = x.
+Proof.
+  induction P ; simpl.
+  - reflexivity.
+  - reflexivity.
+  - apply (path_prod' (IHP1 _) (IHP2 _)).
+  - destruct x.
+    * apply (ap inl (IHP1 _)).
+    * apply (ap inr (IHP2 _)).
+Defined.
+
+Definition poly_map_compose (P : polynomial) {A B C : Type} (f : A -> B) (g : B -> C) (x : poly_act P A) :
+  poly_map P (g o f) x = poly_map P g (poly_map P f x).
+Proof.
+  induction P ; simpl.
+  - reflexivity.
+  - reflexivity.
+  - apply (path_prod' (IHP1 _) (IHP2 _)).
+  - destruct x.
+    * apply (ap inl (IHP1 _)).
+    * apply (ap inr (IHP2 _)).
+Defined.
+
 (* The action of a polynomial on a type family. *)
 Fixpoint poly_fam (P : polynomial) {A : Type} (B : A -> Type) :
   poly_act P A -> Type :=
