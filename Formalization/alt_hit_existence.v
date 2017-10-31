@@ -5,24 +5,22 @@ Require Import HoTT.HIT.Colimits.
 Require Import colim.
 Require Import pcoeq.
 
-(* We formulate the main theorem, which states that all HITs exist, provided that several
-   kinds of HITs do.
-   We assume function extensionality.
-   More precisely, we need to prove
+(* We formulate the main theorem, which states that all signatures have a HIT provided that several HITs do.
+   We assume function extensionality, which we use to prove
    `inc seq constr_seq_map n.+2
     =
     inc seq constr_seq_map n.+3 o constr_seq_map n.+2`
-   This requires function extensionality since `com` only gives the equality for the point.
-   Function extensionality can be avoided by using 'strong colimit' where the path `com` has the type `forall n, inc n = inc n.+1 o f n`.
+   This requires function extensionality since `com` only gives the equality for all points.
+   Function extensionality can be avoided by using 'strong colimits' where the path `com` has the type `forall n, inc n = inc n.+1 o f n`.
 *)
 Section hit_existence.
   Context `{Funext}.
   Variable (Σ : hit_signature).
   
-  (* To build the approximating sequence, we first need to be able to construct types in which the constructor terms can be interpreted.
-     For the Three-HITs theorem we assume all endpoints have at most depth `n`.
+  (* To build the approximating sequence, we first need to be able to construct types in which the endpoints can be interpreted.
+     For the Three-HITs theorem we assume all endpoints have at most depth `n`, so it suffices to interpret endpoints of depth `n`.
      We first define a type `Hcon A n` in which endpoints of depth `n` with parameters in `A` can be interpreted.
-     In addition we show that whenever we have a map `Hcon A n -> B`, then we can interpret endpoints of depth `n` with parameters in `A` in `B` as well.
+     In addition we show that whenever we have a map `Hcon A n -> B`, then in `B`, we can interpret endpoints of depth `n` with parameters from `A` as well.
   *)
   Section add_constructors.
     Fixpoint Hcon (n : nat) (A : Type) : Type :=
@@ -39,7 +37,7 @@ Section hit_existence.
            fun x =>
              match x with
              | inl x => inl(f x)
-             | inr (i;x) => inr(i;poly_map _ (Hcon_map n f) x)
+             | inr (i;x) => inr(i;poly_map (sig_point Σ i) (Hcon_map n f) x)
              end
          end.
 
@@ -55,7 +53,7 @@ Section hit_existence.
                {A : Type} {n : nat}
                (i : sig_point_index Σ) (x : poly_act (sig_point Σ i) A)
       : Hcon (n.+1) A
-      := inr(i;poly_map _ Hcon_inA x).
+      := inr(i;poly_map (sig_point Σ i) Hcon_inA x).
 
     (* Intepretation of constructors in `Hcon (n.+1)` with arguments from `Hcon n A` *)
     Definition Hcon_C
@@ -149,15 +147,16 @@ Section hit_existence.
       : h ((g o Hcon_inA) (interpret_endpoint_all e H f x))
         =
         h (interpret_endpoint_all e H g (poly_map P (f o Hcon_inA) x))
-      := coh _ @ ap h (ap g (interpret_natural e _ _ _)^).
+      := coh (interpret_endpoint e H x)
+             @ ap h (ap g (interpret_natural e H (f o Hcon_inA) x)^).
 
     (* Coherency relating `Hcon_inA` and `Hcon_map` *)
-    Definition coherency_map_in {Q R : Type} n (f : Hcon (n.+1) R -> Q) x :
+    Definition coherency_map_in {Q R : Type} n (f : Hcon (n.+1) R -> Q) (x : R) :
       Hcon_inA (f (inl x)) = Hcon_map n (fun z : R => f (inl z)) (Hcon_inA x)
       := match n with
-       | 0 => reflexivity _
-       | S n => idpath
-       end.
+         | 0 => reflexivity _
+         | S n => idpath
+         end.
   End add_constructors.
 
   (* Now let us assume the HIT has a certain rank `r.+1`. *)
@@ -167,7 +166,7 @@ Section hit_existence.
      At every stage new constructors are added.
      For the path constructors, we need to be able to use constructor terms and that is where `Hcon` comes into play.
      This leads to the notion of `step_data`.
-     However, to guarantee the colimit is indeed a HIT for `Σ`, this needs to be added in a coherent way.
+     However, to guarantee the colimit is indeed a HIT for `Σ`, the constructors needs to be added in a coherent way.
      We give several invariants which can directly be used to prove the colimit satisfies the requirements for being a HIT for `Σ`.
      To make the development more modular, we use type classes for the invariants.
   *)
@@ -179,7 +178,8 @@ Section hit_existence.
     Class step_data (P Q : Type) :=
       {
         constrH : Hcon (r.+1) Q -> P ;
-        path : forall (i : sig_path_index Σ) (x : poly_act (sig_path_param Σ i) Q),
+        path : forall (i : sig_path_index Σ)
+                      (x : poly_act (sig_path_param Σ i) Q),
             interpret_endpoint_all (sig_path_lhs Σ i) (fst H i) constrH x
             =
             interpret_endpoint_all (sig_path_rhs Σ i) (snd H i) constrH x
@@ -196,7 +196,7 @@ Section hit_existence.
     Variable (seq : nat -> Type).
     Context `{constr_seq seq}.
 
-    (* In order to take the colimit, we need to have maps `F n -> F(n.+1)`.
+    (* In order to take the colimit, we need maps `F n -> F(n.+1)`.
        These can be built from `step_data`.
        This is the composition `F n -> Hcon (F n) -> F(n.+1)`.
        The first map is the inclusion `Hcon_inA` and the second map `constrH`.
@@ -211,16 +211,18 @@ Section hit_existence.
     (* Now we define a candidate for the HIT. *)
     Definition colim_constr_seq := colim_N seq constr_seq_map.
 
-    (* From `step_data`, we can define the point and path constructors. *)
-    Definition point_constr (n : nat) (i : sig_point_index Σ)
+    (* From `step_data`, we define the point and path constructors. *)
+    Definition point_constr
+               (n : nat) (i : sig_point_index Σ)
                (x : poly_act (sig_point Σ i) (seq n))
       := constrH (constr n) (Hcon_constr i x).
 
-    Definition path_constr (n : nat) (i : sig_path_index Σ)
+    Definition path_constr
+               (n : nat) (i : sig_path_index Σ)
                (x : poly_act (sig_path_param Σ i) (seq n))
-      : (interpret_endpoint_all (sig_path_lhs Σ i) (fst H i) (constrH (constr n)) x)
+      : interpret_endpoint_all (sig_path_lhs Σ i) (fst H i) (constrH (constr n)) x
         =
-        (interpret_endpoint_all (sig_path_rhs Σ i) (snd H i) (constrH (constr n)) x)
+        interpret_endpoint_all (sig_path_rhs Σ i) (snd H i) (constrH (constr n)) x
       := path (constr n) i x.
 
     (* Next we need to show this type is indeed a HIT for `Σ`.
@@ -248,6 +250,7 @@ Section hit_existence.
               pt_coh_left n i x = pt_coh_right n i x.
 
       (* If we want to talk about path constructors, we first need to be able to interpret endpoints in the type.
+          For the endpoints, the coherencies say that it does not matter whether we interpret it on level `n` or level `n+1`.
           This gives two extra coherencies: one for the left and one for the right.
           The endpoint coherencies are for all endpoints, so we take an arbitrary level `n`, index `i`, and parameter `x`. 
       *)
@@ -295,6 +298,9 @@ Section hit_existence.
       (* For the paths, we also need coherencies.
          To formulate these, we need that the sequence is `endpoint_coherent`.
          The coherency holds for arbitrary levels `n`, indices `i`, and parameters `x`.
+         Basically, this says that interpreting the path constructor on level `n` and `n+1` is the same.
+         However, the endpoints of the two paths are not definitionally equal, so we use the endpoint coherencies to compare them.
+         Furthermore, the paths are only required to be equal in the stage `n+2`, so we apply `ap (constr_seq_map n.+2)` to it.
       *)
       Section pth_intro_coh.
         Variable (n : nat) (i : sig_path_index Σ)
@@ -319,7 +325,7 @@ Section hit_existence.
           path_coherent_left n i x = path_coherent_right n i x.
     End coherencies.
 
-    (* If the sequence is `point_intro_coherent`, then we prove the introduction rule for the point constructor.
+    (* If the sequence is `point_intro_coherent`, then the introduction rule for the point constructor holds.
        We start by defining the sequence `point_constr_seq` which is `(sig_point Σ i)` applied to `seq n` at every level `n`.
        The point introduction rule maps from the colimit of this sequence to the colimit of the constructor sequence.
     *)
@@ -387,8 +393,9 @@ Section hit_existence.
 
       (* Move to colimit. *)
       (* Computation of `ap (inc F f (k.+1)) p`. *)
-      Definition ap_inc (F : nat -> Type) (f : forall n, F n -> F n.+1)
-            (k : nat) (x y : F k.+1) (p : x = y)
+      Definition ap_inc
+                 (F : nat -> Type) (f : forall n, F n -> F n.+1)
+                 (k : nat) (x y : F k.+1) (p : x = y)
         : (com F f (k.+1) x)^
           @ ap (inc F f (k.+2)) (ap (f (k.+1)) p)
             @ com F f (k.+1) y
@@ -399,7 +406,9 @@ Section hit_existence.
 
       (* Move to colimit. *)
       (* With functional extensionaltiy, `com` gives an equality of functions. *)
-      Definition strong_com (F : nat -> Type) (f : forall n, F n -> F(n.+1)) (k : nat)
+      Definition strong_com
+                 (F : nat -> Type) (f : forall n, F n -> F(n.+1))
+                 (k : nat)
         : inc F f k = inc F f k.+1 o f k
         := path_forall _ _ (fun z => (com F f k z)^).
 
@@ -425,9 +434,8 @@ Section hit_existence.
           rewrite concat_pp_p.
           f_ap ; f_ap.
           rewrite strong_com.
-          refine (ap_compose _ _ _ @ _^).
-          refine (ap_compose _ _ _ @ _^).
-          refine (ap _ _).
+          refine (ap_compose _ _ _ @ _).
+          refine (ap _ _ @ (ap_compose _ _ _)^).
           apply pth_coh.
       Defined.
     End pth_intro.
@@ -438,14 +446,14 @@ Section hit_existence.
   Arguments sd_i {_} {_}.
   
   (* An approximating sequence is thus a constructing sequence satisfying several invariants.
-     These invariants are coherencies and, beside adding constructors, we need to add coherencies during the construction.
+     These invariants are coherencies and thus, beside adding constructors, we need to add coherencies during the construction.
      This leads to the notion of `coherent_step_data`: this is `step_data` with some extra coherencies.
      From `coherent_step_data` we get all the required rules.
   *)
   Section coherent_step_data.
     (* Here we give the required coherencies for `coherent_step_data`. *)
     Section coherencies.
-      Variable (P Q R S : Type)
+      Variable (S P Q R : Type)
                (HSP : step_data S P) (HPQ : step_data P Q) (HQR : step_data Q R).
 
       (* Coherency for the points *)
@@ -462,13 +470,18 @@ Section hit_existence.
 
       (* Coherency for the endpoints*)
       Section endpoint_coherency.
-        Variable (i : sig_path_index Σ) (x : poly_act (sig_path_param Σ i) R).
+        Variable (i : sig_path_index Σ)
+                 (x : poly_act (sig_path_param Σ i) R).
         Context `{sd_pt_coh}.
         
         Definition sd_endpointl
           : sd_i
               HPQ
-              (interpret_endpoint_all (sig_path_lhs Σ i) (fst H i) (constrH HQR) x)
+              (interpret_endpoint_all
+                 (sig_path_lhs Σ i)
+                 (fst H i)
+                 (constrH HQR)
+                 x)
             =
             interpret_endpoint_all
               (sig_path_lhs Σ i)
@@ -484,7 +497,11 @@ Section hit_existence.
         Definition sd_endpointr
           : sd_i
               HPQ
-              (interpret_endpoint_all (sig_path_rhs Σ i) (snd H i) (constrH HQR) x)
+              (interpret_endpoint_all
+                 (sig_path_rhs Σ i)
+                 (snd H i)
+                 (constrH HQR)
+                 x)
             =
             interpret_endpoint_all
               (sig_path_rhs Σ i)
@@ -498,9 +515,11 @@ Section hit_existence.
             refine (ap _ (coh_pt _)^).
         Defined.
       End endpoint_coherency.
-      
+
+      (* Coherency for the paths. *)
       Section path_coherency.
-        Variable (i : sig_path_index Σ) (x : poly_act (sig_path_param Σ i) R).
+        Variable (i : sig_path_index Σ)
+                 (x : poly_act (sig_path_param Σ i) R).
         Context `{sd_pt_coh}.
 
         Definition coh_pth_l
@@ -509,7 +528,8 @@ Section hit_existence.
                    @ (path HPQ i (poly_map (sig_path_param Σ i) (sd_i HQR) x))
                    @ (sd_endpointr i x)^).
         
-        Definition coh_pth_r := ap (sd_i HSP) (ap (sd_i HPQ) (path HQR i x)).
+        Definition coh_pth_r
+          := ap (sd_i HSP) (ap (sd_i HPQ) (path HQR i x)).
       End path_coherency.
     End coherencies.
 
@@ -519,36 +539,42 @@ Section hit_existence.
 
     (* We have `S` `P`, `Q` and `R` such that we can interpret constructors in `S`, `P`, and `Q` with arguments from `P`, `Q`, and `R` respectively.
        Or, more briefly, we have `step_data S P`, `step_data P Q`, and `step_data Q R`.
-       We also need `sd_pt_coh HPQ HQR` to formulte the path coherency.
+       We also need `sd_pt_coh HPQ HQR` to formulate the path coherency.
      *)
     Class coherent_step_data
           {S P Q R : Type}
-          (HSP : step_data S P) (HPQ : step_data P Q) (HQR : step_data Q R)
+          (HSP : step_data S P)
+          (HPQ : step_data P Q)
+          (HQR : step_data Q R)
           {coh_pt : sd_pt_coh HPQ HQR}
-      := coh_pth : forall (i : sig_path_index Σ) (x : poly_act (sig_path_param Σ i) R),
-            coh_pth_l HSP HPQ HQR i x coh_pt = coh_pth_r HSP HPQ HQR i x.
+      := coh_pth :
+           forall (i : sig_path_index Σ)
+                  (x : poly_act (sig_path_param Σ i) R),
+             coh_pth_l HSP HPQ HQR i x coh_pt
+             =
+             coh_pth_r HSP HPQ HQR i x.
 
     Variable (S P Q R : Type)
-             (HSP : step_data S P) (HPQ : step_data P Q) (HQR : step_data Q R)
+             (HSP : step_data S P)
+             (HPQ : step_data P Q)
+             (HQR : step_data Q R)
              (coh_pt : sd_pt_coh HPQ HQR).
 
     (* The coherency needed for the point introduction rule *)
     Lemma point_coherency (C : coherent_step_data HSP HPQ HQR)
           (i : sig_point_index Σ) (x : poly_act (sig_point Σ i) R)
-      : (constrH HPQ) (Hcon_constr i (poly_map (sig_point Σ i) ((constrH HQR) o inl) x))
+      : (constrH HPQ)
+          (Hcon_constr i (poly_map (sig_point Σ i) ((constrH HQR) o inl) x))
         =
-        (constrH HPQ) (inl ((constrH HQR) (Hcon_constr i x))).
+        (constrH HPQ)
+          (inl ((constrH HQR) (Hcon_constr i x))).
     Proof.
       unfold sd_pt_coh, coh_pt_l, coh_pt_r in coh_pt.
       rewrite <- coh_pt.
       simpl.
       unfold Hcon_constr.
       repeat f_ap.
-      induction (sig_point Σ i) ; simpl.
-      - apply coherency_map_in.
-      - reflexivity.
-      - rewrite IHp1, IHp2 ; reflexivity.
-      - destruct x ; rewrite IHp1 || rewrite IHp2 ; reflexivity.
+      apply poly_map_Hcon_inA.
     Defined.
   End coherent_step_data.
 
@@ -562,12 +588,13 @@ Section hit_existence.
   Arguments coh_pth {_} {_} {_} {_} {_} {_} {_} _ _.
   Arguments point_coherency {_} {_} {_} {_}.
 
-  (* Now we got `coherent_step_data` which contains the data needed to prove the invariants.
+  (* Now we got `coherent_step_data`, which contains the data needed to prove the invariants.
      A `construction_sequence` is a sequence such that at each level we have `step_data`.
      A `coherent_construction_sequence` is a sequence such that at each level we have `coherent_step_data`.
   *)
   Section coherent_construction_sequence.
-    Class coh_constr_seq (F : nat -> Type)
+    Class coh_constr_seq
+          (F : nat -> Type)
           `{constr_seq F}
           `{forall n, sd_pt_coh (constr n.+1) (constr n)}
       := coh_constr : forall (n : nat),
@@ -575,7 +602,8 @@ Section hit_existence.
 
     (* We work with an arbitrary coherent construction sequence. *)
     Variable (seq : nat -> Type).
-    Context `{constr_seq seq} `{forall n, sd_pt_coh (constr n.+1) (constr n)}.
+    Context `{constr_seq seq}
+            `{forall n, sd_pt_coh (constr n.+1) (constr n)}.
     Variable (coh_seq : coh_constr_seq seq).
 
     (* The invariant for the introduction rule for the points is satisfied. *)
@@ -600,7 +628,7 @@ Section hit_existence.
     Global Instance path_intro_coherent_coh : path_intro_coherent seq.
     Proof.
       intros n i x.
-      pose (@coh_pth _ _ _ _ (constr n.+2) (constr n.+1) (constr n) _ (coh_seq n) i x) as p.
+      pose (@coh_pth _ _ _ _ _ _ _ _ (coh_seq n) i x) as p.
       unfold coh_pth_l, coh_pth_r in p.
       unfold path_coherent_left, path_coherent_right.
       simpl.
@@ -619,7 +647,8 @@ Section hit_existence.
   *)
   Section approximator.
     Variable (P Q R : Type)
-             (HsPQ : step_data P Q) (HsQR : step_data Q R).
+             (HsPQ : step_data P Q)
+             (HsQR : step_data Q R).
     Context `{@sd_pt_coh _ _ _ HsPQ HsQR}.
 
     (* First we add the path constructors to `Hcon (n.+1) Q` with a coequalizer. *)
@@ -656,7 +685,9 @@ Section hit_existence.
       := fun x => @cp _ _ _ _ _.
 
     (* Next we add coherencies for the paths *)
-    Definition path_coherencies : {i : sig_path_index Σ & poly_act (sig_path_param Σ i) R} ->
+    Definition path_coherencies :
+      {i : sig_path_index Σ & poly_act (sig_path_param Σ i) R}
+      ->
       {b1 : add_pt_coherencies & {b2 : add_pt_coherencies & (b1 = b2) * (b1 = b2)}}.
     Proof.
       intros [i x].
@@ -692,21 +723,4 @@ Section hit_existence.
       refine (ap_compose _ _ _)^.
     Defined.
   End approximator.
-
-  Section approximating_sequence_existence.
-    Variable (n : nat) (H : hit_rank Σ (S n)).
-    
-    Theorem sequence_existence : approximating_sequence n H.
-    Admitted.
-
-  End approximating_sequence_existence.
-
-  Section approximating_sequence_colimit.
-    Variable (n : nat) (H : hit_rank Σ (S n)) (Happrox : approximating_sequence n H).
-
-    Theorem hit_existence : HIT Σ.
-    Proof.
-    Admitted.
-
-  End approximating_sequence_colimit.
 End hit_existence.
