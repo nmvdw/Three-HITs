@@ -811,7 +811,7 @@ Section hit_existence.
     Definition seq_point_coh : forall n, sd_pt_coh (constr n.+1) (constr n)
       := fun n => (help_seq n).2.2.2.2.2.
 
-    Global Instance seq_is_coh_cosntr_seq : @coh_constr_seq seq _ seq_point_coh
+    Global Instance seq_is_coh_constr_seq : @coh_constr_seq seq _ seq_point_coh
       := fun _ => _.
   End coherent_construction_sequence_existence.    
 End hit_existence.
