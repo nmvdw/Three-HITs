@@ -5,15 +5,8 @@ Require Import colim.
 Require Import pcoeq.
 
 (* We formulate the main theorem, which states that all signatures have a HIT provided that several HITs do.
-   We assume function extensionality, which we use to prove
-   `inc seq constr_seq_map n.+2
-    =
-    inc seq constr_seq_map n.+3 o constr_seq_map n.+2`
-   This requires function extensionality since `com` only gives the equality for all points.
-   Function extensionality can be avoided by using 'strong colimits' where the path `com` has the type `forall n, inc n = inc n.+1 o f n`.
 *)
 Section hit_existence.
-  Context `{Funext}.
   Variable (Σ : hit_signature).
   
   (* To build the approximating sequence, we first need to be able to construct types in which the endpoints of Σ can be interpreted.
@@ -22,11 +15,29 @@ Section hit_existence.
      In addition, we show that whenever we have a map `Hcon A n -> B`, then in `B`, we can interpret endpoints of depth `n` with parameters from `A` as well.
   *)
   Section add_constructors.
+    Definition Hrec (A : Type)
+      := {i : sig_point_index Σ & poly_act (sig_point Σ i) A}.
+    
     Fixpoint Hcon (n : nat) (A : Type) : Type :=
       match n with
       | 0 => A
-      | S n => A + {i : sig_point_index Σ & poly_act (sig_point Σ i) (Hcon n A)}
+      | S n => A + Hrec (Hcon n A)
       end.
+
+    (* We have inclusions from `Hcon n A` to `Hcon (n.+1) A`. *)
+    Fixpoint incl_con
+             {Q : Type} (n : nat)
+             {struct n}
+      : Hcon n Q -> Hcon (n.+1) Q
+      := match n with
+         | 0 => inl
+         | S n =>
+           fun x =>
+             match x with
+             | inl x => inl x
+             | inr(i;x) => inr (i;poly_map (sig_point Σ i) (incl_con n) x)
+             end
+         end.
 
     (* `Hcon n` acts on maps. *)
     Fixpoint Hcon_map {A B : Type} (n : nat) (f : A -> B) : Hcon n A -> Hcon n B
@@ -98,19 +109,6 @@ Section hit_existence.
          | S n => idpath
          end.
 
-    (* Move to polynomial.v. This says `poly_map` commutes with composition. *)
-    Definition poly_map_compose
-               {A B C : Type} {P : polynomial}
-               (f : A -> B) (g : B -> C) (x : poly_act P A)
-      : poly_map P g (poly_map P f x) = poly_map P (g o f) x.
-    Proof.
-      induction P as [ | | ? IHP1 ? IHP2 | ? IHP1 ? IHP2 ] ; simpl.
-      - reflexivity.
-      - reflexivity.
-      - rewrite IHP1, IHP2. reflexivity.
-      - destruct x ; rewrite IHP1 || rewrite IHP2 ; reflexivity.
-    Defined.
-    
     (* Before showing interpreting endpoints is natural, we need one more lemma. *)
     Lemma poly_map_Hcon_inA
           {A B : Type} {P : polynomial} {n : nat}
@@ -119,7 +117,7 @@ Section hit_existence.
         =
         poly_map P (Hcon_map n f) (poly_map P Hcon_inA x).
     Proof.
-      refine (poly_map_compose _ _ _ @ _ @ (poly_map_compose _ _ _)^).
+      refine ((poly_map_compose _ _ _ _)^ @ _ @ poly_map_compose _ _ _ _).
       refine (ap (fun f => f x) _).
       refine (ap (poly_map P) _).
       apply Hcon_inA_natural.
@@ -176,11 +174,18 @@ Section hit_existence.
          | S n => idpath
          end.
   End add_constructors.
-
+    
   (* Now let us assume the HIT has a certain rank `r.+1`. *)
   Variable (r : nat) (H : hit_rank Σ r.+1).
+  (* We assume function extensionality, which we use to prove
+     `inc seq constr_seq_map n.+2
+       =
+      inc seq constr_seq_map n.+3 o constr_seq_map n.+2`
+     This requires function extensionality since `com` only gives the equality for all points.
+     Function extensionality can be avoided by using 'strong colimits' where the path `com` has the type `forall n, inc n = inc n.+1 o f n`.*)
+  Context `{Funext}.
 
-    (* We start by defining what an approximating sequence for `Σ` is and for that, we follow the ideas in Adamek's theorem.
+  (* We start by defining what an approximating sequence for `Σ` is and for that, we follow the ideas in Adamek's theorem.
      At every stage new constructors are added.
      For the path constructors, we need to be able to use constructor terms and that is where `Hcon` comes into play.
      This leads to the notion of `step_data`.
@@ -358,11 +363,11 @@ Section hit_existence.
 
       Theorem pt_intro : colim_point_constr_seq -> colim_constr_seq.
       Proof.
-        simple refine (colim_N_rec _ _ _ _ _).
+        simple refine (colim_N_rec _ _ _).
         - simpl ; intros n x.
-          apply (inc _ _ (n.+1) (point_constr _ i x)).
+          apply (inc (n.+1) (point_constr _ i x)).
         - simpl ; intros n x.
-          refine (ap _ _ @ com _ _ _ _).
+          refine (ap _ _ @ com _ _).
           apply pt_coh.
       Defined.
     End pt_intro.
@@ -384,25 +389,25 @@ Section hit_existence.
 
       Definition endpoint_lhs : colim_path_constr_seq -> colim_constr_seq.
       Proof.
-        simple refine (colim_N_rec _ _ _ _ _).
+        simple refine (colim_N_rec _ _ _).
         - simpl ; intros n x.
-          apply (inc _ _ (n.+1)).
+          apply (inc (n.+1)).
           refine (interpret_endpoint_all (sig_path_lhs Σ i) (fst H i) (constrH (constr _)) x).
         - simpl ; intros n x.
-          refine (_ @ com _ _ _ _).
-          refine (ap (inc seq constr_seq_map n.+2) _).
+          refine (_ @ com _ _).
+          refine (ap (@inc seq constr_seq_map n.+2) _).
           apply endpointl_coh.
       Defined.
 
       Definition endpoint_rhs : colim_path_constr_seq -> colim_constr_seq.
       Proof.
-        simple refine (colim_N_rec _ _ _ _ _).
+        simple refine (colim_N_rec _ _ _).
         - simpl ; intros n x.
-          apply (inc _ _ (n.+1)).
+          apply (inc (n.+1)).
           refine (interpret_endpoint_all (sig_path_rhs Σ i) (snd H i) (constrH (constr _)) x).
         - simpl ; intros n x.
-          refine (_ @ com _ _ _ _).
-          refine (ap (inc seq constr_seq_map n.+2) _).
+          refine (_ @ com _ _).
+          refine (ap (@inc seq constr_seq_map n.+2) _).
           apply endpointr_coh.
       Defined.
     End lift_endpoints.
@@ -416,10 +421,10 @@ Section hit_existence.
       Definition ap_inc
                  (F : nat -> Type) (f : forall n, F n -> F n.+1)
                  (k : nat) (x y : F k.+1) (p : x = y)
-        : (com F f (k.+1) x)^
-          @ ap (inc F f (k.+2)) (ap (f (k.+1)) p)
-            @ com F f (k.+1) y
-          = ap (inc F f (k.+1)) p
+        : (com (k.+1) x)^
+          @ ap (inc (k.+2)) (ap (f (k.+1)) p)
+            @ com (k.+1) y
+          = ap (inc (k.+1)) p
         := match p with
            | idpath => ap (fun z => z @ _) (concat_p1 _) @ concat_Vp _
            end.
@@ -429,27 +434,27 @@ Section hit_existence.
       Definition strong_com
                  (F : nat -> Type) (f : forall n, F n -> F(n.+1))
                  (k : nat)
-        : inc F f k = inc F f k.+1 o f k
-        := path_forall _ _ (fun z => (com F f k z)^).
+        : inc k = inc k.+1 o f k
+        := path_forall _ _ (fun z => (com k z)^).
 
       (* Introduction rule for paths. *)
       Theorem pth_intro (i : sig_path_index Σ) :
         forall (x : colim_path_constr_seq i), endpoint_lhs i x = endpoint_rhs i x.
       Proof.
-        simple refine (colim_N_ind _ _ _ _ _).
+        simple refine (colim_N_ind _ _ _).
         - simpl ; intros n x.
-          apply (ap (inc _ _ (n.+1)) (path_constr _ i x)).
+          apply (ap (inc (n.+1)) (path_constr _ i x)).
         - simpl ; intros n x.
           rewrite transport_paths_FlFr.
-          rewrite !(colim_N_rec_beta_com _ _ (path_constr_seq_map i)).
+          rewrite !(colim_N_rec_beta_com).
           rewrite inv_pp.
           rewrite concat_p_pp.
-          rewrite (concat_pp_p _ _ (ap (inc seq constr_seq_map n.+2) (endpointr_coh n i x))).
-          rewrite <- (ap_pp (inc seq constr_seq_map n.+2)).
+          rewrite (concat_pp_p _ _ (ap (inc n.+2) (endpointr_coh n i x))).
+          rewrite <- (ap_pp (inc n.+2)).
           rewrite ?concat_pp_p.
-          rewrite (concat_p_pp (ap (inc seq constr_seq_map n.+2) (endpointl_coh n i x))^).
+          rewrite (concat_p_pp (ap (inc n.+2) (endpointl_coh n i x))^).
           rewrite <- ap_V.
-          rewrite <- (ap_pp (inc seq constr_seq_map n.+2)).
+          rewrite <- (ap_pp (inc n.+2)).
           rewrite <- (ap_inc seq constr_seq_map n).
           rewrite concat_pp_p.
           f_ap ; f_ap.
@@ -512,9 +517,9 @@ Section hit_existence.
               (constrH HPQ)
               (poly_map (sig_path_param Σ i) (sd_i HQR) x).
         Proof.
-          rewrite interpret_all_natural.
-          - reflexivity.
-          - refine (fun p => ap _ (coh_pt _)^).
+          simple refine (interpret_all_natural _ _ _ _ idmap _ _).
+          intros.              
+          refine (ap _ (coh_pt _)^).
         Defined.
         
         Definition sd_endpointr
@@ -532,10 +537,9 @@ Section hit_existence.
               (constrH HPQ)
               (poly_map (sig_path_param Σ i) (sd_i HQR) x).
         Proof.
-          rewrite interpret_all_natural.
-          - reflexivity.
-          - intros.              
-            refine (ap _ (coh_pt _)^).
+          simple refine (interpret_all_natural _ _ _ _ idmap _ _).
+          intros.              
+          refine (ap _ (coh_pt _)^).
         Defined.
       End endpoint_coherency.
 
@@ -595,10 +599,11 @@ Section hit_existence.
           (inl ((constrH HQR) (Hcon_constr i x))).
     Proof.
       unfold sd_pt_coh, coh_pt_l, coh_pt_r in coh_pt.
-      rewrite <- coh_pt.
+      refine (_ @ coh_pt _).
       simpl.
       unfold Hcon_constr.
-      repeat f_ap.
+      refine (ap _ (ap _ _)).
+      refine (path_sigma' _ idpath _) ; simpl.
       apply poly_map_Hcon_inA.
     Defined.
   End coherent_step_data.
@@ -655,10 +660,14 @@ Section hit_existence.
       intros n i x.
       pose (@coh_pth _ _ _ _ _ _ _ _ (coh_seq n) i x) as p.
       unfold coh_pth_l, coh_pth_r in p.
-      unfold path_coherent_left, path_coherent_right.
+      unfold path_coherent_left, path_coherent_right, constr_seq_map.
       simpl.
-      rewrite <- p.
-      hott_simpl.
+      refine (_ @ p).
+      unfold constr_seq_map.
+      refine (ap _ _).
+      refine (concat_p_pp _ _ _ @ _).
+      refine (ap (fun z => z @ _ @ _) _).
+      apply inv_V.
     Defined.
   End coherent_construction_sequence.
   
@@ -813,5 +822,191 @@ Section hit_existence.
 
     Global Instance seq_is_coh_constr_seq : @coh_constr_seq seq _ seq_point_coh
       := fun _ => _.
-  End coherent_construction_sequence_existence.    
+  End coherent_construction_sequence_existence.
+
+    (* `Hcon n A` is a minimal extension of `A` in which we can interpret constructor terms.
+      For that we show how to extend maps `(x : A) -> Y x` to `Hcon n A`.
+  *)
+  Section extend_Hcon.
+    (* First, we define the pullback of a family. *)
+    Definition pullback
+               {P Q : Type}
+               (Y : P -> Type)
+               (g : Q -> P)
+      : Q -> Type
+      := Y o g.
+
+    (* Now we extend `Hrec`.
+       For this we start with types `P` and `Q` and an inclusion `inc : Q -> P`.
+       Since we need a family for both `Q` and `Hrec Q`, we require a map `constrQ : Hrec Q -> P`.
+       This map interprets constructors with arguments from `Q` in the type `P`.
+       For the family `Y`, we require that it has a lift of `c`.
+    *)
+    Definition extend_rec
+               {P Q : Type}
+               (YP : P -> Type)
+               (inc : Q -> P)
+               (constrQ : Hrec Q -> P)
+               (c : forall (i : sig_point_index Σ)
+                           (x : poly_act (sig_point Σ i) Q),
+                   poly_fam (sig_point Σ i) (pullback YP inc) x
+                   -> YP (constrQ(i;x)))
+               (f : forall (x : Q), YP (inc x))
+               (x : Hrec Q)
+      : pullback YP constrQ x
+      := match x with
+         | (i;x) => c i x (poly_dmap (sig_point Σ i) f x)
+         end.
+
+    (* To extend maps to `Hcon (S n) A` there are two cases.
+       Either the element is in `A` or it is in `Hrec (Hcon n A)`.
+       In the first case, we use the given map.
+       In the second case, we use `extend_rec`.
+    *)
+    Definition extend_con_S'
+               {P Q : Type}
+               (YP : P -> Type)
+               (n : nat)
+               (x : Hcon (S n) Q)
+      : forall (g : Hcon (S n) Q -> P)
+               (c : forall (i : sig_point_index Σ)
+                           (x : poly_act (sig_point Σ i) (Hcon n Q)),
+                   poly_fam (sig_point Σ i) (pullback YP (g o incl_con n)) x
+                   -> YP (g (inr (i; x))))
+               (f : forall (x : Hcon n Q), YP (g(incl_con n x))),
+        pullback YP g x
+      := match x with
+         | inl q =>
+           match n with
+           | 0 => fun g c f => f q
+           | S _ => fun g c f => f(inl q)
+           end
+         | inr q => fun g c f => extend_rec YP (g o incl_con n) (g o inr) c f q
+         end.
+
+    (* Move to polynomial.v *)
+    Fixpoint fam_compose
+          {P : polynomial}
+          {A B : Type}
+          (f : A -> B)
+          {Y : B -> Type}
+      : forall (y : poly_act P A),
+        poly_fam P (Y o f) y -> poly_fam P Y (poly_map P f y)
+      := match P with
+         | poly_var => fun y z => z
+         | poly_const _ => fun y z => z
+         | poly_times _ _ =>
+           fun y z =>
+             (fam_compose f (fst y) (fst z), fam_compose f (snd y) (snd z))
+         | poly_plus _ _ =>
+           fun y =>
+             match y with
+             | inl y => fam_compose f y
+             | inr y => fam_compose f y
+             end
+         end.
+
+    (* We can also extend a map to `Hcon (S n) Q` if we just start with the part on `Q` by repeatedly applying `extend_con_S`. *)
+    Fixpoint extend_con_Z
+               {P Q : Type}
+               (YP : P -> Type)
+               (n : nat)
+      : forall (g : Hcon (S n) Q -> P)
+               (c : forall (i : sig_point_index Σ)
+                           (x : poly_act (sig_point Σ i) (Hcon n Q)),
+                   poly_fam (sig_point Σ i) (pullback YP (g o incl_con n)) x
+                   -> YP (g (inr (i; x))))
+               (f : forall (x :Q), YP (g(Hcon_inA x)))
+               (x : Hcon (S n) Q),
+        pullback YP g x
+      := match n with
+         | 0 =>
+           fun g c f x => extend_con_S' YP 0 x g c f
+         | S n =>
+           fun g c f x =>
+             extend_con_S' YP (n.+1) x g c
+                           (extend_con_Z YP n
+                                         (g o incl_con (n.+1))
+                                         (fun i y z => c i _ (fam_compose _ y z)) f)
+         end.
+    
+    (* The extension is indeed an extension. *)
+    Definition extend_con_S_is_extension
+               {P Q : Type}
+               (YP : P -> Type)
+               (n : nat)
+               (g : Hcon (n.+2) Q -> P)
+               (c : forall (i : sig_point_index Σ)
+                           (x : poly_act (sig_point Σ i) (Hcon (n.+1) Q)),
+                   poly_fam (sig_point Σ i) (pullback YP (g o incl_con (n.+1))) x
+                   -> YP (g (inr (i; x))))
+               (f : forall (x : Hcon (n.+1) Q), YP (g(incl_con (n.+1) x)))
+               (x : Q)
+      : extend_con_S' YP (n.+1) (Hcon_inA x) g c f = f(Hcon_inA x)
+      := idpath.
+
+    (* The extension is indeed an extension. *)
+    Definition extend_con_Z_is_extension
+               {P Q : Type}
+               (YP : P -> Type)
+               (n : nat)
+               (g : Hcon (n.+1) Q -> P)
+               (c : forall (i : sig_point_index Σ)
+                           (x : poly_act (sig_point Σ i) (Hcon n Q)),
+                   poly_fam (sig_point Σ i) (pullback YP (g o incl_con n)) x
+                   -> YP (g (inr (i; x))))
+               (f : forall (x : Q), YP (g(Hcon_inA x)))
+               (x : Q)
+      : extend_con_Z YP n g c f (Hcon_inA x) = f x.
+    Proof.
+      induction n.
+      - reflexivity.
+      - refine (_ @ (IHn
+                      (g o (incl_con (n.+1)))
+                      (fun i y z => c i _ (fam_compose _ y z)) _)).
+        apply extend_con_S_is_extension.        
+    Defined.
+
+    (* There are two computation rules for `extend_con_Z` telling what it does on constructors.
+       One computation rule is for zero and the other for succesors.
+    *)
+    Definition extend_con_Z_constr_zero
+               {P Q : Type}
+               (YP : P -> Type)
+               (g : Hcon 1 Q -> P)
+               (c : forall (i : sig_point_index Σ)
+                           (x : poly_act (sig_point Σ i) (Hcon 0 Q)),
+                   poly_fam (sig_point Σ i) (pullback YP (g o incl_con 0)) x
+                   -> YP (g (inr (i; x))))
+               (f : forall (x : Q), YP (g(Hcon_inA x)))
+               (i : sig_point_index Σ)
+               (x : poly_act (sig_point Σ i) Q)
+      : extend_con_Z YP 0 g c f (Hcon_constr i x)
+        =
+        c i (poly_map (sig_point Σ i) Hcon_inA x)
+          (poly_dmap (sig_point Σ i) f (poly_map (sig_point Σ i) _ x))
+      := idpath.
+    
+    Definition extend_con_Z_constr_succ
+               {P Q : Type}
+               (YP : P -> Type)
+               (n : nat)
+               (g : Hcon (n.+2) Q -> P)
+               (c : forall (i : sig_point_index Σ)
+                           (x : poly_act (sig_point Σ i) (Hcon (n.+1) Q)),
+                   poly_fam (sig_point Σ i) (pullback YP (g o incl_con (n.+1))) x
+                   -> YP (g (inr (i; x))))
+               (f : forall (x : Q), YP (g(Hcon_inA x)))
+               (i : sig_point_index Σ)
+               (x : poly_act (sig_point Σ i) (Hcon (n.+1) Q))
+      : extend_con_Z YP (n.+1) g c f (Hcon_C x)
+        =
+        c i x (poly_dmap
+                 (sig_point Σ i)
+                 (extend_con_Z YP n
+                               (g o incl_con (n.+1))
+                               (fun i' y z => c i' _ (fam_compose _ y z)) f)
+                 x)
+      := idpath.
+  End extend_Hcon.
 End hit_existence.

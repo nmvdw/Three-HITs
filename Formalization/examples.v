@@ -1,6 +1,8 @@
 Require Import HoTT.
 Require Import hit_structure polynomial.
 
+Ltac compute_rank := split ; intros [ ] ; repeat constructor.
+
 (* Example: circle *)
 Section Circle.
   Definition circle_signature :=
@@ -12,6 +14,11 @@ Section Circle.
       sig_path_lhs := (fun _ => endpoint_constr tt endpoint_var) ;
       sig_path_rhs := (fun _ => endpoint_constr tt endpoint_var)
     |}.
+
+  Definition circle_rank : hit_rank circle_signature 1.
+  Proof.
+    compute_rank.
+  Defined.
 
   (* Example: the HoTT library circle is a HIT *)
   Definition circle_hit : HIT circle_signature.
@@ -59,6 +66,11 @@ Section NaturalNumbers.
       sig_path_lhs := Empty_rect _ ;
       sig_path_rhs := Empty_rect _
     |}.
+
+  Definition nat_rank : hit_rank nat_signature 1.
+  Proof.
+    compute_rank.
+  Defined.
 
   (* Example: nat is a hit. *)
   Definition nat_hit : HIT nat_signature.
@@ -118,6 +130,11 @@ Section Suspension.
       sig_path_lhs := (fun _ => endpoint_constr false (endpoint_const tt)) ;
       sig_path_rhs := (fun _ => endpoint_constr true (endpoint_const tt))
     |}.
+
+  Definition suspension_rank : hit_rank suspension_signature 1.
+  Proof.
+    compute_rank.
+  Defined.
 
   Definition suspension_hit : HIT suspension_signature.
   Proof.
@@ -187,6 +204,11 @@ Section Propositional_Truncation.
       sig_path_rhs := (fun _ => endpoint_snd endpoint_var)
     |}.
 
+  Definition trunc_rank : hit_rank trunc_signature 0.
+  Proof.
+    compute_rank.
+  Defined.
+
   Definition trunc_hit : HIT trunc_signature.
   Proof.
     simple refine {| hit_carrier := Trunc (-1) A |}.
@@ -255,3 +277,21 @@ Section Propositional_Truncation.
     hott_simpl.
   Defined.
 End Propositional_Truncation.
+
+(* Example: natural numbers modulo 2. This one is not in the HoTT library *)
+Section Mod2.
+  Definition mod2_signature :=
+    {|
+      sig_point_index := Bool ;
+      sig_point := (fun b => if b then poly_const Unit else poly_var) ;
+      sig_path_index := Unit ;
+      sig_path_param := (fun _ => poly_const Unit) ;
+      sig_path_lhs := (fun _ => endpoint_constr false (endpoint_constr false (endpoint_constr true endpoint_var))) ;
+      sig_path_rhs := (fun _ => endpoint_constr true endpoint_var)
+    |}.
+
+  Definition mod2_rank : hit_rank mod2_signature 3.
+  Proof.
+    compute_rank.
+  Defined.
+End Mod2.

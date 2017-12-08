@@ -490,13 +490,11 @@ Section HIT_Recursion.
   Variable (cY : point_over_rec)
            (pY_rec : path_over_rec cY).
 
-  Definition pY : path_over_rec_help cY.
-  Proof.
-    intros j x h.
-    pose (pY_rec j (fam_const h)).
-    rewrite <- ?(endpoint_dact_const hit_point cY _ _ _) in p.
-    apply p.
-  Defined.
+  Definition pY : path_over_rec_help cY :=
+    fun j x h =>
+      endpoint_dact_const hit_point cY _ _ _
+                          @ pY_rec j (fam_const h)
+                          @ (endpoint_dact_const hit_point cY _ _ _ )^.
     
   Definition cY' : point_over_nondep Σ H A
     := fun i _ x => cY i (fam_const x).
@@ -566,4 +564,3 @@ Section HIT_Recursion.
     Defined.
   End beta_path.
 End HIT_Recursion.
-
