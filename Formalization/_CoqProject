@@ -1,9 +1,10 @@
 -R . "" COQC = hoqc COQDEP = hoqdep
 
+general.v
 polynomial.v
 hit_structure.v
 examples.v
 colim.v
-hit_existence.v
-general.v
 pcoeq.v
+hit_existence.v
+alt_hit_existence.v
