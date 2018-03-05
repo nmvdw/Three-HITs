@@ -48,7 +48,7 @@ Proof.
   - exact loop.
 
   - intros F c f x.
-    now apply (S1_ind F (c tt tt tt)), (f tt).
+    exact (S1_ind F (c tt tt tt) (f tt tt tt) x).
 
   - intros F c p [] [] ; reflexivity.
 
