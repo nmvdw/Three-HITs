@@ -585,8 +585,8 @@ Section HIT_Recursion.
         =
         hit_rec (endpoint_act hit_point (sig_path_rhs Σ j) u)
       := endpoint_compute_rhs Σ H A cY' pY' j u.
-    
-    Theorem hit_rec_beta_path      
+
+    Theorem hit_rec_beta_path
       : ap hit_rec (hit_path j u)
         =
         t5^ @ pY j u (poly_dmap (sig_path_param Σ j) hit_rec u) @ t6.
@@ -598,4 +598,4 @@ Section HIT_Recursion.
       hott_simpl.
     Defined.
   End beta_path.
-End HIT_Recursion
+End HIT_Recursion.

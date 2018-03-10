@@ -1,7 +1,7 @@
 Require Import HoTT.
 Require Import hit_structure polynomial.
 
-Ltac compute_rank := split ; intros [ ] ; repeat constructor.
+Local Ltac compute_rank := split ; intros [ ] ; repeat constructor.
 
 (* Example: circle *)
 Section Circle.
@@ -38,7 +38,7 @@ Section Circle.
                      hit_path := (fun _ _ => _ ) |}.
     - exact loop.
     - intros F c f x.
-      exact (S1_ind F (c tt tt tt) (f tt tt tt)).
+      apply (S1_ind F (c tt tt tt) (f tt tt tt)).
     - intros F c p [] [] ; reflexivity.
     - intros F [] c p [] [].
       apply S1_ind_beta_loop.
@@ -299,19 +299,21 @@ Section Propositional_Truncation.
 End Propositional_Truncation.
 
 (* Example: natural numbers modulo 2. This one is not in the HoTT library *)
-Section Mod2.
-  Definition mod2_signature :=
+Section NatMod2.
+  Definition nat_mod2_signature :=
     {|
       sig_point_index := Bool ;
       sig_point := (fun b => if b then poly_const Unit else poly_var) ;
       sig_path_index := Unit ;
       sig_path_param := (fun _ => poly_const Unit) ;
-      sig_path_lhs := (fun _ => endpoint_constr false (endpoint_constr false (endpoint_constr true endpoint_var))) ;
+      sig_path_lhs := (fun _ =>  endpoint_constr false
+                                (endpoint_constr false 
+                                (endpoint_constr true endpoint_var))) ;
       sig_path_rhs := (fun _ => endpoint_constr true endpoint_var)
     |}.
 
-  Definition mod2_rank : hit_rank mod2_signature 3.
+  Definition nat_mod2_rank : hit_rank nat_mod2_signature 3.
   Proof.
     compute_rank.
   Defined.
-End Mod2.
+End NatMod2.
