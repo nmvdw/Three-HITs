@@ -163,7 +163,6 @@ Section ColimAsCoeq.
     := @cp _ _ ident_left ident_right (i;(x,(j;g))).
 
   Section Induction.
-    Check colimit_ind.
     Variable (P : coeq_D -> Type)
              (p_in : forall (i : G) (x : D i), P (colim_cd i x))
              (p_p : forall (i j : G) (g : G i j) (x : D i),
