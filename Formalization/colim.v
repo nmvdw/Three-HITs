@@ -163,6 +163,7 @@ Section ColimAsCoeq.
     := @cp _ _ ident_left ident_right (i;(x,(j;g))).
 
   Section Induction.
+    Check colimit_ind.
     Variable (P : coeq_D -> Type)
              (p_in : forall (i : G) (x : D i), P (colim_cd i x))
              (p_p : forall (i j : G) (g : G i j) (x : D i),
@@ -457,7 +458,7 @@ Section GraphDefinitions.
   (* The relevant graph properties *)
   Definition nonempty (G : graph) := G.
 
-  Class is_simple_graph (G : graph) :=
+  Class thin (G : graph) :=
     connect_hprop : forall (i j : G), IsHProp (connected i j).
 
   Definition filtered (G : graph) :=
@@ -558,7 +559,7 @@ End GraphDefinitions.
 Arguments G_cons {_} {_} {_} {_} _ _.
 Notation "D '_fp' g" := (compose_long D g) (at level 8).
 
-(* The mapping telescope graph is rather nice: it is `is_simple_graph`, `filtered`, and `nonempty`.
+(* The mapping telescope graph is rather nice: it is `thin`, `filtered`, and `nonempty`.
    We show the former two properties.
 *)
 Section MappingTelescopeGraph.
@@ -711,7 +712,7 @@ Section MappingTelescopeGraph.
     - apply max_r.
   Defined.
 
-  (* Showing it is is_simple_graph, requires more work.
+  (* Showing it is thin, requires more work.
      We need some lemmata to show that each `y : connected i i` is equal to `G_nil i`.
   *)
   Definition connected_mtg_ii_fam (i j : mappingtelescope_graph) (z : connected i j) : Type.
@@ -761,7 +762,7 @@ Section MappingTelescopeGraph.
     * contradiction (n idpath).
   Defined.
 
-  Global Instance is_simple_graph_mtg : is_simple_graph mappingtelescope_graph.
+  Global Instance thin_mtg : thin mappingtelescope_graph.
   Proof.
     intros i j.
     apply hprop_allpath.
@@ -933,12 +934,12 @@ Arguments transport_up_well_def {G D} Y {i k1 k2} x Hik1 Hk1k2 p.
 Arguments choose_top {G D i j k} x y Hik Hjk _.
 Arguments choose_top_well_def {G D i j k1 k2} x y Hik1 Hjk1 Hk1k2 p q.
 
-(* If the graph is `is_simple_graph`, `filtered`, and `nonempty`, then colimits over it commute with the constant functor.
+(* If the graph is `thin`, `filtered`, and `nonempty`, then colimits over it commute with the constant functor.
 *)
 Section ColimConst.
   Variable (G : graph) (g : nonempty G) (G_fil : filtered G)
            (A : Type).
-  Context `{is_simple_graph G}.
+  Context `{thin G}.
 
   (* We start by defining the inverse *)
   Definition const_to_colimit (a : A) : constant G A
@@ -1082,7 +1083,7 @@ Section ColimitProduct.
   Variable (G : graph)
            (D1 D2 : diagram G)
            (G_fil : filtered G).
-  Context `{is_simple_graph G}.
+  Context `{thin G}.
 
   Definition compose_long_prod
              {i j : G} (Hij : connected i j) (x : prod_diagram D1 D2 i)
@@ -1245,12 +1246,12 @@ Section ColimitProduct.
   Defined.
 End ColimitProduct.
 
-(* Now we can show colimits over `filtered`, `is_simple_graph`, `nonempty` graphs commute with polynomials. *)
+(* Now we can show colimits over `filtered`, `thin`, `nonempty` graphs commute with polynomials. *)
 Section FilteredColimitPolynomial.
   Variable (G : graph)
            (g : nonempty G)
            (G_fil : filtered G).
-  Context `{is_simple_graph G}.
+  Context `{thin G}.
 
   Global Instance colimit_to_poly_equiv (D : diagram G) P
     : IsEquiv (colimit_to_poly G D P).
