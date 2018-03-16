@@ -27,28 +27,45 @@ Proof.
       exact (endpoint_act (@hit_point _ H) ((guarded_sig_path_rhs Σ i).2) p).
 Defined.
 
-Theorem hit_is_coequalizer : is_colimit D H.
+(* There is a cocone over [D] with tip [H]. *)
+Lemma cocone_D_H : cocone D H.
+Proof.
+ simple refine {| q := _ |}.
+ + { intros [|].
+     - intros jy.
+       destruct (@diagram1 _ D true false false jy) as [i x].
+       exact (@hit_point Σ H i x).
+     - intros [i x].
+       exact (@hit_point Σ H i x).
+   }
+ + { simpl.
+     intros [|] [|] e ; try elim e.
+     destruct e as [|].
+     - intros [i x].
+       apply (@hit_path Σ H i).
+     - reflexivity.
+   }
+Defined.
+
+Theorem hit_is_coequalizer `{Funext} : is_colimit D H.
 Proof.
   simple refine {| is_colimit_C := _ |}.
-  - simple refine {| q := _ |}.
-    + { intros [|].
-        - pose (l := @diagram1 _ D true false false).
-          intros jy.
-          destruct (l jy) as [i x].
-          exact (@hit_point Σ H i x).
-        - intros [i x].
-          exact (@hit_point Σ H i x).
-      }
-    + { simpl.
-        intros [|] [|] e ; try elim e.
-        destruct e as [|].
-        - intros [i x].
-          apply (@hit_path Σ H i).
-        - reflexivity.
-      }
-  - intro Y.
-    admit.
+  - exact cocone_D_H.
+  - { intro Y.
+      apply equiv_fcontr_isequiv.
+      intro C.
+      simple refine {| center := exist _ _ _ |}.
+      - simple refine (hit_primrec _ H Y _ _).
+        + intros i x u.
+          apply (q C false).
+          exact (i; x).
+        + intros p x u.
+          admit.
+      - simpl.
+        admit.
+      - intros [f p].
+        admit.
+    }
 Admitted.
-
 
 End HIT_is_coequalizer.
