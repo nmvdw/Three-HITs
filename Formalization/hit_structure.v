@@ -173,6 +173,41 @@ Structure hit_signature :=
     sig_path_rhs : forall i, endpoint sig_point (sig_path_param i) poly_var
   }.
 
+(* A guarded HIT is a HIT in which all endpoints are constructors. *)
+Structure guarded_hit_signature := {
+  (* indexing for point constructors *)
+  guarded_sig_point_index : Type ;
+
+  (* the signatures for point constructors *)
+  guarded_sig_point : guarded_sig_point_index -> polynomial ;
+
+  (* indexing for path constructors *)
+  guarded_sig_path_index : Type ;
+
+  (* the parameters of each path constructor *)
+  guarded_sig_path_param : guarded_sig_path_index -> polynomial ;
+
+  (* the left and right endpoints of path constructors *)
+  guarded_sig_path_lhs : forall i, { c : guarded_sig_point_index & endpoint guarded_sig_point (guarded_sig_path_param i) (guarded_sig_point c) } ;
+  guarded_sig_path_rhs : forall i, { c : guarded_sig_point_index & endpoint guarded_sig_point (guarded_sig_path_param i) (guarded_sig_point c) }
+}.
+
+Definition unguard (G : guarded_hit_signature) : hit_signature :=
+{|
+  sig_point_index := guarded_sig_point_index G ;
+  sig_point := guarded_sig_point G ;
+  sig_path_index := guarded_sig_path_index G ;
+  sig_path_param := guarded_sig_path_param G ;
+  sig_path_lhs := (fun i => endpoint_constr
+                              ((guarded_sig_path_lhs G i).1)
+                              ((guarded_sig_path_lhs G i).2)) ;
+  sig_path_rhs := (fun i => endpoint_constr
+                              ((guarded_sig_path_rhs G i).1)
+                              ((guarded_sig_path_rhs G i).2))
+|}.
+
+Coercion unguard : guarded_hit_signature >-> hit_signature.
+
 (* A HIT signature has rank [n] if all of its endpoints do. *)
 Definition hit_rank Σ n :=
   (forall (j : sig_path_index Σ), endpoint_rank (sig_point Σ) (sig_path_lhs Σ j) n) *
@@ -550,8 +585,8 @@ Section HIT_Recursion.
         =
         hit_rec (endpoint_act hit_point (sig_path_rhs Σ j) u)
       := endpoint_compute_rhs Σ H A cY' pY' j u.
-    
-    Theorem hit_rec_beta_path      
+
+    Theorem hit_rec_beta_path
       : ap hit_rec (hit_path j u)
         =
         t5^ @ pY j u (poly_dmap (sig_path_param Σ j) hit_rec u) @ t6.

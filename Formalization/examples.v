@@ -1,7 +1,7 @@
 Require Import HoTT.
 Require Import hit_structure polynomial.
 
-Ltac compute_rank := split ; intros [ ] ; repeat constructor.
+Local Ltac compute_rank := split ; intros [ ] ; repeat constructor.
 
 (* Example: circle *)
 Section Circle.
@@ -11,9 +11,19 @@ Section Circle.
       sig_point := (fun _ => poly_const Unit) ;
       sig_path_index := Unit ;
       sig_path_param := (fun _ => poly_const Unit) ;
-      sig_path_lhs := (fun _ => endpoint_constr tt endpoint_var) ;
-      sig_path_rhs := (fun _ => endpoint_constr tt endpoint_var)
+      sig_path_lhs := (fun _ => endpoint_constr tt (endpoint_const tt)) ;
+      sig_path_rhs := (fun _ => endpoint_constr tt (endpoint_const tt))
     |}.
+
+  Definition circle_guarded_signature :=
+  {|
+    guarded_sig_point_index := Unit ;
+    guarded_sig_point := (fun _ => poly_const Unit) ;
+    guarded_sig_path_index := Unit ;
+    guarded_sig_path_param := (fun _ => poly_const Unit) ;
+    guarded_sig_path_lhs := (fun _ => (tt; endpoint_const tt)) ;
+    guarded_sig_path_rhs := (fun _ => (tt; endpoint_const tt))
+  |}.
 
   Definition circle_rank : hit_rank circle_signature 1.
   Proof.
@@ -28,7 +38,7 @@ Section Circle.
                      hit_path := (fun _ _ => _ ) |}.
     - exact loop.
     - intros F c f x.
-      now apply (S1_ind F (c tt tt tt)), (f tt).
+      apply (S1_ind F (c tt tt tt) (f tt tt tt)).
     - intros F c p [] [] ; reflexivity.
     - intros F [] c p [] [].
       apply S1_ind_beta_loop.
@@ -129,6 +139,16 @@ Section Suspension.
       sig_path_param := (fun _ => poly_const A) ;
       sig_path_lhs := (fun _ => endpoint_constr false (endpoint_const tt)) ;
       sig_path_rhs := (fun _ => endpoint_constr true (endpoint_const tt))
+    |}.
+
+  Definition suspension_guarded_signature (A : Type) :=
+    {|
+      guarded_sig_point_index := Bool ;
+      guarded_sig_point := (fun _ => poly_const Unit) ;
+      guarded_sig_path_index := Unit ;
+      guarded_sig_path_param := (fun _ => poly_const A) ;
+      guarded_sig_path_lhs := (fun _ => (false; endpoint_const tt)) ;
+      guarded_sig_path_rhs := (fun _ => (true; endpoint_const tt))
     |}.
 
   Definition suspension_rank : hit_rank suspension_signature 1.
@@ -278,131 +298,22 @@ Section Propositional_Truncation.
   Defined.
 End Propositional_Truncation.
 
-Section N2.
-  Definition N2_signature : hit_signature
-    := {|
-        sig_point_index := Bool ;
-        sig_point := (fun b => if b then poly_const Unit else poly_var) ;
-        sig_path_index := Unit ;
-        sig_path_param := (fun _ => poly_var) ;
-        sig_path_lhs := fun _ => endpoint_constr false endpoint_var ;
-        sig_path_rhs := fun _ =>
-                          endpoint_constr
-                            false
-                            (endpoint_constr
-                               false
-                               (endpoint_constr
-                                  false
-                                  endpoint_var))
-      |}.
+(* Example: natural numbers modulo 2. This one is not in the HoTT library *)
+Section NatMod2.
+  Definition nat_mod2_signature :=
+    {|
+      sig_point_index := Bool ;
+      sig_point := (fun b => if b then poly_const Unit else poly_var) ;
+      sig_path_index := Unit ;
+      sig_path_param := (fun _ => poly_const Unit) ;
+      sig_path_lhs := (fun _ =>  endpoint_constr false
+                                (endpoint_constr false 
+                                (endpoint_constr true endpoint_var))) ;
+      sig_path_rhs := (fun _ => endpoint_constr true endpoint_var)
+    |}.
 
-  Definition mod2_rank : hit_rank N2_signature 3.
+  Definition nat_mod2_rank : hit_rank nat_mod2_signature 3.
   Proof.
     compute_rank.
   Defined.
-
-  Variable (H : HIT N2_signature).
-
-  Definition Z : H := @hit_point _ H true tt.
-  Definition S : H -> H := @hit_point _ H false.
-
-  Definition loopexp_succ (i : Int)
-    : loopexp loop i @ loop = loopexp loop (succ_int i).
-  Proof.
-    induction i as [n | | p].
-    - induction n as [ | n IHn].
-      + cbn ; apply concat_Vp.
-      + hott_simpl.
-    - apply concat_1p.
-    - induction p as [ | p IHp] ; reflexivity.
-  Defined.
-
-  Definition loopexp_pred (i : Int)
-    : loop^ @ loopexp loop i = loopexp loop (pred_int i).
-  Proof.
-    induction i as [n | | p].
-    - induction n as [ | n IHn].
-      + reflexivity.
-      + exact (concat_p_pp _ _ _ @ ap (fun q => q @ loop^) IHn).
-    - apply concat_p1.
-    - induction p as [ | p IHp].
-      + apply concat_Vp.
-      + simpl.
-        refine (concat_p_pp _ _ _ @ ap (fun q => q @ loop) IHp @ _).
-        destruct p ; hott_simpl.
-  Defined.
-
-  Definition S1_encode_p_loop
-             `{Univalence}
-             (p : base = base)
-    : S1_encode _ (p @ loop) = succ_int(S1_encode _ p).
-  Proof.
-    pose (equiv_loopS1_int p).
-    assert (p = equiv_loopS1_int^-1 i) as X.
-    { refine (eissect _ _)^. }
-    rewrite X ; simpl.
-    transitivity (S1_encode base (loopexp loop (succ_int i))).
-    { apply ap.
-      apply loopexp_succ.
-    }
-    rewrite !S1_encode_loopexp.
-    reflexivity.
-  Defined.
-
-  Definition S1_encode_loopV_p
-             `{Univalence}
-             (p : base = base)
-    : S1_encode _ (loop^ @ p) = pred_int(S1_encode _ p).
-  Proof.
-    pose (equiv_loopS1_int p).
-    assert (p = equiv_loopS1_int^-1 i) as X.
-    { refine (eissect _ _)^. }
-    rewrite X ; simpl.
-    transitivity (S1_encode base (loopexp loop (pred_int i))).
-    { apply ap.
-      apply loopexp_pred.
-    }
-    rewrite !S1_encode_loopexp.
-    reflexivity.
-  Defined.
-  
-  Definition S1_round `{Univalence} (p : base = base) : loop^ @ p @ loop = p.
-  Proof.
-    pose (equiv_loopS1_int ((loop^ @ p) @ loop)) as q1.
-    pose (equiv_loopS1_int p) as q2.
-    assert (X : q1 = q2).
-    {
-      cbn.
-      rewrite S1_encode_p_loop.
-      rewrite S1_encode_loopV_p.
-      transitivity (succ_int (succ_int^-1 (S1_encode base p))).
-      { reflexivity. }
-      apply (eisretr succ_int).      
-    }
-    pose (ap equiv_loopS1_int^-1 X).
-    rewrite !eissect in p0.
-    exact p0.
-  Defined.
-
-  Definition mod_to_path : H -> base = base.
-  Proof.
-    simple refine (hit_rec _ _ _ _ _ ).
-    - intros [ | ] p.
-      + exact loop.
-      + cbn in *.
-        exact p^.
-    - intros j x ; cbn in *.
-      exact (inv_V _)^.
-  Defined.
-  
-  Definition H_to_S `{Univalence} : H -> S1.
-  Proof.
-    simple refine (hit_ind _ _ _).
-    - intros i ? x ; cbn in *.
-      exact base.
-    - intros j n x.
-      cbn in *.
-      refine (transport_const _ _ @ _).
-      exact (mod_to_path n).
-  Defined.
-End N2.
+End NatMod2.

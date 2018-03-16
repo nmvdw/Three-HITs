@@ -58,7 +58,7 @@ Definition inv_unique
 Section ColimitNatural.
   Variable (F : nat -> Type)
            (f : forall n : nat, F n -> F(S n)).
-  
+
   Definition colim_N : Type
     := colimit (Build_sequence F f).
 
@@ -74,7 +74,7 @@ Section ColimitNatural.
     Variable (P : colim_N -> Type)
              (Pi : forall (n : nat), forall (x : F n), P (inc n x))
              (Pc : forall (n : nat) (x : F n), (com n x) # Pi (S n) (f n x) = Pi n x).
-    
+
     Definition colim_N_ind : forall (x : colim_N), P x.
     Proof.
       simple refine (@colimit_ind mappingtelescope_graph (Build_sequence F f) _ Pi _) ; simpl.
@@ -163,7 +163,6 @@ Section ColimAsCoeq.
     := @cp _ _ ident_left ident_right (i;(x,(j;g))).
 
   Section Induction.
-    Check colimit_ind.
     Variable (P : coeq_D -> Type)
              (p_in : forall (i : G) (x : D i), P (colim_cd i x))
              (p_p : forall (i j : G) (g : G i j) (x : D i),
@@ -486,7 +485,7 @@ Section GraphDefinitions.
       =
       D _fp (compose (G_cons _ _ _ g Hjk1) Hk1k2) x
     := idpath.
-  
+
   Definition double_compose_long
              {G : graph} {i j k : G} (D : diagram G)
              (Hij : connected i j) (Hjk : connected j k)
@@ -497,7 +496,7 @@ Section GraphDefinitions.
     - reflexivity.
     - apply H.
   Defined.
-      
+
   Fixpoint colimp_p
              {G : graph} {i j : G} {D : diagram G} (H : connected i j)
     : forall (x : D i), colim j (compose_long D H x) = colim i x
@@ -965,7 +964,7 @@ Section ColimConst.
     * intro z. reflexivity.
     * intros z. apply IH.
   Defined.
-    
+
   Definition choose_top_const
         {i j k : G} (x : A)
         (Hik : connected i k) (Hjk : connected j k)
@@ -974,7 +973,7 @@ Section ColimConst.
     simple refine (choose_top _ _ Hik Hjk _).
     refine (compose_long_const _ _ _ _ @ (compose_long_const _ _ _ _)^).
   Defined.
-  
+
   Definition choose_top_well_def_const
         {i j k1 k2 : G} (x : A)
         (Hik1 : connected i k1) (Hjk1 : connected j k1)
@@ -993,7 +992,7 @@ Section ColimConst.
       * apply IHHjk1.
     - apply IHHik1.
   Defined.
-  
+
   Definition choose_top_colimp
         (g' i1 i2 j : G)
         (Hgj : connected g j)
@@ -1043,7 +1042,7 @@ End ColimConst.
 (* To show filtered colimits commute with products, we first prove a double recursion pricniple for colimits. *)
 Section ColimitDoubleRecursion.
   Variable (G : graph) (D1 D2 : diagram G).
-  
+
   Definition colimit_rec2
              (Y : Type)
              (f : forall i j, D1 i -> D2 j -> Y)
@@ -1172,7 +1171,7 @@ Section ColimitProduct.
     simple refine (choose_top _ _ Hk2k3 Hk1k3 _).
     apply prod_diag_fp_l.
   Defined.
-  
+
   Definition choose_top_prod_r
              (i j1 j2 : G)
              (g : G j1 j2)
@@ -1187,7 +1186,7 @@ Section ColimitProduct.
     simple refine (choose_top _ _ Hk2k3 Hk1k3 _).
     apply prod_diag_fp_r.
   Defined.
-  
+
   Definition prod_to_colimit : prod_colimit D1 D2 -> colimit_prod D1 D2.
   Proof.
     simple refine (colimit_rec2 G D1 D2 _ _ _ _ _) ; simpl.
@@ -1280,14 +1279,14 @@ Section ColimitNPolynomial.
              (F : nat -> Type) (f : forall n, F n -> F n.+1)
     : forall (n : nat), poly_act_fam_N P F n -> poly_act_fam_N P F n.+1
     := fun n => poly_map P (f n).
-  
+
   Definition colimit_N_poly
              (P : polynomial)
              (F : nat -> Type) (f : forall n, F n -> F n.+1)
     : colim_N (poly_act_fam_N P F) (poly_act_map_N P F f) -> poly_act P (colim_N F f).
   Proof.
     intros X.
-    apply colimit_to_poly.  
+    apply colimit_to_poly.
     unfold colimit_poly.
     simple refine (colim_N_rec _ _ _ X).
     - intros i x.
