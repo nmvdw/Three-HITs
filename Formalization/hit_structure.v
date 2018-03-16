@@ -382,7 +382,6 @@ Section HIT_Primitive_Recursion.
   Definition hit_point_primrec_beta
           (i : sig_point_index Σ)
           (u : poly_act (sig_point Σ i) H)
-          (x : poly_fam (sig_point Σ i) (fun (x : H) => A) u)
     : hit_primrec (hit_point i u)
       =
       c i u (poly_dmap (sig_point Σ i) hit_primrec u)
@@ -559,13 +558,6 @@ Section HIT_Recursion.
       * rewrite IHp1, IHp2.
         reflexivity.
       * destruct u ; rewrite IHp1 || rewrite IHp2 ; try f_ap ; auto.
-    - induction (sig_point Σ i) ; simpl in *.
-      * apply (hit_rec u).
-      * apply u.
-      * refine (IHp1 (fst u), IHp2 (snd u)).
-      * destruct u.
-        ** apply IHp1 ; auto.
-        ** apply IHp2 ; auto.
   Defined.
 
   Section beta_path.

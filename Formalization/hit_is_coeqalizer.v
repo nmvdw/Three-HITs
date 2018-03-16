@@ -64,7 +64,16 @@ Proof.
           refine (_ @ (qq C true false false (p;x))^).
           exact (qq C true false true (p;x)).
       - simpl.
-        admit.
+        simple refine (path_cocone _ _).
+        + intros [ | ] ; cbn.
+          * intros [i x].
+            exact (hit_point_primrec_beta _ _ _ _ _ _ _ @ qq C true false false (i;x)).
+          * intros [i x].
+            apply hit_point_primrec_beta.
+        + intros [ | ] [ | ] ; simpl ; try contradiction.
+          intros [ | ] [i x] ; simpl.
+          * admit.
+          * apply concat_1p.
       - intros [f p].
         admit.
     }
