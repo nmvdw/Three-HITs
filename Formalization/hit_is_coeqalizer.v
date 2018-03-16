@@ -59,8 +59,10 @@ Proof.
         + intros i x u.
           apply (q C false).
           exact (i; x).
-        + intros p x u.
-          admit.
+        + intros p x u ; simpl.
+          refine (transport_const _ _ @ _).
+          refine (_ @ (qq C true false false (p;x))^).
+          exact (qq C true false true (p;x)).
       - simpl.
         admit.
       - intros [f p].
