@@ -1,6 +1,10 @@
 Require Import HoTT.
 Require Import heterogeneous_equality path_over.
 
+(** Squares represents heterogeneous equalities between paths.
+    A square has 4 sides `t`, `l`, `r`, `d` and it represents `l^ @ t @ r = d`.
+    One way to define it, is using an inductive type with one constructor.
+ *)
 Inductive square {A : Type} : 
   forall {lt rt ld rd : A}
          (t : lt = rt)
@@ -9,6 +13,7 @@ Inductive square {A : Type} :
   , Type
   := id_square : forall {a : A}, square (@idpath _ a) idpath idpath (@idpath _ a).
 
+(** We can also use another constructor. *)
 Inductive square_lr  {A : Type} : 
   forall {lt rt ld rd : A}
          (t : lt = rt)
@@ -21,6 +26,9 @@ Inductive square_lr  {A : Type} :
       square_lr idpath l r idpath.
 
 Section equivalences.
+  (** An equivalent definition of `square t l r d` is `l @ t = d @ r`.
+      So, it is equivalent to a homotopy.
+   *)
   Definition square_to_path
              {A : Type}
              {lt rt ld rd : A}
@@ -64,6 +72,7 @@ Section equivalences.
       induction x ; reflexivity.
   Defined.
 
+  (** The two inductive definitions of squares are equivalent. *)
   Definition square_to_square_lr
              {A : Type}
              {lt rt ld rd : A}
@@ -103,7 +112,8 @@ Section equivalences.
     - intros x ; induction x.
       reflexivity.
   Defined.
-  
+
+  (** A square is a path over a pair of paths in a family of paths. *)
   Definition square_to_path_over
              {A : Type}
              {lt rt ld rd : A}
@@ -148,7 +158,10 @@ Section equivalences.
 End equivalences.
 
 Section operations.
-  Definition vrefl
+  (** We have two identity paths.
+      The first one is between the top and bottom side.
+   *)
+  Definition hrefl
              {A : Type} {a b : A}
              (p : a = b)
     : square p idpath idpath p
@@ -156,7 +169,8 @@ Section operations.
        | idpath => id_square
        end.
 
-  Definition hrefl
+  (** The second identity is between the left and right side. *)
+  Definition vrefl
              {A : Type} {a b : A}
              (p : a = b)
     : square idpath p p idpath
@@ -164,6 +178,7 @@ Section operations.
        | idpath => id_square
        end.
 
+  (** We can apply maps to squares. *)
   Definition ap_square
              {A B : Type} (f : A -> B)
              {lt rt ld rd : A}
@@ -176,6 +191,7 @@ Section operations.
        | id_square _ => id_square
        end.
 
+  (** We can make squares of pairs. *)
   Definition pair_square
              {A B : Type}
              {lta rta lda rda : A}
@@ -196,6 +212,7 @@ Section operations.
        | id_square _, id_square _ => id_square
        end.
 
+  (** We can move a square along paths in each coordinate. *)
   Definition whisker_square
              {A : Type}
              {lt rt ld rd : A}
@@ -215,6 +232,7 @@ Section operations.
     exact (transport (fun z => square z _ _ _) pt id_square).
   Defined.
 
+  (** Vertical composition of squares. *)
   Definition compose_square_v
              {A : Type}
              {lt rt : A}
@@ -238,6 +256,7 @@ Section operations.
              s₂).
   Defined.
 
+  (** Horizontal composition of squares. *)
   Definition compose_square_h
              {A : Type}
              {lt mt rt : A}
@@ -258,6 +277,9 @@ Section operations.
              s₂).
   Defined.
 
+  (** We can rotate squares.
+      This gives an equivalence.
+   *)
   Definition square_symmetry
              {A : Type}
              {lt rt ld rd : A}
@@ -282,6 +304,9 @@ Section operations.
       intro x ; induction x ; reflexivity.
   Defined.
 
+  (** If one side of the square is missing, then we can fill it.
+      This is a Kan-filling.
+   *)
   Definition fill_square_top
              {A : Type}
              {lt rt ld rd : A}
@@ -334,7 +359,11 @@ Section operations.
                             @ ((concat_pp_p _ _ _)^)
                             @ (ap (fun z => z @ _) (concat_pp_p _ _ _)^))).
 
-  Definition path_to_transport
+  (** Next we want look at squares of the form `square t (ap f p) (ap g p) d`.
+      These are the same as paths over `p` in the family `f z = g z.
+      For that, we first need some lemmata.
+   *)
+  Lemma path_to_transport
              {A B : Type} {f g : A -> B}
              {a₁ a₂ : A} {p : a₁ = a₂}
              {l : f a₁ = g a₁} {r : f a₂ = g a₂}
@@ -345,7 +374,7 @@ Section operations.
     exact ((concat_p1 l)^ @ q^ @ concat_1p r).
   Defined.
 
-  Definition transport_to_path
+  Lemma transport_to_path
              {A B : Type} {f g : A -> B}
              {a₁ a₂ : A} {p : a₁ = a₂}
              {l : f a₁ = g a₁} {r : f a₂ = g a₂}
