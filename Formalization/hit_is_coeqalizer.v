@@ -72,7 +72,11 @@ Proof.
             apply hit_point_primrec_beta.
         + intros [ | ] [ | ] ; simpl ; try contradiction.
           intros [ | ] [i x] ; simpl.
-          * admit.
+          * rewrite !(hit_path_primrec_beta Σ).
+            hott_simpl.
+            f_ap.
+            rewrite !inv_pp.
+            hott_simpl.
           * apply concat_1p.
       - intros [f p].
         admit.
