@@ -1,0 +1,11 @@
+-R . "TH" COQC = hoqc COQDEP = hoqdep
+
+basics/functor.v
+basics/polynomial.v
+basics/polynomial_lemma.v
+basics/heterogeneous_equality.v
+basics/path_over.v
+basics/square.v
+basics/endpoint.v
+basics/endpoint_lemma.v
+basics/hit_algebra.v
